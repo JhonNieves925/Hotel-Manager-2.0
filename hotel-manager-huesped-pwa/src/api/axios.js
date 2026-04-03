@@ -1,18 +1,18 @@
-// src/api/axios.js
 import axios from 'axios'
 
 // DESARROLLO LOCAL → baseURL: 'http://localhost:8080/api'
 // PRODUCCIÓN      → baseURL: '/api'
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // cambiar antes de subir
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
-    //'ngrok-skip-browser-warning': 'true'  // solo para Ngrok
+                                //'ngrok-skip-browser-warning': 'true'
   }
 })
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('huesped_token')
     if (token) config.headers.Authorization = `Bearer ${token}`
     return config
   },
@@ -23,9 +23,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('usuario')
-      window.location.href = '/login'
+      localStorage.removeItem('huesped_token')
+      localStorage.removeItem('huesped_usuario')
+      window.location.href = '/huesped/login'
     }
     return Promise.reject(error)
   }

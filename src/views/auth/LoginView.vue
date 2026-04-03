@@ -1,54 +1,108 @@
 <template>
   <div class="login-page">
-    <div class="login-card">
 
-      <div class="login-header">
-        <h1>Hotel Manager</h1>
-        <p>Inicia sesión para continuar</p>
+    <!-- Panel izquierdo decorativo -->
+    <div class="login-left">
+      <div class="left-content">
+        <div class="left-logo">
+          <span class="logo-icon">✦</span>
+          <span class="logo-text">Hotel Manager</span>
+        </div>
+        <div class="left-estrellas">★★★★★</div>
+        <h2 class="left-titulo">Panel de<br/>gestión hotelera</h2>
+        <p class="left-sub">Acceso exclusivo para el equipo del hotel</p>
+        <div class="left-deco">
+          <div class="deco-line"></div>
+          <span class="deco-texto">Sistema de gestión</span>
+          <div class="deco-line"></div>
+        </div>
+        <div class="left-features">
+          <div class="feature-item">
+            <span class="feature-icon">◈</span>
+            <span>Gestión de reservas en tiempo real</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">◈</span>
+            <span>Control de habitaciones y huéspedes</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">◈</span>
+            <span>Reportes financieros y de ocupación</span>
+          </div>
+        </div>
       </div>
-
-      <form @submit.prevent="handleLogin" class="login-form">
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="admin@hotelmanager.co"
-            required
-            :disabled="cargando"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            placeholder="••••••••"
-            required
-            :disabled="cargando"
-          />
-        </div>
-
-        <!-- Mensaje de error -->
-        <div v-if="error" class="error-msg">
-          {{ error }}
-        </div>
-
-        <button type="submit" class="btn-login" :disabled="cargando">
-          {{ cargando ? 'Iniciando sesión...' : 'Iniciar sesión' }}
-        </button>
-
-      </form>
-
-      <div class="login-footer">
-        <RouterLink to="/">Volver al portal de reservas</RouterLink>
+      <div class="left-particles">
+        <span v-for="i in 12" :key="i" class="particle" :style="particleStyle(i)"></span>
       </div>
-
     </div>
+
+    <!-- Panel derecho — formulario -->
+    <div class="login-right">
+      <div class="login-card">
+
+        <div class="card-header">
+          <div class="card-badge">Acceso restringido</div>
+          <h1 class="card-titulo">Acceso para<br/>empleados y admin</h1>
+          <p class="card-sub">Ingresa tus credenciales para continuar</p>
+        </div>
+
+        <form @submit.prevent="handleLogin" class="login-form">
+
+          <div class="form-group">
+            <label for="email">
+              <span class="label-icon">◉</span> Correo electrónico
+            </label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              placeholder="empleado@hotelmanager.co"
+              required
+              :disabled="cargando"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <span class="label-icon">◉</span> Contraseña
+            </label>
+            <div class="input-wrap">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="verPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                required
+                :disabled="cargando"
+                autocomplete="current-password"
+              />
+              <button type="button" class="btn-ver" @click="verPassword = !verPassword">
+                {{ verPassword ? '◯' : '●' }}
+              </button>
+            </div>
+          </div>
+
+          <div v-if="error" class="error-msg">
+            <span>⚠</span> {{ error }}
+          </div>
+
+          <button type="submit" class="btn-login" :disabled="cargando">
+            <span v-if="cargando" class="btn-spinner"></span>
+            <span v-else>Ingresar al panel</span>
+          </button>
+
+        </form>
+
+        <div class="card-footer">
+          <RouterLink to="/" class="link-volver">
+            ← Volver al portal de reservas
+          </RouterLink>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -57,28 +111,35 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 
-const router   = useRouter()
-const route    = useRoute()
+const router    = useRouter()
+const route     = useRoute()
 const authStore = useAuthStore()
 
-const form = ref({
-  email: '',
-  password: ''
-})
-const cargando = ref(false)
-const error    = ref('')
+const form = ref({ email: '', password: '' })
+const cargando   = ref(false)
+const error      = ref('')
+const verPassword = ref(false)
+
+function particleStyle(i) {
+  return {
+    left: `${(i * 19 + 7) % 100}%`,
+    top:  `${(i * 27 + 5) % 100}%`,
+    animationDelay: `${(i * 0.5) % 5}s`,
+    width:  i % 3 === 0 ? '3px' : '2px',
+    height: i % 3 === 0 ? '3px' : '2px',
+    opacity: 0.15 + (i % 4) * 0.08
+  }
+}
 
 async function handleLogin() {
   cargando.value = true
   error.value    = ''
-
   try {
     await authStore.login(form.value.email, form.value.password)
-    // Si había una ruta destino guardada, redirige ahí
     const redirect = route.query.redirect || '/dashboard'
     router.push(redirect)
   } catch (e) {
-    error.value = e.response?.data?.error || 'Error al iniciar sesión'
+    error.value = e.response?.data?.error || 'Credenciales incorrectas. Verifica tu email y contraseña.'
   } finally {
     cargando.value = false
   }
@@ -86,111 +147,356 @@ async function handleLogin() {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 .login-page {
   min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ─── PANEL IZQUIERDO ─── */
+.login-left {
+  background: linear-gradient(160deg, #0A0A0A 0%, #141008 60%, #0A0A0A 100%);
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-  padding: 1rem;
+  padding: 3rem;
 }
 
-.login-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  padding: 2.5rem;
-  width: 100%;
+.left-content {
+  position: relative;
+  z-index: 2;
   max-width: 400px;
-  box-shadow: var(--shadow-md);
 }
 
-.login-header {
-  text-align: center;
+.left-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   margin-bottom: 2rem;
 }
 
-.login-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--color-gray-800);
-  margin-bottom: 0.25rem;
+.logo-icon {
+  color: #C9A84C;
+  font-size: 1rem;
 }
 
-.login-header p {
-  color: var(--color-gray-400);
-  font-size: 0.95rem;
+.logo-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #E8E0D0;
 }
 
+.left-estrellas {
+  font-size: 0.7rem;
+  color: #C9A84C;
+  letter-spacing: 0.3em;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.left-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.15;
+  color: #FAF7F0;
+  margin-bottom: 1rem;
+}
+
+.left-sub {
+  font-size: 0.8rem;
+  color: #8A8070;
+  letter-spacing: 0.1em;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+.left-deco {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.deco-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(201, 168, 76, 0.2);
+}
+
+.deco-texto {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.left-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: #7A7060;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+.feature-icon {
+  color: #C9A84C;
+  font-size: 0.6rem;
+  flex-shrink: 0;
+}
+
+.left-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: #C9A84C;
+  border-radius: 50%;
+  animation: float 7s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.1; }
+  50% { transform: translateY(-15px) scale(1.4); opacity: 0.3; }
+}
+
+/* Borde dorado entre paneles */
+.login-left::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+}
+
+/* ─── PANEL DERECHO ─── */
+.login-right {
+  background: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.card-header {
+  margin-bottom: 2.5rem;
+}
+
+.card-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 1.25rem;
+}
+
+.card-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1.2;
+  color: #FAF7F0;
+  margin-bottom: 0.6rem;
+}
+
+.card-sub {
+  font-size: 0.78rem;
+  color: #8A8070;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* ─── FORMULARIO ─── */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
   font-weight: 500;
-  color: var(--color-gray-600);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8A8070;
+}
+
+.label-icon {
+  font-size: 0.5rem;
+  color: #C9A84C;
 }
 
 .form-group input {
-  padding: 0.7rem 1rem;
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
+  background: #1A1A1A;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 2px;
+  padding: 0.85rem 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: #FAF7F0;
   outline: none;
+  transition: all 0.3s;
+  width: 100%;
 }
 
 .form-group input:focus {
-  border-color: var(--color-primary);
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.03);
+}
+
+.form-group input::placeholder {
+  color: #4A4540;
 }
 
 .form-group input:disabled {
-  background: var(--color-gray-100);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap input {
+  padding-right: 3rem;
+}
+
+.btn-ver {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #8A8070;
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s;
+}
+
+.btn-ver:hover { color: #C9A84C; }
+
 .error-msg {
-  background: #fef2f2;
-  color: var(--color-danger);
-  border: 1px solid #fecaca;
-  border-radius: var(--radius);
-  padding: 0.6rem 1rem;
-  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: #FCA5A5;
 }
 
 .btn-login {
-  background: var(--color-primary);
-  color: #fff;
+  background: #C9A84C;
+  color: #0A0A0A;
   border: none;
-  border-radius: var(--radius);
-  padding: 0.8rem;
-  font-size: 1rem;
+  border-radius: 2px;
+  padding: 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
   font-weight: 600;
-  transition: background 0.2s;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .btn-login:hover:not(:disabled) {
-  background: var(--color-primary-dark);
+  background: #E8C97A;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.2);
 }
 
 .btn-login:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-.login-footer {
+.btn-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top-color: #0A0A0A;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.card-footer {
   text-align: center;
-  margin-top: 1.5rem;
-  font-size: 0.875rem;
-  color: var(--color-gray-400);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.link-volver {
+  font-size: 0.72rem;
+  color: #8A8070;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.link-volver:hover { color: #C9A84C; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .login-page { grid-template-columns: 1fr; }
+  .login-left { display: none; }
+  .login-right { padding: 2rem 1.5rem; background: #0A0A0A; }
 }
 </style>

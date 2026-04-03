@@ -1,0 +1,76 @@
+/* ─── TEMA OSCURO ─── */
+[data-tema="oscuro"] {
+  --color-primary:      #C9A84C;
+  --color-primary-dark: #9A7A2E;
+  --color-success:      #4a8c5c;
+  --color-gray-50:      #0A0A0A;
+  --color-gray-100:     #1A1A1A;
+  --color-gray-200:     rgba(201,168,76,0.15);
+  --color-gray-400:     #8A8070;
+  --color-gray-600:     #B0A898;
+  --color-gray-800:     #E8E0D0;
+  --shadow-sm:          0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:          0 4px 20px rgba(0,0,0,0.5);
+}
+
+[data-tema="oscuro"] body {
+  background-color: #0A0A0A;
+  color: #E8E0D0;
+}
+
+[data-tema="oscuro"] .navbar {
+  background: rgba(10,10,10,0.95) !important;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+[data-tema="oscuro"] .hero {
+  background: linear-gradient(135deg, #050508 0%, #001534) !important;
+}
+
+[data-tema="oscuro"] .habitacion-card {
+  background: #1C1A17 !important;
+  border-color: rgba(201,168,76,0.15) !important;
+}
+
+[data-tema="oscuro"] .hab-header {
+  background: rgb(25 74 167 / 68%) !important;
+  color: #c9d2d7 !important;
+}
+
+[data-tema="oscuro"] .precio-monto {
+  color: #3df355 !important;
+}
+
+[data-tema="oscuro"] .btn-reservar {
+  background: #3cff6899 !important;
+  color: #e3ebe2 !important;
+  border-color: rgb(246 249 243) !important;
+}
+
+[data-tema="oscuro"] .btn-reservar:hover {
+  background: #C9A84C !important;
+  color: #0A0A0A !important;
+}
+
+[data-tema="oscuro"] .buscador {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(201,168,76,0.2) !important;
+}
+
+[data-tema="oscuro"] .buscador-campo input {
+  color: #E8E0D0;
+  color-scheme: dark;
+}
+
+[data-tema="oscuro"] .hab-descripcion,
+[data-tema="oscuro"] .hab-detalles span {
+  color: #dfd9cf !important;
+}
+
+[data-tema="oscuro"] .estado-vacio p {
+  color: #8A8070 !important;
+}
+
+[data-tema="oscuro"] .habitaciones-section {
+  background: #070f18 !important;
+}

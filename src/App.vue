@@ -4,6 +4,7 @@
 
 <script setup>
 import { RouterView } from 'vue-router'
+import './assets/main.css'
 </script>
 
 <style>
@@ -51,5 +52,15 @@ button {
 
 input, select, textarea {
   font-family: inherit;
+}
+
+[data-tema="oscuro"] .inicio-page {
+  background-color: #0A0A0A;
+  color: #E8E0D0;
+}
+
+[data-tema="oscuro"] .reservar-page {
+  background-color: #0A0A0A;
+  color: #E8E0D0;
 }
 </style>

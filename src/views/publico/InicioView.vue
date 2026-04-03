@@ -5,8 +5,8 @@
     <nav class="navbar">
       <div class="nav-brand">Hotel Manager</div>
       <div class="nav-links">
-        <RouterLink to="/app" class="btn-nav-app">App Admin</RouterLink>
-        <RouterLink to="/login" class="btn-nav">Acceso empleados</RouterLink>
+        <button class="btn-tema" @click="toggleTema" :title="temaOscuro ?
+         'Tema claro' : 'Tema oscuro'">{{ temaOscuro ? '☀' : '☾' }}</button>
       </div>
     </nav>
 
@@ -96,11 +96,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { habitacionService } from '../../api/services'
 
+
 const router = useRouter()
+const temaOscuro = ref(false)
 
 const fechaEntrada  = ref('')
 const fechaSalida   = ref('')
@@ -151,11 +153,41 @@ function irAReservar(habitacion) {
 function formatPrecio(valor) {
   return Number(valor).toLocaleString('es-CO')
 }
+
+onMounted(() => {
+  temaOscuro.value = localStorage.getItem('tema') === 'oscuro'
+  aplicarTema()
+})
+
+function toggleTema() {
+  temaOscuro.value = !temaOscuro.value
+  localStorage.setItem('tema', temaOscuro.value ? 'oscuro' : 'claro')
+  aplicarTema()
+}
+
+function aplicarTema() {
+  document.documentElement.setAttribute('data-tema', temaOscuro.value ? 'oscuro' : 'claro')
+}
 </script>
 
 <style scoped>
 .inicio-page {
   min-height: 100vh;
+}
+
+.btn-tema {
+  background: transparent;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: var(--color-gray-600);
+  transition: all 0.2s;
+}
+
+.btn-tema:hover {
+  background: var(--color-gray-100);
 }
 
 .navbar {
@@ -257,7 +289,7 @@ function formatPrecio(valor) {
 .buscador-campo label {
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--color-gray-600);
+  color: var(--color-gray-400);
 }
 
 .buscador-campo input {
@@ -266,7 +298,7 @@ function formatPrecio(valor) {
   border-radius: var(--radius);
   font-size: 0.9rem;
   outline: none;
-  color: var(--color-gray-800);
+  color: var(#a3a7ad);
 }
 
 .buscador-campo input:focus {

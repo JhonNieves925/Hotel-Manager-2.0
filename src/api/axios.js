@@ -5,12 +5,14 @@
 
 import axios from 'axios'
 
+// DESARROLLO LOCAL → baseURL: 'http://localhost:8080/api'
+// PRODUCCIÓN      → baseURL: '/api'
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',  //'/api',
-  headers: { 
-    'Content-Type': 'application/json'
-    //'ngrok-skip-browser-warning': 'true'
-   }
+  baseURL: 'http://localhost:8080/api' ,  //cambiar antes de subir
+  headers: {
+    'Content-Type': 'application/json',
+    //'ngrok-skip-browser-warning': 'true'  // solo para Ngrok
+  }
 })
 
 // Interceptor de request — agrega el token JWT si existe

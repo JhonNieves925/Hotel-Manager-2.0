@@ -190,6 +190,24 @@ async function handleReservar() {
   }
 }
 
+async function confirmar() {
+  cargando.value = true
+  error.value    = ''
+  try {
+    // Si está logueado agrega su id
+    if (auth.isLoggedIn && auth.usuario?.id) {
+      form.value.idHuespedUsuario = auth.usuario.id
+    }
+    console.log('Form enviado:', JSON.stringify(form.value))
+    await reservaService.crear(form.value)
+    router.push({ name: 'reservas' })
+  } catch (e) {
+    error.value = e.response?.data?.error || 'Error al crear la reserva'
+  } finally {
+    cargando.value = false
+  }
+}
+
 function formatFecha(fecha) {
   if (!fecha) return ''
   return new Date(fecha + 'T00:00:00').toLocaleDateString('es-CO', {
