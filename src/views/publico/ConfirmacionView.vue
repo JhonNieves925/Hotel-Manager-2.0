@@ -51,7 +51,18 @@
           </div>
         </div>
 
-        <RouterLink to="/" class="btn-inicio">Volver al inicio</RouterLink>
+        <!-- ACCIONES -->
+        <div class="acciones">
+          <button class="btn-factura" @click="descargarFactura" :disabled="descargando">
+            <span v-if="descargando" class="spinner-btn"></span>
+            <span v-else>↓ Descargar factura PDF</span>
+          </button>
+          <RouterLink to="/" class="btn-inicio">Volver al inicio</RouterLink>
+        </div>
+
+        <p class="nota-factura">
+          También puedes descargar tu factura en cualquier momento desde el panel de reservas
+        </p>
       </div>
 
       <div v-else class="error-msg">
@@ -67,10 +78,14 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { reservaService } from '../../api/services'
+import { useFacturaPDF } from '../../composables/useFacturaPDF'
 
 const route   = useRoute()
 const reserva = ref(null)
-const cargando = ref(true)
+const cargando   = ref(true)
+const descargando = ref(false)
+
+const { descargarPDF, formatFecha, formatPrecio, formatFormaPago } = useFacturaPDF()
 
 onMounted(async () => {
   try {
@@ -83,28 +98,17 @@ onMounted(async () => {
   }
 })
 
-function formatFecha(fecha) {
-  if (!fecha) return ''
-  return new Date(fecha + 'T00:00:00').toLocaleDateString('es-CO', {
-    day: '2-digit', month: 'long', year: 'numeric'
-  })
-}
-
-function formatPrecio(valor) {
-  return Number(valor).toLocaleString('es-CO')
-}
-
-function formatFormaPago(valor) {
-  const map = {
-    efectivo: 'Efectivo',
-    tarjeta_credito: 'Tarjeta de crédito',
-    tarjeta_debito: 'Tarjeta de débito',
-    transferencia: 'Transferencia',
-    pse: 'PSE',
-    nequi: 'Nequi',
-    daviplata: 'Daviplata'
+async function descargarFactura() {
+  if (!reserva.value) return
+  descargando.value = true
+  try {
+    await descargarPDF(reserva.value)
+  } catch (e) {
+    alert('Error al generar el PDF')
+    console.error(e)
+  } finally {
+    descargando.value = false
   }
-  return map[valor] || valor
 }
 </script>
 
@@ -118,12 +122,7 @@ function formatFormaPago(valor) {
   background: #fff;
   box-shadow: var(--shadow-sm);
 }
-
-.nav-brand {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
+.nav-brand { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); text-decoration: none; }
 
 .container {
   max-width: 520px;
@@ -131,11 +130,7 @@ function formatFormaPago(valor) {
   padding: 0 1rem;
 }
 
-.estado-cargando {
-  text-align: center;
-  color: var(--color-gray-400);
-  padding: 3rem;
-}
+.estado-cargando { text-align: center; color: var(--color-gray-400); padding: 3rem; }
 
 .confirmacion-card {
   background: #fff;
@@ -147,90 +142,102 @@ function formatFormaPago(valor) {
 }
 
 .check-icon {
-  width: 64px;
-  height: 64px;
+  width: 64px; height: 64px;
   background: #dcfce7;
   color: var(--color-success);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem; font-weight: 700;
   margin: 0 auto 1.25rem;
 }
 
 .confirmacion-card h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-gray-800);
-  margin-bottom: 0.4rem;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--color-gray-800); margin-bottom: 0.4rem;
 }
-
-.subtitulo {
-  color: var(--color-gray-400);
-  font-size: 0.9rem;
-  margin-bottom: 2rem;
-}
+.subtitulo { color: var(--color-gray-400); font-size: 0.9rem; margin-bottom: 2rem; }
 
 .detalles {
   border: 1px solid var(--color-gray-100);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   text-align: left;
 }
-
 .detalle-fila {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--color-gray-100);
+  font-size: 0.875rem;
 }
-
 .detalle-fila:last-child { border-bottom: none; }
+.detalle-fila.total { background: var(--color-gray-50); }
+.detalle-label { color: var(--color-gray-400); }
+.detalle-valor { font-weight: 600; color: var(--color-gray-800); }
+.detalle-fila.total .detalle-valor { color: var(--color-primary); font-size: 1rem; font-weight: 700; }
 
-.detalle-fila.total {
-  background: var(--color-gray-50);
+/* Acciones */
+.acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.detalle-fila.total .detalle-valor {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.detalle-label {
-  font-size: 0.825rem;
-  color: var(--color-gray-400);
-}
-
-.detalle-valor {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-gray-800);
-}
-
-.btn-inicio {
-  display: inline-block;
+.btn-factura {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
   background: var(--color-primary);
   color: #fff;
+  border: none;
   border-radius: var(--radius);
-  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: background 0.2s;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.btn-factura:hover { background: var(--color-primary-dark); }
+.btn-factura:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.btn-inicio:hover { background: var(--color-primary-dark); color: #fff; }
-
-.error-msg {
-  background: #fef2f2;
-  color: var(--color-danger);
-  border: 1px solid #fecaca;
+.btn-inicio {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: #fff;
+  color: var(--color-gray-600);
+  border: 1px solid var(--color-gray-200);
   border-radius: var(--radius);
-  padding: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s;
   text-align: center;
 }
+.btn-inicio:hover { background: var(--color-gray-50); }
+
+.nota-factura {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+  line-height: 1.5;
+}
+
+.error-msg { text-align: center; padding: 3rem; color: var(--color-gray-400); }
+.error-msg a { color: var(--color-primary); }
+
+/* Spinner */
+.spinner-btn {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>

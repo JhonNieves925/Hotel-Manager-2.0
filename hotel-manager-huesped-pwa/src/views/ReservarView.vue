@@ -190,6 +190,7 @@ onMounted(async () => {
     form.value.huesped.nombre   = auth.usuario.nombre
     form.value.huesped.apellido = auth.usuario.apellido
     form.value.huesped.email    = auth.usuario.email
+    form.value.huesped.telefono = auth.usuario.telefono || ''
   }
 
   try {

@@ -31,6 +31,7 @@ export const reservaService = {
   obtener:       (id)            => api.get(`/reservas/${id}`),
   reservasDeHoy: ()              => api.get('/reservas/hoy'),
   crear:         (data)          => api.post('/reservas', data),
+  editar: (id, data) => api.put(`/reservas/${id}`, data),
   cambiarEstado: (id, nuevoEstado) => api.patch(`/reservas/${id}/estado`, null, {
     params: { nuevoEstado }
   }),
