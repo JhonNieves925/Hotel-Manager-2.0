@@ -175,144 +175,251 @@ function formatPrecio(v) {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Montserrat:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
-.page { min-height: 100vh; background: var(--dark); display: flex; flex-direction: column; }
+/* ── Variables locales ── */
+:root {
+  --navy:        #0D1B3E;
+  --navy-2:      #112244;
+  --navy-3:      #1A2F5A;
+  --navy-card:   #0F2040;
+  --orange:      #E8773A;
+  --orange-light:#F28C4E;
+  --orange-dark: #C5602A;
+  --white:       #FFFFFF;
+  --white-muted: rgba(255,255,255,0.65);
+  --white-dim:   rgba(255,255,255,0.25);
+  --border:      rgba(255,255,255,0.08);
+  --border-orange: rgba(232,119,58,0.3);
+}
 
+.page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 40%, #1a0a2e 100%);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── HEADER ── */
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 1.5rem;
-  background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201,168,76,0.1);
+  padding: 0.9rem 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 1px 12px rgba(0,0,0,0.15);
 }
-.brand { display: flex; align-items: center; gap: 0.4rem;
-  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
-  letter-spacing: 0.15em; text-transform: uppercase; color: var(--text);
+
+.brand {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  color: #E8773A;
+  letter-spacing: 0.02em;
 }
-.brand-icon { color: var(--gold); font-size: 0.8rem; }
+.brand-icon { color: #E8773A; font-size: 1rem; }
 
 .btn-perfil {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #E8773A;
+  border: none;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.72rem; font-weight: 600; color: var(--gold); letter-spacing: 0.05em;
+  font-size: 0.72rem; font-weight: 700;
+  color: #fff; letter-spacing: 0.05em;
+  text-decoration: none;
 }
 
+/* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  display: flex; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(201,168,76,0.1);
+  display: flex;
+  background: #ffffff;
+  box-shadow: 0 -1px 12px rgba(0,0,0,0.12);
+  border-top: 1px solid rgba(0,0,0,0.06);
   padding-bottom: env(safe-area-inset-bottom);
 }
+
 .nav-item {
   flex: 1; display: flex; flex-direction: column; align-items: center;
-  gap: 0.25rem; padding: 0.75rem 0.5rem;
-  font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-muted); transition: color 0.2s; text-decoration: none;
+  gap: 0.2rem; padding: 0.7rem 0.5rem;
+  font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: #999; transition: color 0.2s; text-decoration: none;
 }
-.nav-item.active, .nav-item:hover { color: var(--gold); }
+.nav-item.active, .router-link-active { color: #E8773A !important; }
+.nav-item:hover { color: #E8773A; }
 .nav-icon { font-size: 1rem; }
 
+/* ── MAIN ── */
 .main {
-  flex: 1; padding: 5rem 1.5rem 6rem;
+  flex: 1;
+  padding: 5rem 1.5rem 6rem;
   max-width: 600px; margin: 0 auto; width: 100%;
 }
 
+/* ── PAGE HEADER ── */
 .page-header { margin-bottom: 1.5rem; }
 .page-header h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem; font-weight: 300; color: var(--text); margin-bottom: 0.25rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem; font-weight: 600;
+  color: #ffffff; margin-bottom: 0.25rem;
 }
-.page-header p { font-size: 0.75rem; color: var(--text-muted); }
+.page-header p {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.05em;
+}
 
+/* ── FILTROS ── */
 .filtros { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
 .filtro-btn {
-  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-muted); background: transparent;
-  border: 1px solid rgba(201,168,76,0.15); border-radius: 20px;
-  padding: 0.35rem 0.85rem; transition: all 0.2s;
+  font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  transition: all 0.2s;
 }
-.filtro-btn.active, .filtro-btn:hover {
-  color: var(--gold); border-color: rgba(201,168,76,0.4);
-  background: rgba(201,168,76,0.08);
+.filtro-btn.active,
+.filtro-btn:hover {
+  color: #E8773A;
+  border-color: rgba(232,119,58,0.5);
+  background: rgba(232,119,58,0.1);
 }
 
+/* ── CARGANDO ── */
 .cargando {
-  display: flex; align-items: center; gap: 0.75rem; justify-content: center;
-  padding: 3rem; color: var(--text-muted); font-size: 0.85rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  justify-content: center; padding: 3rem;
+  color: rgba(255,255,255,0.4); font-size: 0.85rem;
 }
 .spinner {
-  width: 20px; height: 20px; border: 2px solid rgba(201,168,76,0.2);
-  border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite;
+  width: 20px; height: 20px;
+  border: 2px solid rgba(232,119,58,0.2);
+  border-top-color: #E8773A;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── VACÍO ── */
 .vacio { text-align: center; padding: 4rem 1rem; }
-.vacio-icon { font-size: 2rem; color: var(--gold); opacity: 0.3; margin-bottom: 1rem; }
-.vacio-titulo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: var(--text); margin-bottom: 0.5rem; }
-.vacio-sub { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-.btn-reservar-nuevo {
-  display: inline-block; background: var(--gold); color: var(--dark);
-  border-radius: 4px; padding: 0.7rem 1.5rem;
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+.vacio-icon { font-size: 2rem; color: #E8773A; opacity: 0.3; margin-bottom: 1rem; }
+.vacio-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 400;
+  color: #fff; margin-bottom: 0.5rem;
 }
+.vacio-sub { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; }
+.btn-reservar-nuevo {
+  display: inline-block; background: #E8773A; color: #fff;
+  border-radius: 6px; padding: 0.7rem 1.5rem;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  transition: background 0.2s;
+}
+.btn-reservar-nuevo:hover { background: #F28C4E; }
 
+/* ── LISTA DE RESERVAS ── */
 .reservas-lista { display: flex; flex-direction: column; gap: 1rem; }
 
 .reserva-card {
-  background: #1C1A17; border: 1px solid rgba(201,168,76,0.12);
-  border-radius: 10px; overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s;
   animation: fadeUp 0.4s ease both;
 }
+.reserva-card:hover {
+  border-color: rgba(232,119,58,0.25);
+  transform: translateY(-1px);
+}
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .reserva-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0.85rem 1.1rem; border-bottom: 1px solid rgba(201,168,76,0.08);
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
 }
-.reserva-id { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.1em; }
+.reserva-id {
+  font-size: 0.68rem; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.12em; font-weight: 500;
+}
 
-.badge { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-.badge.pendiente  { background: rgba(217,119,6,0.15);  color: #fbbf24; }
-.badge.confirmada { background: rgba(37,99,235,0.15);  color: #93c5fd; }
-.badge.en_curso   { background: rgba(22,163,74,0.15);  color: #86efac; }
-.badge.completada { background: rgba(100,116,139,0.15); color: #94a3b8; }
-.badge.cancelada  { background: rgba(220,38,38,0.15);  color: #fca5a5; }
+/* ── BADGES ── */
+.badge {
+  display: inline-block; padding: 0.22rem 0.7rem;
+  border-radius: 20px; font-size: 0.62rem;
+  font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.badge.pendiente  { background: rgba(251,191,36,0.12);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+.badge.confirmada { background: rgba(99,179,237,0.12);  color: #63b3ed; border: 1px solid rgba(99,179,237,0.2); }
+.badge.en_curso   { background: rgba(72,187,120,0.12);  color: #68d391; border: 1px solid rgba(72,187,120,0.2); }
+.badge.completada { background: rgba(160,174,192,0.12); color: #a0aec0; border: 1px solid rgba(160,174,192,0.2); }
+.badge.cancelada  { background: rgba(252,129,74,0.12);  color: #fc814a; border: 1px solid rgba(252,129,74,0.2); }
 
 .reserva-hab {
-  padding: 0.85rem 1.1rem; display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1px solid rgba(201,168,76,0.06);
+  padding: 0.9rem 1.15rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-.hab-tipo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--text); }
-.hab-num { font-size: 0.72rem; color: var(--text-muted); }
+.hab-tipo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; font-weight: 400; color: #fff;
+}
+.hab-num { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
 
 .reserva-fechas {
   display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.85rem 1.1rem; border-bottom: 1px solid rgba(201,168,76,0.06);
+  padding: 0.9rem 1.15rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .fecha-item { display: flex; flex-direction: column; gap: 0.15rem; }
-.fecha-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.fecha-valor { font-size: 0.82rem; color: var(--text); font-weight: 500; }
-.fecha-sep { color: var(--gold); opacity: 0.4; font-size: 0.8rem; flex: 1; text-align: center; }
+.fecha-label {
+  font-size: 0.58rem; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.fecha-valor { font-size: 0.82rem; color: #fff; font-weight: 500; }
+.fecha-sep {
+  color: #E8773A; opacity: 0.5; font-size: 0.85rem;
+  flex: 1; text-align: center;
+}
 
 .reserva-footer {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0.85rem 1.1rem;
+  padding: 0.85rem 1.15rem;
 }
 .reserva-total { display: flex; align-items: baseline; gap: 0.5rem; }
-.total-label { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-.total-monto { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--gold); }
+.total-label {
+  font-size: 0.6rem; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.total-monto {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; font-weight: 600; color: #E8773A;
+}
 
 .btn-cancelar {
-  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-  color: #fca5a5; background: rgba(220,38,38,0.1);
-  border: 1px solid rgba(220,38,38,0.2); border-radius: 4px;
-  padding: 0.4rem 0.85rem; transition: all 0.2s;
+  font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(252,129,74,0.8);
+  background: rgba(252,129,74,0.08);
+  border: 1px solid rgba(252,129,74,0.2);
+  border-radius: 6px; padding: 0.4rem 0.9rem;
+  transition: all 0.2s;
 }
-.btn-cancelar:hover:not(:disabled) { background: rgba(220,38,38,0.2); }
-.btn-cancelar:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancelar:hover:not(:disabled) {
+  background: rgba(252,129,74,0.18);
+  border-color: rgba(252,129,74,0.4);
+  color: #fc814a;
+}
+.btn-cancelar:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>

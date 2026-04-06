@@ -3,18 +3,14 @@
 
     <header class="header">
       <button class="btn-volver" @click="router.back()">←</button>
-      <div class="brand">
-        <span class="brand-icon">✦</span>
-        <span>Hotel Manager</span>
-      </div>
+      <div class="brand">🏨 Hotel Manager</div>
       <div style="width:32px"></div>
     </header>
 
     <main class="main">
 
-      <!-- Resumen habitación -->
+      <!-- RESUMEN HABITACIÓN -->
       <div v-if="habitacion" class="resumen-card">
-        <div class="resumen-deco">✦</div>
         <div class="resumen-hab">
           <div class="hab-icon">{{ iconoTipo(habitacion.tipo) }}</div>
           <div>
@@ -22,43 +18,44 @@
             <div class="hab-num">Habitación {{ habitacion.numero }}</div>
           </div>
         </div>
-        <div class="resumen-estrellas">★★★★★</div>
+
         <div class="resumen-items">
           <div class="resumen-item">
-            <span>Check-in</span>
-            <span>{{ formatFecha(form.fechaEntrada) }}</span>
+            <span class="resumen-label">📅 Check-in</span>
+            <span class="resumen-valor">{{ formatFecha(form.fechaEntrada) }}</span>
+            <span class="resumen-hora">🕐 {{ formatHora(form.horaEntrada) }}</span>
           </div>
+          <div class="resumen-sep">→</div>
           <div class="resumen-item">
-            <span>Check-out</span>
-            <span>{{ formatFecha(form.fechaSalida) }}</span>
-          </div>
-          <div class="resumen-item">
-            <span>Noches</span>
-            <span>{{ noches }}</span>
+            <span class="resumen-label">📅 Check-out</span>
+            <span class="resumen-valor">{{ formatFecha(form.fechaSalida) }}</span>
+            <span class="resumen-hora">🕐 {{ formatHora(form.horaSalida) }}</span>
           </div>
         </div>
-        <div class="resumen-total">
-          <span>Total</span>
-          <span class="total-monto">${{ formatPrecio(total) }}</span>
+
+        <div class="resumen-footer">
+          <span class="resumen-noches">{{ noches }} noche{{ noches !== 1 ? 's' : '' }}</span>
+          <div class="resumen-total">
+            <span class="total-label">Total</span>
+            <span class="total-monto">${{ formatPrecio(total) }}</span>
+          </div>
         </div>
       </div>
 
       <div v-if="errorCarga" class="error-msg">⚠ {{ errorCarga }}</div>
 
-      <!-- Formulario -->
+      <!-- FORMULARIO -->
       <form @submit.prevent="confirmar" class="form" v-if="habitacion">
 
+        <!-- DATOS DEL HUÉSPED -->
         <div class="form-seccion">
-          <div class="seccion-label">
+          <div class="seccion-header">
             <span class="seccion-num">01</span>
-            <span>Datos del huésped</span>
-            <div class="seccion-linea"></div>
+            <span class="seccion-titulo">Datos del huésped</span>
           </div>
 
-          <!-- Si está logueado usa sus datos -->
           <div v-if="auth.isLoggedIn" class="datos-guardados">
-            <span class="datos-icon">◈</span>
-            <span>Usando tus datos registrados</span>
+            ✅ Usando tus datos registrados
           </div>
 
           <template v-else>
@@ -79,10 +76,11 @@
                   <option value="cc">Cédula</option>
                   <option value="ce">C. Extranjería</option>
                   <option value="pasaporte">Pasaporte</option>
+                  <option value="nit">NIT</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Número documento *</label>
+                <label>N° documento *</label>
                 <input v-model="form.huesped.numeroDocumento" type="text" placeholder="1234567890" required />
               </div>
             </div>
@@ -102,35 +100,61 @@
                 <input v-model="form.huesped.telefono" type="tel" placeholder="3001234567" required />
               </div>
               <div class="form-group">
-                <label>Email (opcional)</label>
+                <label>Email</label>
                 <input v-model="form.huesped.email" type="email" placeholder="juan@email.com" />
               </div>
             </div>
           </template>
         </div>
 
+        <!-- HORARIOS -->
         <div class="form-seccion">
-          <div class="seccion-label">
+          <div class="seccion-header">
             <span class="seccion-num">02</span>
-            <span>Forma de pago</span>
-            <div class="seccion-linea"></div>
+            <span class="seccion-titulo">Horarios de llegada y salida</span>
           </div>
-          <div class="form-group">
-            <label>Método de pago *</label>
-            <select v-model="form.formaPago" required>
-              <option value="">Selecciona</option>
-              <option value="efectivo">Efectivo</option>
-              <option value="tarjeta_credito">Tarjeta de crédito</option>
-              <option value="tarjeta_debito">Tarjeta de débito</option>
-              <option value="transferencia">Transferencia</option>
-              <option value="pse">PSE</option>
-              <option value="nequi">Nequi</option>
-              <option value="daviplata">Daviplata</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label>🕐 Hora de llegada (check-in)</label>
+              <select v-model="form.horaEntrada">
+                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+              </select>
+              <span class="campo-hint">Hora estimada de llegada al hotel</span>
+            </div>
+            <div class="form-group">
+              <label>🕐 Hora de salida (check-out)</label>
+              <select v-model="form.horaSalida">
+                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+              </select>
+              <span class="campo-hint">Hora estimada de salida del hotel</span>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Observaciones (opcional)</label>
-            <textarea v-model="form.observaciones" rows="2" placeholder="Llegada tarde, cama extra..."></textarea>
+        </div>
+
+        <!-- PAGO -->
+        <div class="form-seccion">
+          <div class="seccion-header">
+            <span class="seccion-num">03</span>
+            <span class="seccion-titulo">Forma de pago</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Método de pago *</label>
+              <select v-model="form.formaPago" required>
+                <option value="">Selecciona...</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta_credito">Tarjeta de crédito</option>
+                <option value="tarjeta_debito">Tarjeta de débito</option>
+                <option value="transferencia">Transferencia bancaria</option>
+                <option value="pse">PSE</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Observaciones</label>
+              <textarea v-model="form.observaciones" rows="2" placeholder="Llegada tarde, cama extra, etc."></textarea>
+            </div>
           </div>
         </div>
 
@@ -138,10 +162,10 @@
 
         <button type="submit" class="btn-confirmar" :disabled="cargando">
           <span v-if="cargando" class="spinner"></span>
-          <span v-else>Confirmar reserva · ${{ formatPrecio(total) }}</span>
+          <span v-else>✅ Confirmar reserva · ${{ formatPrecio(total) }}</span>
         </button>
 
-        <p class="form-nota">✦ Reserva segura y confirmada al instante</p>
+        <p class="form-nota">🔒 Reserva segura y confirmada al instante</p>
 
       </form>
 
@@ -168,6 +192,8 @@ const form = ref({
   idHabitacion:  null,
   fechaEntrada:  '',
   fechaSalida:   '',
+  horaEntrada:   '15:00',
+  horaSalida:    '12:00',
   formaPago:     '',
   observaciones: '',
   huesped: {
@@ -177,20 +203,39 @@ const form = ref({
   }
 })
 
+// Horas en intervalos de 30 min
+const horasDisponibles = computed(() => {
+  const horas = []
+  for (let h = 0; h < 24; h++) {
+    for (let m of [0, 30]) {
+      const hStr = String(h).padStart(2, '0')
+      const mStr = String(m).padStart(2, '0')
+      const val  = `${hStr}:${mStr}`
+      const periodo = h < 12 ? 'AM' : 'PM'
+      const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+      horas.push({ value: val, label: `${h12}:${mStr} ${periodo}` })
+    }
+  }
+  return horas
+})
+
 onMounted(async () => {
-  const { idHabitacion, entrada, salida } = route.query
+  const { idHabitacion, entrada, salida, horaEntrada, horaSalida } = route.query
   if (!idHabitacion || !entrada || !salida) { router.push('/inicio'); return }
 
   form.value.idHabitacion = Number(idHabitacion)
   form.value.fechaEntrada = entrada
   form.value.fechaSalida  = salida
+  // Usar horas elegidas en el buscador si vienen
+  if (horaEntrada) form.value.horaEntrada = horaEntrada
+  if (horaSalida)  form.value.horaSalida  = horaSalida
 
-  // Si está logueado prellenar datos
+  // Prellenar datos del usuario logueado
   if (auth.isLoggedIn && auth.usuario) {
-    form.value.huesped.nombre   = auth.usuario.nombre
-    form.value.huesped.apellido = auth.usuario.apellido
-    form.value.huesped.email    = auth.usuario.email
-    form.value.huesped.telefono = auth.usuario.telefono || ''
+    form.value.huesped.nombre    = auth.usuario.nombre    || ''
+    form.value.huesped.apellido  = auth.usuario.apellido  || ''
+    form.value.huesped.email     = auth.usuario.email     || ''
+    form.value.huesped.telefono  = auth.usuario.telefono  || ''
   }
 
   try {
@@ -203,28 +248,15 @@ onMounted(async () => {
 
 const noches = computed(() => {
   if (!form.value.fechaEntrada || !form.value.fechaSalida) return 0
-  return Math.max(0, (new Date(form.value.fechaSalida) - new Date(form.value.fechaEntrada)) / 86400000)
+  return Math.max(0,
+    Math.round((new Date(form.value.fechaSalida) - new Date(form.value.fechaEntrada)) / 86400000)
+  )
 })
 
 const total = computed(() => {
   if (!habitacion.value || !noches.value) return 0
   return habitacion.value.precioNoche * noches.value
 })
-
-function iconoTipo(tipo) {
-  return { 'Suite': '◆', 'Doble': '◈', 'Triple': '⬡', 'Sencilla': '○' }[tipo] || '◈'
-}
-
-function formatFecha(f) {
-  if (!f) return ''
-  return new Date(f + 'T00:00:00').toLocaleDateString('es-CO', {
-    day: '2-digit', month: 'short', year: 'numeric'
-  })
-}
-
-function formatPrecio(v) {
-  return Number(v || 0).toLocaleString('es-CO')
-}
 
 async function confirmar() {
   cargando.value = true
@@ -233,7 +265,7 @@ async function confirmar() {
     if (auth.isLoggedIn && auth.usuario?.id) {
       form.value.idHuespedUsuario = auth.usuario.id
     }
-    await reservaService.crear(form.value)
+    const res = await reservaService.crear(form.value)
     router.push({ name: 'reservas' })
   } catch (e) {
     error.value = e.response?.data?.error || 'Error al crear la reserva'
@@ -241,117 +273,179 @@ async function confirmar() {
     cargando.value = false
   }
 }
+
+function iconoTipo(tipo) {
+  return { 'Suite': '🛏️', 'Doble': '🛏', 'Triple': '🏠', 'Sencilla': '🪑' }[tipo] || '🛏️'
+}
+
+function formatFecha(f) {
+  if (!f) return ''
+  return new Date(f + 'T00:00:00').toLocaleDateString('es-CO', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  })
+}
+
+function formatHora(h) {
+  if (!h) return ''
+  const [hh, mm] = h.split(':')
+  const hNum = parseInt(hh)
+  const periodo = hNum < 12 ? 'AM' : 'PM'
+  const h12 = hNum === 0 ? 12 : hNum > 12 ? hNum - 12 : hNum
+  return `${h12}:${mm} ${periodo}`
+}
+
+function formatPrecio(v) {
+  return Number(v || 0).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+}
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Montserrat:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap');
 
-.page { min-height: 100vh; background: var(--dark); }
+* { box-sizing: border-box; }
+.page { min-height: 100vh; background: #fffbf5; font-family: 'Inter', sans-serif; }
 
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-between; align-items: center;
   padding: 1rem 1.5rem;
-  background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201,168,76,0.1);
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
-.btn-volver { color: var(--text-muted); font-size: 1.1rem; background: transparent; border: none; cursor: pointer; transition: color 0.2s; }
-.btn-volver:hover { color: var(--gold); }
-.brand { display: flex; align-items: center; gap: 0.4rem;
-  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
-  letter-spacing: 0.15em; text-transform: uppercase; color: var(--text);
+.btn-volver {
+  background: none; border: none; font-size: 1.3rem;
+  color: #64748b; cursor: pointer;
 }
-.brand-icon { color: var(--gold); font-size: 0.8rem; }
+.btn-volver:hover { color: #e85d04; }
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; font-weight: 700; color: #e85d04;
+}
 
-.main { padding: 5rem 1.5rem 3rem; max-width: 500px; margin: 0 auto; }
+.main { padding: 5rem 1.25rem 3rem; max-width: 600px; margin: 0 auto; }
 
 /* RESUMEN */
 .resumen-card {
-  background: #1C1A17; border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 16px; padding: 1.5rem;
+  margin-bottom: 1.75rem; color: #fff;
+  box-shadow: 0 8px 30px rgba(26,26,46,0.3);
 }
-.resumen-deco { font-size: 0.9rem; color: var(--gold); opacity: 0.4; margin-bottom: 1rem; }
-.resumen-hab { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.75rem; }
-.hab-icon {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+
+.resumen-hab {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;
+}
+.hab-icon { font-size: 2rem; }
+.hab-tipo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 700; color: #ffb347;
+}
+.hab-num { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+
+.resumen-items {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  background: rgba(255,255,255,0.08); border-radius: 10px;
+  padding: 1rem; margin-bottom: 1rem;
+}
+.resumen-sep { color: rgba(255,255,255,0.4); padding-top: 0.5rem; font-size: 1.2rem; }
+.resumen-item { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.resumen-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.05em; }
+.resumen-valor { font-size: 0.9rem; font-weight: 600; color: #fff; }
+.resumen-hora  { font-size: 0.78rem; color: #ffb347; }
+
+.resumen-footer {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.resumen-noches { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+.total-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-right: 0.5rem; }
+.total-monto { font-size: 1.4rem; font-weight: 800; color: #ffb347; }
+
+/* FORMULARIO */
+.form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.form-seccion {
+  background: #fff; border-radius: 14px;
+  padding: 1.25rem; border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.seccion-header {
+  display: flex; align-items: center; gap: 0.65rem;
+  margin-bottom: 1.1rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.seccion-num {
+  background: #e85d04; color: #fff;
+  width: 26px; height: 26px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; color: var(--gold); flex-shrink: 0;
+  font-size: 0.72rem; font-weight: 800; flex-shrink: 0;
 }
-.hab-tipo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--text); }
-.hab-num { font-size: 0.7rem; color: var(--text-muted); }
-.resumen-estrellas { font-size: 0.6rem; color: var(--gold); letter-spacing: 0.25em; opacity: 0.6; margin-bottom: 1rem; }
-
-.resumen-items { border: 1px solid rgba(201,168,76,0.08); border-radius: 6px; overflow: hidden; margin-bottom: 0.75rem; }
-.resumen-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.6rem 0.85rem; border-bottom: 1px solid rgba(201,168,76,0.06);
-  font-size: 0.78rem;
-}
-.resumen-item:last-child { border-bottom: none; }
-.resumen-item span:first-child { color: var(--text-muted); }
-.resumen-item span:last-child { color: var(--text); font-weight: 500; }
-
-.resumen-total {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.85rem; background: rgba(201,168,76,0.06);
-  border: 1px solid rgba(201,168,76,0.15); border-radius: 6px;
-  font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;
-}
-.total-monto { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--gold); }
-
-/* FORM */
-.form { display: flex; flex-direction: column; gap: 2rem; }
-.form-seccion { display: flex; flex-direction: column; gap: 0.85rem; }
-
-.seccion-label { display: flex; align-items: center; gap: 0.75rem; }
-.seccion-num { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); opacity: 0.4; font-weight: 300; line-height: 1; }
-.seccion-label span:nth-child(2) { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
-.seccion-linea { flex: 1; height: 1px; background: rgba(201,168,76,0.1); }
+.seccion-titulo { font-size: 0.9rem; font-weight: 700; color: #1a1a2e; }
 
 .datos-guardados {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-size: 0.78rem; color: var(--gold);
-  background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 6px; padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem; background: #f0fdf4;
+  border: 1px solid #86efac; border-radius: 8px;
+  font-size: 0.85rem; color: #15803d; font-weight: 500;
 }
-.datos-icon { font-size: 0.6rem; }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
-.form-group label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+.form-row:last-child { margin-bottom: 0; }
 
-.form-group input, .form-group select, .form-group textarea {
-  background: #1A1A1A; border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 4px; padding: 0.75rem 1rem;
-  font-family: 'Montserrat', sans-serif; font-size: 0.875rem;
-  font-weight: 300; color: var(--text); outline: none; transition: all 0.3s; width: 100%;
+.form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.form-group label { font-size: 0.75rem; font-weight: 600; color: #475569; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid #e2e8f0; border-radius: 8px;
+  font-size: 0.875rem; color: #1a1a2e; background: #f8fafc;
+  outline: none; transition: border-color 0.2s;
+  font-family: 'Inter', sans-serif;
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: rgba(201,168,76,0.45); }
-.form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-dim); }
-.form-group select option { background: #1A1A1A; }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: #e85d04; background: #fff; }
 .form-group textarea { resize: none; }
+.campo-hint { font-size: 0.7rem; color: #94a3b8; }
 
 .error-msg {
-  background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2);
-  border-radius: 4px; padding: 0.7rem 1rem; font-size: 0.8rem; color: #FCA5A5;
+  padding: 0.75rem 1rem; background: #fef2f2;
+  border: 1px solid #fecaca; border-radius: 10px;
+  font-size: 0.85rem; color: #dc2626;
 }
 
 .btn-confirmar {
-  background: var(--gold); color: var(--dark); border: none; border-radius: 4px;
-  padding: 1rem; font-family: 'Montserrat', sans-serif; font-size: 0.72rem;
-  font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
-  transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e85d04, #c44d02);
+  color: #fff; border: none; border-radius: 12px;
+  font-size: 1rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center;
+  justify-content: center; gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(232,93,4,0.35);
 }
-.btn-confirmar:hover:not(:disabled) { background: var(--gold-light); }
-.btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-confirmar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(232,93,4,0.45);
+}
+.btn-confirmar:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.spinner { width: 15px; height: 15px; border: 2px solid rgba(0,0,0,0.3); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.form-nota { text-align: center; font-size: 0.65rem; color: var(--text-dim); }
+.form-nota {
+  text-align: center; font-size: 0.78rem;
+  color: #94a3b8; margin-top: -0.5rem;
+}
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .form-row { grid-template-columns: 1fr; }
+  .resumen-items { flex-direction: column; gap: 0.5rem; }
+  .resumen-sep { display: none; }
 }
 </style>

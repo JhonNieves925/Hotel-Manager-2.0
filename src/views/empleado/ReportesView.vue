@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-layout">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-brand">Hotel Manager</div>
       <nav class="sidebar-nav">
@@ -18,24 +17,20 @@
       </div>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
 
-      <!-- ENCABEZADO -->
       <div class="page-header">
         <h1>{{ authStore.isAdmin ? 'Reportes financieros' : 'Reportes de ocupación' }}</h1>
         <span class="fecha-hoy">{{ fechaHoy }}</span>
       </div>
 
-      <!-- TABS DE PERÍODO -->
+      <!-- TABS PERÍODO -->
       <div class="periodo-tabs">
         <button
-          v-for="p in periodos"
-          :key="p.key"
+          v-for="p in periodos" :key="p.key"
           :class="['tab', { active: periodoActivo === p.key }]"
           @click="cambiarPeriodo(p.key)"
         >{{ p.label }}</button>
-
         <div v-if="periodoActivo === 'anual'" class="anio-selector">
           <select v-model="anioSeleccionado" @change="cargarReporte">
             <option v-for="a in aniosDisponibles" :key="a" :value="a">{{ a }}</option>
@@ -55,41 +50,41 @@
             <label class="rango-label">Hasta</label>
             <input type="date" v-model="rangoHasta" class="rango-input" :min="rangoDesde" :max="hoyISO" />
           </div>
-          <button class="btn-aplicar" @click="aplicarRango" :disabled="!rangoDesde || !rangoHasta">
-            Aplicar
-          </button>
+          <button class="btn-aplicar" @click="aplicarRango" :disabled="!rangoDesde || !rangoHasta">Aplicar</button>
           <button v-if="rangoAplicado" class="btn-limpiar" @click="limpiarRango">✕ Limpiar</button>
         </div>
         <p v-if="rangoAplicado" class="rango-info">
-          Mostrando reservas del <strong>{{ formatFechaCorta(rangoDesde) }}</strong>
+          Mostrando del <strong>{{ formatFechaCorta(rangoDesde) }}</strong>
           al <strong>{{ formatFechaCorta(rangoHasta) }}</strong>
           — {{ reservasPeriodo.length }} resultado(s)
         </p>
-        <p v-else class="rango-info muted">Selecciona un rango de fechas y presiona Aplicar</p>
+        <p v-else class="rango-info muted">Selecciona un rango y presiona Aplicar</p>
       </div>
 
       <!-- CARGANDO -->
-      <div v-if="cargando" class="estado-cargando">Cargando reporte...</div>
-
-      <!-- MENSAJE RANGO NO APLICADO -->
-      <div v-else-if="periodoActivo === 'personalizado' && !rangoAplicado" class="estado-espera">
-        <div class="espera-icono">📅</div>
-        <p>Selecciona el rango de fechas y presiona <strong>Aplicar</strong> para ver los resultados</p>
+      <div v-if="cargando" class="estado-cargando">
+        <div class="spinner"></div> Cargando reporte...
       </div>
 
-      <!-- CONTENIDO DEL REPORTE -->
+      <!-- ESPERA RANGO -->
+      <div v-else-if="periodoActivo === 'personalizado' && !rangoAplicado" class="estado-espera">
+        <div class="espera-icono">📅</div>
+        <p>Selecciona el rango y presiona <strong>Aplicar</strong></p>
+      </div>
+
+      <!-- CONTENIDO -->
       <div v-else-if="reporte || periodoActivo === 'personalizado'" class="reporte-contenido">
 
-        <!-- ── TARJETAS STATS — se ocultan en modo personalizado (no hay endpoint para rangos arbitrarios) ── -->
+        <!-- STATS GRID (oculto en personalizado) -->
         <template v-if="periodoActivo !== 'personalizado'">
           <div v-if="authStore.isAdmin" class="stats-grid">
             <div class="stat-card ingresos">
-              <div class="stat-icono">ingresos</div>
+              <div class="stat-icono">$</div>
               <div class="stat-numero">${{ formatPrecio(reporte.total) }}</div>
-              <div class="stat-label">{{ labelPeriodo }}</div>
+              <div class="stat-label">Total ingresos — {{ labelPeriodo }}</div>
             </div>
             <div class="stat-card transacciones">
-              <div class="stat-icono">pagos</div>
+              <div class="stat-icono">#</div>
               <div class="stat-numero">{{ reporte.transacciones }}</div>
               <div class="stat-label">Pagos procesados</div>
             </div>
@@ -122,18 +117,14 @@
             </div>
           </div>
 
-          <!-- ── BARRA DE OCUPACIÓN ── -->
+          <!-- BARRA OCUPACIÓN -->
           <div class="ocupacion-card">
             <div class="ocupacion-header">
               <span class="ocupacion-titulo">Ocupación actual</span>
               <span class="ocupacion-pct" :class="colorBarra">{{ pctOcupacion }}%</span>
             </div>
             <div class="barra-fondo">
-              <div
-                class="barra-relleno"
-                :style="{ width: pctOcupacion + '%' }"
-                :class="colorBarra"
-              ></div>
+              <div class="barra-relleno" :class="colorBarra" :style="{ width: pctOcupacion + '%' }"></div>
             </div>
             <div class="ocupacion-detalle">
               <span class="dot ocupada"></span> {{ reporte.habitacionesOcupadas }} ocupadas &nbsp;
@@ -143,10 +134,27 @@
           </div>
         </template>
 
-        <!-- ── SPLIT: Resumen + Tabla de reservas ── -->
+        <!-- ═══ GRÁFICA DE TENDENCIA ═══ -->
+        <div class="grafica-card" v-if="periodoActivo !== 'hoy' && datosGrafica.labels.length > 1">
+          <div class="grafica-header">
+            <div>
+              <span class="grafica-titulo">Tendencia de reservas</span>
+              <span class="grafica-subtitulo">{{ labelPeriodo }}</span>
+            </div>
+            <div class="grafica-leyenda">
+              <span class="leyenda-item"><span class="leyenda-dot azul"></span>Reservas</span>
+              <span v-if="authStore.isAdmin" class="leyenda-item"><span class="leyenda-dot verde"></span>Ingresos</span>
+            </div>
+          </div>
+          <div class="grafica-wrap">
+            <canvas ref="canvasGrafica" height="110"></canvas>
+          </div>
+        </div>
+
+        <!-- SPLIT: Resumen + Tabla -->
         <div class="split-layout">
 
-          <!-- Resumen numérico -->
+          <!-- RESUMEN -->
           <div class="resumen-card">
             <h3 class="card-title">
               {{ periodoActivo === 'personalizado' ? 'Resumen del rango' : 'Resumen — ' + labelPeriodo }}
@@ -164,14 +172,11 @@
               <div class="resumen-fila">
                 <span class="resumen-label">Promedio por pago</span>
                 <span class="resumen-valor">
-                  ${{ reporte.transacciones > 0
-                    ? formatPrecio(reporte.total / reporte.transacciones)
-                    : '0' }}
+                  ${{ reporte.transacciones > 0 ? formatPrecio(reporte.total / reporte.transacciones) : '0' }}
                 </span>
               </div>
             </template>
 
-            <!-- Resumen calculado desde las reservas filtradas (funciona para todos los modos) -->
             <div class="resumen-fila">
               <span class="resumen-label">Reservas encontradas</span>
               <span class="resumen-valor destacado">{{ reservasPeriodo.length }}</span>
@@ -200,12 +205,11 @@
             </template>
           </div>
 
-          <!-- Tabla de reservas del período -->
+          <!-- TABLA RESERVAS -->
           <div class="reservas-card">
             <div class="reservas-card-header">
               <h3 class="card-title">Reservas del período</h3>
               <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-                <!-- Filtro por estado -->
                 <select v-model="filtroEstado" class="filtro-select">
                   <option value="">Todos los estados</option>
                   <option value="pendiente">Pendiente</option>
@@ -219,10 +223,7 @@
             </div>
 
             <div v-if="cargandoReservas" class="estado-mini">Cargando...</div>
-
-            <div v-else-if="reservasPeriodo.length === 0" class="estado-mini vacio">
-              No hay reservas en este período
-            </div>
+            <div v-else-if="reservasPeriodo.length === 0" class="estado-mini vacio">No hay reservas en este período</div>
 
             <div v-else class="tabla-wrapper">
               <table class="tabla-reservas">
@@ -255,9 +256,7 @@
                     </td>
                     <td class="col-noches">{{ r.noches }}</td>
                     <td v-if="authStore.isAdmin" class="col-total">${{ formatPrecio(r.valorTotal) }}</td>
-                    <td>
-                      <span :class="['badge', r.estadoReserva]">{{ labelEstado(r.estadoReserva) }}</span>
-                    </td>
+                    <td><span :class="['badge', r.estadoReserva]">{{ labelEstado(r.estadoReserva) }}</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -265,24 +264,17 @@
           </div>
 
         </div>
-        <!-- /split-layout -->
-
       </div>
-      <!-- /reporte-contenido -->
 
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
-import {
-  reporteAdminService,
-  reporteOcupacionService,
-  reservaService
-} from '../../api/services'
+import { reporteAdminService, reporteOcupacionService, reservaService } from '../../api/services'
 
 const router    = useRouter()
 const authStore = useAuthStore()
@@ -295,20 +287,20 @@ const periodos = [
   { key: 'personalizado', label: '📅 Personalizado' }
 ]
 
-const periodoActivo    = ref('hoy')
-const anioSeleccionado = ref(new Date().getFullYear())
-const reporte          = ref(null)
-const todasLasReservas = ref([])
-const cargando         = ref(false)
-const cargandoReservas = ref(false)
-const filtroEstado     = ref('')
+const periodoActivo      = ref('hoy')
+const anioSeleccionado   = ref(new Date().getFullYear())
+const reporte            = ref(null)
+const todasLasReservas   = ref([])
+const cargando           = ref(false)
+const cargandoReservas   = ref(false)
+const filtroEstado       = ref('')
+const rangoDesde         = ref('')
+const rangoHasta         = ref('')
+const rangoAplicado      = ref(false)
+const canvasGrafica      = ref(null)
+let   chartInstance      = null
 
-// Rango personalizado
-const rangoDesde   = ref('')
-const rangoHasta   = ref('')
-const rangoAplicado = ref(false)
-
-// ── Computadas ──────────────────────────────────────────────
+// ── Computadas ───────────────────────────────────────────────
 const hoyISO = computed(() => new Date().toISOString().slice(0, 10))
 
 const aniosDisponibles = computed(() => {
@@ -322,25 +314,22 @@ const fechaHoy = computed(() =>
   })
 )
 
-const labelPeriodo = computed(() => {
-  const map = {
-    hoy:          'Hoy — ' + new Date().toLocaleDateString('es-CO'),
-    semana:       'Semana actual',
-    mes:          'Mes de ' + new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }),
-    anual:        'Año ' + anioSeleccionado.value,
-    personalizado: rangoAplicado.value
-      ? formatFechaCorta(rangoDesde.value) + ' al ' + formatFechaCorta(rangoHasta.value)
-      : 'Rango personalizado'
-  }
-  return map[periodoActivo.value]
-})
+const labelPeriodo = computed(() => ({
+  hoy:          'Hoy — ' + new Date().toLocaleDateString('es-CO'),
+  semana:       'Semana actual',
+  mes:          'Mes de ' + new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }),
+  anual:        'Año ' + anioSeleccionado.value,
+  personalizado: rangoAplicado.value
+    ? formatFechaCorta(rangoDesde.value) + ' al ' + formatFechaCorta(rangoHasta.value)
+    : 'Rango personalizado'
+})[periodoActivo.value])
 
 const pctOcupacion = computed(() => {
   if (!reporte.value) return 0
   if (authStore.isAdmin) {
-    const total = (reporte.value.habitacionesOcupadas    || 0)
-                + (reporte.value.habitacionesDisponibles || 0)
-                + (reporte.value.habitacionesMantenimiento || 0)
+    const total = (reporte.value.habitacionesOcupadas || 0) +
+                  (reporte.value.habitacionesDisponibles || 0) +
+                  (reporte.value.habitacionesMantenimiento || 0)
     return total > 0 ? Math.round((reporte.value.habitacionesOcupadas / total) * 100) : 0
   }
   return reporte.value.porcentajeOcupacion || 0
@@ -358,13 +347,47 @@ const reservasPeriodo = computed(() => {
   return filtradas.filter(r => r.estadoReserva === filtroEstado.value)
 })
 
-// Calculados desde las reservas filtradas (útiles en modo personalizado)
 const totalIngresosReservas = computed(() =>
-  reservasPeriodo.value.reduce((sum, r) => sum + Number(r.valorTotal || 0), 0)
+  reservasPeriodo.value.reduce((s, r) => s + Number(r.valorTotal || 0), 0)
 )
 const totalNochesReservas = computed(() =>
-  reservasPeriodo.value.reduce((sum, r) => sum + Number(r.noches || 0), 0)
+  reservasPeriodo.value.reduce((s, r) => s + Number(r.noches || 0), 0)
 )
+
+// ── Datos para la gráfica ────────────────────────────────────
+const datosGrafica = computed(() => {
+  const reservas = filtrarPorPeriodo(todasLasReservas.value) // sin filtro de estado
+  if (!reservas.length) return { labels: [], reservasData: [], ingresosData: [] }
+
+  const agrupado = {}
+
+  reservas.forEach(r => {
+    const fecha = parsearFecha(r.createdAt || r.fechaEntrada)
+    if (!fecha || isNaN(fecha.getTime())) return
+
+    let clave = ''
+    if (periodoActivo.value === 'semana') {
+      clave = fecha.toLocaleDateString('es-CO', { weekday: 'short', day: '2-digit' })
+    } else if (periodoActivo.value === 'mes') {
+      clave = fecha.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
+    } else if (periodoActivo.value === 'anual') {
+      clave = fecha.toLocaleDateString('es-CO', { month: 'short', year: 'numeric' })
+    } else if (periodoActivo.value === 'personalizado' && rangoAplicado.value) {
+      clave = fecha.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
+    }
+
+    if (!clave) return
+    if (!agrupado[clave]) agrupado[clave] = { count: 0, ingresos: 0 }
+    agrupado[clave].count++
+    agrupado[clave].ingresos += Number(r.valorTotal || 0)
+  })
+
+  const labels       = Object.keys(agrupado)
+  const reservasData = labels.map(k => agrupado[k].count)
+  const ingresosData = labels.map(k => agrupado[k].ingresos)
+
+  return { labels, reservasData, ingresosData }
+})
 
 // ── Lifecycle ────────────────────────────────────────────────
 onMounted(() => {
@@ -372,9 +395,12 @@ onMounted(() => {
   cargarTodasLasReservas()
 })
 
+// Redibujar gráfica cuando cambian los datos
+watch(datosGrafica, () => nextTick(dibujarGrafica))
+
 // ── Métodos ──────────────────────────────────────────────────
 async function cargarReporte() {
-  if (periodoActivo.value === 'personalizado') return  // no hay endpoint para rangos libres
+  if (periodoActivo.value === 'personalizado') return
   cargando.value = true
   reporte.value  = null
   try {
@@ -395,11 +421,8 @@ async function cargarReporte() {
       }
     }
     reporte.value = res.data
-  } catch (e) {
-    console.error('Error cargando reporte:', e)
-  } finally {
-    cargando.value = false
-  }
+  } catch (e) { console.error(e) }
+  finally { cargando.value = false }
 }
 
 async function cargarTodasLasReservas() {
@@ -407,20 +430,13 @@ async function cargarTodasLasReservas() {
   try {
     const res = await reservaService.listarTodas()
     todasLasReservas.value = res.data
-  } catch (e) {
-    console.error('Error cargando reservas:', e)
-  } finally {
-    cargandoReservas.value = false
-  }
+  } catch (e) { console.error(e) }
+  finally { cargandoReservas.value = false }
 }
 
-// Parsea cualquier formato de fecha que devuelva Spring/Jackson
 function parsearFecha(valor) {
   if (!valor) return null
-  if (Array.isArray(valor)) {
-    const [y, m, d, h = 0, min = 0, s = 0] = valor
-    return new Date(y, m - 1, d, h, min, s)
-  }
+  if (Array.isArray(valor)) { const [y,m,d,h=0,min=0,s=0]=valor; return new Date(y,m-1,d,h,min,s) }
   if (typeof valor === 'string') {
     if (valor.length === 10) return new Date(valor + 'T00:00:00')
     return new Date(valor)
@@ -429,38 +445,29 @@ function parsearFecha(valor) {
 }
 
 function filtrarPorPeriodo(reservas) {
-  const hoy = new Date()
-  hoy.setHours(0, 0, 0, 0)
-
+  const hoy = new Date(); hoy.setHours(0,0,0,0)
   return reservas.filter(r => {
     const fecha = parsearFecha(r.createdAt) ?? parsearFecha(r.fechaEntrada)
     if (!fecha || isNaN(fecha.getTime())) return true
-
     switch (periodoActivo.value) {
       case 'hoy': {
-        const fin = new Date(hoy); fin.setDate(fin.getDate() + 1)
+        const fin = new Date(hoy); fin.setDate(fin.getDate()+1)
         return fecha >= hoy && fecha < fin
       }
       case 'semana': {
         const lunes = new Date(hoy)
-        const diasDesde = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1
-        lunes.setDate(hoy.getDate() - diasDesde)
-        const domingo = new Date(lunes); domingo.setDate(lunes.getDate() + 7)
-        return fecha >= lunes && fecha < domingo
+        lunes.setDate(hoy.getDate() - (hoy.getDay()===0?6:hoy.getDay()-1))
+        const dom = new Date(lunes); dom.setDate(lunes.getDate()+7)
+        return fecha >= lunes && fecha < dom
       }
-      case 'mes': {
-        return fecha.getMonth()    === hoy.getMonth() &&
-               fecha.getFullYear() === hoy.getFullYear()
-      }
-      case 'anual': {
-        return fecha.getFullYear() === Number(anioSeleccionado.value)
-      }
-      case 'personalizado': {
+      case 'mes':
+        return fecha.getMonth()===hoy.getMonth() && fecha.getFullYear()===hoy.getFullYear()
+      case 'anual':
+        return fecha.getFullYear()===Number(anioSeleccionado.value)
+      case 'personalizado':
         if (!rangoAplicado.value || !rangoDesde.value || !rangoHasta.value) return false
-        const desde = new Date(rangoDesde.value + 'T00:00:00')
-        const hasta = new Date(rangoHasta.value + 'T23:59:59')
-        return fecha >= desde && fecha <= hasta
-      }
+        return fecha >= new Date(rangoDesde.value+'T00:00:00') &&
+               fecha <= new Date(rangoHasta.value+'T23:59:59')
       default: return true
     }
   })
@@ -469,36 +476,126 @@ function filtrarPorPeriodo(reservas) {
 function cambiarPeriodo(key) {
   periodoActivo.value = key
   filtroEstado.value  = ''
-  if (key === 'personalizado') {
-    // No cargamos reporte, solo esperamos que el usuario configure el rango
-    rangoAplicado.value = false
-    return
-  }
+  if (key === 'personalizado') { rangoAplicado.value = false; return }
   cargarReporte()
 }
 
 function aplicarRango() {
   if (!rangoDesde.value || !rangoHasta.value) return
   rangoAplicado.value = true
-  // reservasPeriodo se recalcula automáticamente vía computed
 }
 
 function limpiarRango() {
-  rangoDesde.value    = ''
-  rangoHasta.value    = ''
-  rangoAplicado.value = false
+  rangoDesde.value = ''; rangoHasta.value = ''; rangoAplicado.value = false
 }
 
-function handleLogout() {
-  authStore.logout()
-  router.push('/login')
+// ── Gráfica con Chart.js ─────────────────────────────────────
+async function cargarChartJS() {
+  if (window.Chart) return
+  await new Promise((res, rej) => {
+    const s = document.createElement('script')
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js'
+    s.onload = res; s.onerror = rej
+    document.head.appendChild(s)
+  })
 }
+
+async function dibujarGrafica() {
+  const { labels, reservasData, ingresosData } = datosGrafica.value
+  if (!labels.length || !canvasGrafica.value) return
+
+  await cargarChartJS()
+
+  if (chartInstance) { chartInstance.destroy(); chartInstance = null }
+
+  const datasets = [
+    {
+      label: 'Reservas',
+      data: reservasData,
+      backgroundColor: 'rgba(37,99,235,0.15)',
+      borderColor: '#2563eb',
+      borderWidth: 2,
+      borderRadius: 4,
+      tension: 0.3,
+      fill: true,
+      yAxisID: 'yReservas'
+    }
+  ]
+
+  if (authStore.isAdmin) {
+    datasets.push({
+      label: 'Ingresos ($)',
+      data: ingresosData,
+      backgroundColor: 'rgba(22,163,74,0.1)',
+      borderColor: '#16a34a',
+      borderWidth: 2,
+      borderRadius: 4,
+      tension: 0.3,
+      fill: false,
+      type: 'line',
+      yAxisID: 'yIngresos'
+    })
+  }
+
+  const scales = {
+    x: {
+      grid: { display: false },
+      ticks: { font: { size: 11 }, color: '#94a3b8', maxRotation: 45 }
+    },
+    yReservas: {
+      type: 'linear',
+      position: 'left',
+      beginAtZero: true,
+      ticks: {
+        font: { size: 11 }, color: '#2563eb',
+        stepSize: 1,
+        callback: v => Number.isInteger(v) ? v : ''
+      },
+      grid: { color: 'rgba(0,0,0,0.05)' }
+    }
+  }
+
+  if (authStore.isAdmin) {
+    scales.yIngresos = {
+      type: 'linear',
+      position: 'right',
+      beginAtZero: true,
+      ticks: {
+        font: { size: 11 }, color: '#16a34a',
+        callback: v => '$' + Number(v).toLocaleString('es-CO', { maximumFractionDigits: 0 })
+      },
+      grid: { display: false }
+    }
+  }
+
+  chartInstance = new window.Chart(canvasGrafica.value, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'Ingresos ($)')
+                return 'Ingresos: $' + Number(ctx.raw).toLocaleString('es-CO', { maximumFractionDigits: 0 })
+              return 'Reservas: ' + ctx.raw
+            }
+          }
+        }
+      },
+      scales
+    }
+  })
+}
+
+function handleLogout() { authStore.logout(); router.push('/login') }
 
 function formatPrecio(valor) {
-  return Number(valor || 0).toLocaleString('es-CO', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  })
+  return Number(valor || 0).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
 }
 
 function formatFechaCorta(dt) {
@@ -516,149 +613,60 @@ function formatHora(dt) {
 }
 
 function labelEstado(estado) {
-  const map = {
-    pendiente:  'Pendiente',
-    confirmada: 'Confirmada',
-    en_curso:   'En curso',
-    completada: 'Completada',
-    cancelada:  'Cancelada'
-  }
-  return map[estado] || estado
+  return { pendiente:'Pendiente', confirmada:'Confirmada', en_curso:'En curso', completada:'Completada', cancelada:'Cancelada' }[estado] || estado
 }
 </script>
 
 <style scoped>
 .dashboard-layout { display: flex; min-height: 100vh; background: var(--color-gray-50); }
 
-/* Sidebar */
 .sidebar { width: 200px; min-height: 100vh; background: #1e293b; display: flex; flex-direction: column; padding: 1.5rem 0; position: fixed; top: 0; left: 0; bottom: 0; }
 .sidebar-brand { color: #fff; font-size: 1rem; font-weight: 700; padding: 0 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 0.75rem; }
 .sidebar-nav { display: flex; flex-direction: column; flex: 1; }
 .nav-item { color: rgba(255,255,255,0.65); font-size: 0.875rem; padding: 0.65rem 1.25rem; text-decoration: none; transition: background 0.15s, color 0.15s; }
 .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
-.nav-item.active { background: var(--color-primary); color: #fff; }
+.nav-item.active { background: rgba(37,99,235,0.3); color: #fff; border-left: 3px solid var(--color-primary); }
 .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); }
 .usuario-nombre { color: #fff; font-size: 0.85rem; font-weight: 600; }
 .usuario-rol { color: rgba(255,255,255,0.45); font-size: 0.75rem; margin-bottom: 0.75rem; text-transform: capitalize; }
-.btn-logout { width: 100%; padding: 0.45rem; background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius); font-size: 0.8rem; cursor: pointer; transition: background 0.15s; }
-.btn-logout:hover { background: rgba(239,68,68,0.25); }
+.btn-logout { width: 100%; padding: 0.45rem; background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius); font-size: 0.8rem; cursor: pointer; }
 
-/* Contenido */
 .main-content { margin-left: 200px; flex: 1; padding: 2rem; min-height: 100vh; }
-
-/* Header */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 .page-header h1 { font-size: 1.35rem; font-weight: 700; color: var(--color-gray-800); }
-.fecha-hoy { font-size: 0.8rem; color: var(--color-gray-400); text-transform: capitalize; }
+.fecha-hoy { font-size: 0.82rem; color: var(--color-gray-400); text-transform: capitalize; }
 
-/* Tabs */
 .periodo-tabs { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
 .tab { padding: 0.45rem 1rem; border-radius: 20px; border: 1px solid var(--color-gray-200); background: #fff; color: var(--color-gray-600); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
 .tab:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .tab.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-.anio-selector select { padding: 0.45rem 0.85rem; border: 1px solid var(--color-gray-200); border-radius: var(--radius); font-size: 0.875rem; color: var(--color-gray-800); background: #fff; outline: none; }
+.anio-selector select { padding: 0.45rem 0.85rem; border: 1px solid var(--color-gray-200); border-radius: var(--radius); font-size: 0.875rem; background: #fff; outline: none; }
 
-/* Panel rango personalizado */
-.rango-panel {
-  background: #fff;
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
-  padding: 1.1rem 1.5rem;
-  margin-bottom: 1.25rem;
-  box-shadow: var(--shadow-sm);
-}
-.rango-campos {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-.rango-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-.rango-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-gray-400);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.rango-input {
-  padding: 0.45rem 0.75rem;
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  color: var(--color-gray-800);
-  background: var(--color-gray-50);
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
+/* Rango personalizado */
+.rango-panel { background: #fff; border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: 1.1rem 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow-sm); }
+.rango-campos { display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap; }
+.rango-campo { display: flex; flex-direction: column; gap: 0.3rem; }
+.rango-label { font-size: 0.72rem; font-weight: 600; color: var(--color-gray-400); text-transform: uppercase; letter-spacing: 0.04em; }
+.rango-input { padding: 0.45rem 0.75rem; border: 1px solid var(--color-gray-200); border-radius: var(--radius); font-size: 0.875rem; background: var(--color-gray-50); outline: none; cursor: pointer; }
 .rango-input:focus { border-color: var(--color-primary); background: #fff; }
 .rango-sep { color: var(--color-gray-400); font-size: 1.1rem; padding-bottom: 0.3rem; }
-.btn-aplicar {
-  padding: 0.5rem 1.25rem;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.btn-aplicar:hover { background: var(--color-primary-dark); }
+.btn-aplicar { padding: 0.5rem 1.25rem; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
 .btn-aplicar:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-limpiar {
-  padding: 0.5rem 0.9rem;
-  background: none;
-  border: 1px solid var(--color-gray-200);
-  color: var(--color-gray-400);
-  border-radius: var(--radius);
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-limpiar:hover { border-color: var(--color-danger); color: var(--color-danger); }
-.rango-info {
-  margin-top: 0.75rem;
-  font-size: 0.82rem;
-  color: var(--color-gray-600);
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--color-gray-100);
-}
+.btn-limpiar { padding: 0.5rem 0.9rem; background: none; border: 1px solid var(--color-gray-200); color: var(--color-gray-400); border-radius: var(--radius); font-size: 0.82rem; cursor: pointer; }
+.rango-info { margin-top: 0.75rem; font-size: 0.82rem; color: var(--color-gray-600); padding-top: 0.75rem; border-top: 1px solid var(--color-gray-100); }
 .rango-info.muted { color: var(--color-gray-400); font-style: italic; }
 .rango-info strong { color: var(--color-primary); }
 
-/* Estado espera */
-.estado-espera {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: var(--color-gray-400);
-}
+.estado-cargando { display: flex; align-items: center; gap: 0.75rem; padding: 3rem; color: var(--color-gray-400); justify-content: center; }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--color-gray-200); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.estado-espera { text-align: center; padding: 3rem; color: var(--color-gray-400); }
 .espera-icono { font-size: 2.5rem; margin-bottom: 0.75rem; }
-.estado-espera p { font-size: 0.9rem; }
 .estado-espera strong { color: var(--color-primary); }
 
-/* Filtro estado */
-.filtro-select {
-  padding: 0.35rem 0.75rem;
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius);
-  font-size: 0.8rem;
-  color: var(--color-gray-600);
-  background: var(--color-gray-50);
-  outline: none;
-  cursor: pointer;
-}
-
-.estado-cargando { text-align: center; padding: 3rem; color: var(--color-gray-400); }
 .reporte-contenido { display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* Stats grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
 .stat-card { background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); border-left: 4px solid; display: flex; flex-direction: column; gap: 0.35rem; }
 .stat-card.ingresos      { border-left-color: var(--color-primary); }
 .stat-card.transacciones { border-left-color: #8b5cf6; }
@@ -666,11 +674,10 @@ function labelEstado(estado) {
 .stat-card.disponibles   { border-left-color: var(--color-success); }
 .stat-card.mantenimiento { border-left-color: var(--color-warning); }
 .stat-card.total-habs    { border-left-color: var(--color-gray-400); }
-.stat-icono  { font-size: 0.7rem; font-weight: 700; color: var(--color-gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-icono  { font-size: 0.7rem; font-weight: 700; color: var(--color-gray-400); text-transform: uppercase; }
 .stat-numero { font-size: 1.6rem; font-weight: 700; color: var(--color-gray-800); line-height: 1; }
 .stat-label  { font-size: 0.78rem; color: var(--color-gray-400); }
 
-/* Barra ocupación */
 .ocupacion-card { background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); }
 .ocupacion-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
 .ocupacion-titulo { font-size: 0.95rem; font-weight: 600; color: var(--color-gray-800); }
@@ -689,10 +696,20 @@ function labelEstado(estado) {
 .dot.disponible   { background: var(--color-success); }
 .dot.mantenimiento { background: var(--color-warning); }
 
-/* Split layout */
-.split-layout { display: grid; grid-template-columns: 300px 1fr; gap: 1.25rem; align-items: start; }
+/* ═══ GRÁFICA ═══ */
+.grafica-card { background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); }
+.grafica-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.grafica-titulo { font-size: 0.95rem; font-weight: 600; color: var(--color-gray-800); display: block; }
+.grafica-subtitulo { font-size: 0.75rem; color: var(--color-gray-400); }
+.grafica-leyenda { display: flex; gap: 1rem; align-items: center; }
+.leyenda-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--color-gray-600); }
+.leyenda-dot { width: 10px; height: 10px; border-radius: 50%; }
+.leyenda-dot.azul  { background: #2563eb; }
+.leyenda-dot.verde { background: #16a34a; }
+.grafica-wrap { position: relative; height: 200px; }
 
-/* Resumen */
+/* SPLIT */
+.split-layout { display: grid; grid-template-columns: 300px 1fr; gap: 1.25rem; align-items: start; }
 .resumen-card { background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); }
 .card-title { font-size: 0.9rem; font-weight: 600; color: var(--color-gray-800); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--color-gray-100); }
 .resumen-fila { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--color-gray-100); }
@@ -704,29 +721,26 @@ function labelEstado(estado) {
 .resumen-valor.media { color: var(--color-warning); }
 .resumen-valor.baja  { color: var(--color-success); }
 
-/* Reservas card */
 .reservas-card { background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); overflow: hidden; }
 .reservas-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--color-gray-100); flex-wrap: wrap; gap: 0.5rem; }
 .reservas-card-header .card-title { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 .reservas-count { font-size: 0.75rem; color: var(--color-gray-400); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: 20px; padding: 0.2rem 0.65rem; }
-.estado-mini { text-align: center; padding: 1.5rem; color: var(--color-gray-400); font-size: 0.875rem; }
-.estado-mini.vacio { padding: 2.5rem; }
+.filtro-select { padding: 0.35rem 0.75rem; border: 1px solid var(--color-gray-200); border-radius: var(--radius); font-size: 0.8rem; background: var(--color-gray-50); outline: none; cursor: pointer; }
+.estado-mini { text-align: center; padding: 2rem; color: var(--color-gray-400); font-size: 0.875rem; }
 
-/* Tabla */
 .tabla-wrapper { overflow-x: auto; }
 .tabla-reservas { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .tabla-reservas th { text-align: left; color: var(--color-gray-400); font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--color-gray-100); white-space: nowrap; }
 .tabla-reservas td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--color-gray-50); color: var(--color-gray-700); vertical-align: top; }
 .tabla-reservas tbody tr:last-child td { border-bottom: none; }
 .tabla-reservas tbody tr:hover { background: var(--color-gray-50); }
-.col-id    { color: var(--color-gray-400) !important; font-size: 0.75rem; white-space: nowrap; }
+.col-id    { color: var(--color-gray-400) !important; font-size: 0.75rem; }
 .col-fecha { white-space: nowrap; }
-.hora-txt  { color: var(--color-gray-400); font-size: 0.72rem; margin-top: 2px; }
+.hora-txt  { color: var(--color-gray-400); font-size: 0.72rem; }
 .num-hab   { color: var(--color-gray-400); font-size: 0.72rem; }
 .col-noches { text-align: center; }
-.col-total  { font-weight: 600; color: var(--color-gray-800); white-space: nowrap; }
+.col-total  { font-weight: 600; color: var(--color-primary); }
 
-/* Badges */
 .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.72rem; font-weight: 500; white-space: nowrap; }
 .badge.pendiente  { background: #fef3c7; color: #92400e; }
 .badge.confirmada { background: #dcfce7; color: #166534; }
@@ -734,13 +748,6 @@ function labelEstado(estado) {
 .badge.completada { background: #f0fdf4; color: #15803d; }
 .badge.cancelada  { background: #fee2e2; color: #991b1b; }
 
-/* Responsive */
 @media (max-width: 1100px) { .split-layout { grid-template-columns: 1fr; } }
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .main-content { margin-left: 0; padding: 1rem; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .rango-campos { flex-direction: column; align-items: stretch; }
-  .rango-sep { display: none; }
-}
+@media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 1rem; } .stats-grid { grid-template-columns: repeat(2,1fr); } .rango-campos { flex-direction: column; align-items: stretch; } .rango-sep { display: none; } }
 </style>

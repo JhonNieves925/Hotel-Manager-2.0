@@ -147,7 +147,7 @@ async function handleLogin() {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -155,12 +155,12 @@ async function handleLogin() {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ─── PANEL IZQUIERDO ─── */
 .login-left {
-  background: linear-gradient(160deg, #0A0A0A 0%, #141008 60%, #0A0A0A 100%);
+  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 50%, #1a0a2e 100%);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -182,40 +182,37 @@ async function handleLogin() {
   margin-bottom: 2rem;
 }
 
-.logo-icon {
-  color: #C9A84C;
-  font-size: 1rem;
-}
+.logo-icon { color: #E8773A; font-size: 1rem; }
 
 .logo-text {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Playfair Display', serif;
   font-size: 1.3rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #E8E0D0;
+  letter-spacing: 0.1em;
+  color: #fff;
+  font-weight: 600;
 }
 
 .left-estrellas {
   font-size: 0.7rem;
-  color: #C9A84C;
+  color: #E8773A;
   letter-spacing: 0.3em;
   margin-bottom: 2rem;
   opacity: 0.8;
 }
 
 .left-titulo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Playfair Display', serif;
   font-size: 3rem;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.15;
-  color: #FAF7F0;
+  color: #fff;
   margin-bottom: 1rem;
 }
 
 .left-sub {
   font-size: 0.8rem;
-  color: #8A8070;
-  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.08em;
   margin-bottom: 2.5rem;
   font-weight: 300;
 }
@@ -230,14 +227,14 @@ async function handleLogin() {
 .deco-line {
   flex: 1;
   height: 1px;
-  background: rgba(201, 168, 76, 0.2);
+  background: rgba(232,119,58,0.2);
 }
 
 .deco-texto {
   font-size: 0.6rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #C9A84C;
+  color: #E8773A;
   opacity: 0.7;
   white-space: nowrap;
 }
@@ -253,49 +250,38 @@ async function handleLogin() {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.78rem;
-  color: #7A7060;
+  color: rgba(255,255,255,0.35);
   font-weight: 300;
   letter-spacing: 0.03em;
 }
 
-.feature-icon {
-  color: #C9A84C;
-  font-size: 0.6rem;
-  flex-shrink: 0;
-}
+.feature-icon { color: #E8773A; font-size: 0.6rem; flex-shrink: 0; }
 
-.left-particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
+.left-particles { position: absolute; inset: 0; pointer-events: none; }
 
 .particle {
   position: absolute;
-  background: #C9A84C;
+  background: #E8773A;
   border-radius: 50%;
   animation: float 7s ease-in-out infinite;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.1; }
-  50% { transform: translateY(-15px) scale(1.4); opacity: 0.3; }
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.06; }
+  50%       { transform: translateY(-15px) scale(1.4); opacity: 0.18; }
 }
 
-/* Borde dorado entre paneles */
 .login-left::after {
   content: '';
   position: absolute;
-  right: 0;
-  top: 10%;
-  bottom: 10%;
+  right: 0; top: 10%; bottom: 10%;
   width: 1px;
-  background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(232,119,58,0.25), transparent);
 }
 
 /* ─── PANEL DERECHO ─── */
 .login-right {
-  background: #111111;
+  background: #0A1628;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,196 +293,123 @@ async function handleLogin() {
   max-width: 420px;
 }
 
-.card-header {
-  margin-bottom: 2.5rem;
-}
+.card-header { margin-bottom: 2.5rem; }
 
 .card-badge {
   display: inline-block;
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: #C9A84C;
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  padding: 0.35rem 0.9rem;
-  border-radius: 20px;
+  font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: #E8773A;
+  border: 1px solid rgba(232,119,58,0.3);
+  background: rgba(232,119,58,0.08);
+  padding: 0.35rem 0.9rem; border-radius: 20px;
   margin-bottom: 1.25rem;
 }
 
 .card-titulo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.2rem;
-  font-weight: 300;
-  line-height: 1.2;
-  color: #FAF7F0;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 400;
+  line-height: 1.2; color: #fff;
   margin-bottom: 0.6rem;
 }
 
 .card-sub {
   font-size: 0.78rem;
-  color: #8A8070;
-  font-weight: 300;
-  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.35);
+  font-weight: 300; letter-spacing: 0.05em;
 }
 
 /* ─── FORMULARIO ─── */
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  display: flex; flex-direction: column;
+  gap: 1.25rem; margin-bottom: 2rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
 
 .form-group label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #8A8070;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.62rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
 }
 
-.label-icon {
-  font-size: 0.5rem;
-  color: #C9A84C;
-}
+.label-icon { font-size: 0.5rem; color: #E8773A; }
 
 .form-group input {
-  background: #1A1A1A;
-  border: 1px solid rgba(201, 168, 76, 0.15);
-  border-radius: 2px;
-  padding: 0.85rem 1rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: #FAF7F0;
-  outline: none;
-  transition: all 0.3s;
-  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; padding: 0.85rem 1rem;
+  font-family: 'Inter', sans-serif; font-size: 0.875rem;
+  font-weight: 400; color: #fff; outline: none;
+  transition: all 0.25s; width: 100%;
 }
-
 .form-group input:focus {
-  border-color: rgba(201, 168, 76, 0.5);
-  background: rgba(201, 168, 76, 0.03);
+  border-color: rgba(232,119,58,0.5);
+  background: rgba(232,119,58,0.04);
 }
+.form-group input::placeholder { color: rgba(255,255,255,0.2); }
+.form-group input:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.form-group input::placeholder {
-  color: #4A4540;
-}
-
-.form-group input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.input-wrap {
-  position: relative;
-}
-
-.input-wrap input {
-  padding-right: 3rem;
-}
+.input-wrap { position: relative; }
+.input-wrap input { padding-right: 3rem; }
 
 .btn-ver {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: #8A8070;
-  font-size: 0.7rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  transition: color 0.2s;
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.3); font-size: 0.7rem;
+  cursor: pointer; padding: 0.25rem; transition: color 0.2s;
 }
-
-.btn-ver:hover { color: #C9A84C; }
+.btn-ver:hover { color: #E8773A; }
 
 .error-msg {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(220, 38, 38, 0.08);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  border-radius: 2px;
-  padding: 0.75rem 1rem;
-  font-size: 0.8rem;
-  color: #FCA5A5;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(252,129,74,0.08); border: 1px solid rgba(252,129,74,0.2);
+  border-radius: 6px; padding: 0.75rem 1rem;
+  font-size: 0.8rem; color: #fc814a;
 }
 
 .btn-login {
-  background: #C9A84C;
-  color: #0A0A0A;
-  border: none;
-  border-radius: 2px;
-  padding: 0.95rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  background: #E8773A; color: #fff; border: none;
+  border-radius: 6px; padding: 0.95rem;
+  font-family: 'Inter', sans-serif; font-size: 0.72rem;
+  font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem; margin-top: 0.5rem;
 }
-
 .btn-login:hover:not(:disabled) {
-  background: #E8C97A;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.2);
+  background: #F28C4E; transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(232,119,58,0.3);
 }
-
-.btn-login:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
+.btn-login:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .btn-spinner {
-  width: 15px;
-  height: 15px;
-  border: 2px solid rgba(0,0,0,0.3);
-  border-top-color: #0A0A0A;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: #fff;
+  border-radius: 50%; animation: spin 0.8s linear infinite;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .card-footer {
-  text-align: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(201, 168, 76, 0.08);
+  text-align: center; padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
 
 .link-volver {
-  font-size: 0.72rem;
-  color: #8A8070;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  transition: color 0.2s;
+  font-size: 0.72rem; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.08em; text-decoration: none; transition: color 0.2s;
 }
-
-.link-volver:hover { color: #C9A84C; }
+.link-volver:hover { color: #E8773A; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
   .login-page { grid-template-columns: 1fr; }
   .login-left { display: none; }
-  .login-right { padding: 2rem 1.5rem; background: #0A0A0A; }
+  .login-right {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 50%, #1a0a2e 100%);
+  }
 }
 </style>

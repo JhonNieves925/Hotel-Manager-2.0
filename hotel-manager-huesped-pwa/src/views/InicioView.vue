@@ -4,119 +4,228 @@
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="brand">
-        <span class="brand-icon">✦</span>
+        <span class="brand-icon">🏨</span>
         <span class="brand-name">Hotel Manager</span>
       </div>
       <div class="nav-links">
-        <RouterLink v-if="!auth.isLoggedIn" to="/login" class="btn-login">Iniciar sesión</RouterLink>
-        <RouterLink v-if="!auth.isLoggedIn" to="/registro" class="btn-registro">Registrarse</RouterLink>
+        <RouterLink to="/app" class="btn-nav app">📱 Descarga la app</RouterLink>
+        <RouterLink v-if="!auth.isLoggedIn" to="/login"   class="btn-nav outline">Iniciar sesión</RouterLink>
+        <RouterLink v-if="!auth.isLoggedIn" to="/registro" class="btn-nav solid">Registrarse</RouterLink>
         <template v-if="auth.isLoggedIn">
-          <RouterLink to="/mis-reservas" class="btn-login">Mis reservas</RouterLink>
-          <RouterLink to="/perfil" class="btn-registro">{{ auth.nombreCompleto }}</RouterLink>
+          <RouterLink to="/mis-reservas" class="btn-nav outline">Mis reservas</RouterLink>
+          <RouterLink to="/perfil"       class="btn-nav solid">{{ auth.nombreCompleto.split(' ')[0] }}</RouterLink>
         </template>
       </div>
     </nav>
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-bg">
-        <div class="hero-particles">
-          <span v-for="i in 15" :key="i" class="particle" :style="particleStyle(i)"></span>
-        </div>
-      </div>
+      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <div class="hero-badge">✦ Experiencia de lujo</div>
-        <h1 class="hero-title">
-          Tu estadía perfecta<br/>
-          <span class="hero-accent">te está esperando</span>
-        </h1>
-        <p class="hero-sub">Reserva en minutos · Gestiona desde tu celular</p>
-        <div class="estrellas">★★★★★</div>
+        <div class="hero-badge">🌟 Cali, Valle del Cauca</div>
+        <h1 class="hero-title">Vive una experiencia<br><span class="hero-accent">inolvidable</span></h1>
+        <p class="hero-sub">Habitaciones confortables · Atención personalizada · Ubicación privilegiada</p>
 
+        <!-- BUSCADOR -->
         <div class="buscador">
-          <div class="buscador-campo">
-            <label>◈ Check-in</label>
-            <input type="date" v-model="fechaEntrada" :min="hoy" @change="buscar" />
+          <div class="buscador-titulo">¿Cuándo quieres hospedarte?</div>
+          <div class="buscador-campos">
+            <div class="campo-grupo">
+              <label class="campo-label">📅 Check-in</label>
+              <input type="date" v-model="fechaEntrada" :min="hoy" class="campo-input" @change="onFechaChange" />
+            </div>
+            <div class="campo-grupo">
+              <label class="campo-label">🕐 Hora llegada</label>
+              <select v-model="horaEntrada" class="campo-input">
+                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+              </select>
+            </div>
+            <div class="buscador-sep">→</div>
+            <div class="campo-grupo">
+              <label class="campo-label">📅 Check-out</label>
+              <input type="date" v-model="fechaSalida" :min="fechaEntrada || hoy" class="campo-input" @change="onFechaChange" />
+            </div>
+            <div class="campo-grupo">
+              <label class="campo-label">🕐 Hora salida</label>
+              <select v-model="horaSalida" class="campo-input">
+                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+              </select>
+            </div>
+            <button class="btn-buscar" @click="buscar" :disabled="cargando || !fechaEntrada || !fechaSalida">
+              <span v-if="cargando" class="spinner-btn"></span>
+              <span v-else>🔍 Buscar</span>
+            </button>
           </div>
-          <div class="buscador-div"></div>
-          <div class="buscador-campo">
-            <label>◈ Check-out</label>
-            <input type="date" v-model="fechaSalida" :min="fechaEntrada || hoy" @change="buscar" />
-          </div>
-          <button class="btn-buscar" @click="buscar" :disabled="cargando">
-            <span v-if="cargando" class="spinner"></span>
-            <span v-else>Buscar</span>
-          </button>
+          <p v-if="error" class="buscador-error">⚠ {{ error }}</p>
         </div>
       </div>
     </section>
 
-    <!-- HABITACIONES -->
-    <section class="habitaciones-section" v-if="buscado">
-      <div class="container">
-        <div v-if="error" class="error-msg">⚠ {{ error }}</div>
+    <!-- CARACTERÍSTICAS -->
+    <section class="features">
+      <div class="features-container">
+        <div class="feature-item">
+          <span class="feature-ico">🛏️</span>
+          <span class="feature-txt">Habitaciones premium</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-ico">🍳</span>
+          <span class="feature-txt">Desayuno incluido</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-ico">📶</span>
+          <span class="feature-txt">WiFi de alta velocidad</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-ico">🅿️</span>
+          <span class="feature-txt">Parqueadero gratuito</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-ico">🔒</span>
+          <span class="feature-txt">Seguridad 24/7</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-ico">❄️</span>
+          <span class="feature-txt">Aire acondicionado</span>
+        </div>
+      </div>
+    </section>
 
-        <div v-if="habitaciones.length === 0 && !cargando" class="vacio">
-          <div class="vacio-icon">○</div>
-          <p>No hay habitaciones disponibles para esas fechas</p>
+    <!-- RESULTADOS DE BÚSQUEDA -->
+    <section v-if="buscado" class="resultados" id="resultados">
+      <div class="resultados-container">
+
+        <div v-if="cargando" class="estado-cargando">
+          <div class="spinner-grande"></div>
+          <p>Buscando habitaciones disponibles...</p>
         </div>
 
         <template v-else>
-          <div class="seccion-header">
-            <div class="linea"></div>
-            <h2>Habitaciones disponibles</h2>
-            <div class="linea"></div>
+          <div class="resultados-header">
+            <h2 v-if="habitaciones.length > 0">
+              🏠 {{ habitaciones.length }} habitación{{ habitaciones.length !== 1 ? 'es' : '' }} disponible{{ habitaciones.length !== 1 ? 's' : '' }}
+            </h2>
+            <h2 v-else>😔 Sin disponibilidad</h2>
+            <p class="resultados-fechas">
+              {{ formatFechaCorta(fechaEntrada) }} {{ horaEntrada }} → {{ formatFechaCorta(fechaSalida) }} {{ horaSalida }}
+              · {{ noches }} noche{{ noches !== 1 ? 's' : '' }}
+            </p>
           </div>
 
-          <div class="hab-grid">
-            <div
-              v-for="hab in habitaciones"
-              :key="hab.id"
-              class="hab-card"
-              @click="irAReservar(hab)"
-            >
-              <div class="card-badge">{{ hab.tipo }}</div>
-              <div class="card-icon">{{ iconoTipo(hab.tipo) }}</div>
-              <div class="card-body">
-                <h3>{{ hab.tipo }}</h3>
-                <span class="card-num">Hab. {{ hab.numero }}</span>
-                <p class="card-desc">{{ hab.descripcionTipo }}</p>
-                <div class="card-detalles">
-                  <span>▲ Piso {{ hab.piso }}</span>
-                  <span>◉ {{ hab.capacidad }} persona(s)</span>
-                </div>
-                <div class="card-estrellas">★★★★★</div>
+          <div v-if="habitaciones.length === 0" class="sin-disponibilidad">
+            <div class="sin-disp-ico">🔍</div>
+            <p>No encontramos habitaciones disponibles para esas fechas.</p>
+            <p class="sin-disp-sub">Intenta con otras fechas o contáctanos directamente.</p>
+          </div>
+
+          <div v-else class="habitaciones-grid">
+            <div v-for="hab in habitaciones" :key="hab.id" class="hab-card">
+              <div class="hab-card-img">
+                <div class="hab-tipo-badge">{{ hab.tipo }}</div>
+                <div class="hab-emoji">{{ iconoTipo(hab.tipo) }}</div>
               </div>
-              <div class="card-footer">
-                <div class="precio">
-                  <span class="precio-desde">desde</span>
-                  <span class="precio-monto">${{ formatPrecio(hab.precioNoche) }}</span>
-                  <span class="precio-label">/noche</span>
+              <div class="hab-card-body">
+                <div class="hab-card-header">
+                  <h3 class="hab-nombre">{{ hab.tipo }}</h3>
+                  <span class="hab-numero">Hab. {{ hab.numero }}</span>
                 </div>
-                <button class="btn-reservar">Reservar</button>
+                <p class="hab-descripcion">{{ hab.descripcion || descripcionDefault(hab.tipo) }}</p>
+                <div class="hab-detalles">
+                  <span class="hab-detalle">🏢 Piso {{ hab.piso }}</span>
+                  <span class="hab-detalle">👥 {{ hab.capacidad }} persona{{ hab.capacidad !== 1 ? 's' : '' }}</span>
+                </div>
+                <div class="hab-card-footer">
+                  <div class="hab-precio">
+                    <span class="precio-monto">${{ formatPrecio(hab.precioNoche) }}</span>
+                    <span class="precio-noche">/ noche</span>
+                  </div>
+                  <div class="precio-total">Total: <strong>${{ formatPrecio(hab.precioNoche * noches) }}</strong></div>
+                  <button class="btn-reservar" @click="irAReservar(hab)">
+                    Reservar ahora →
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </template>
+
       </div>
     </section>
 
-    <!-- ESTADO INICIAL -->
-    <section class="inicio-estado" v-if="!buscado">
-      <div class="container">
-        <div class="vacio">
-          <div class="vacio-icon">◈</div>
-          <p class="vacio-titulo">Selecciona tus fechas</p>
-          <p class="vacio-sub">Descubre nuestras habitaciones disponibles</p>
+    <!-- SECCIÓN INFO HOTEL -->
+    <section class="info-hotel">
+      <div class="info-container">
+        <div class="info-texto">
+          <h2>¿Por qué elegirnos?</h2>
+          <p>En Hotel Manager te ofrecemos una experiencia de hospedaje excepcional en el corazón de Cali. Nuestras instalaciones combinan confort, seguridad y atención personalizada para hacer de tu estadía un momento memorable.</p>
+          <div class="info-stats">
+            <div class="stat">
+              <span class="stat-num">500+</span>
+              <span class="stat-lbl">Huéspedes satisfechos</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">4.9★</span>
+              <span class="stat-lbl">Calificación promedio</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">24/7</span>
+              <span class="stat-lbl">Atención al cliente</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-visual">
+          <div class="info-card-stack">
+            <div class="info-card azul">
+              <span class="info-card-ico">📍</span>
+              <div>
+                <div class="info-card-titulo">Ubicación</div>
+                <div class="info-card-sub">Cali, Valle del Cauca</div>
+              </div>
+            </div>
+            <div class="info-card naranja">
+              <span class="info-card-ico">🕐</span>
+              <div>
+                <div class="info-card-titulo">Check-in desde</div>
+                <div class="info-card-sub">Tu hora elegida</div>
+              </div>
+            </div>
+            <div class="info-card verde">
+              <span class="info-card-ico">📞</span>
+              <div>
+                <div class="info-card-titulo">Contacto</div>
+                <div class="info-card-sub">(2) 123-4567</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- SOCIAL PROOF TOAST -->
+<Transition name="toast">
+  <div v-if="toastVisible" class="toast-notif">
+    <div class="toast-avatar">{{ toast.inicial }}</div>
+    <div class="toast-body">
+      <p class="toast-nombre">{{ toast.nombre }} acaba de reservar</p>
+      <p class="toast-hab">{{ toast.tipo }} · Hab. {{ toast.numero }}</p>
+      <p class="toast-tiempo">Hace {{ toast.tiempo }}</p>
+    </div>
+    <button class="toast-close" @click="toastVisible = false">×</button>
+  </div>
+</Transition>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-brand">🏨 Hotel Manager</div>
+      <p class="footer-sub">Cali, Valle del Cauca · Colombia</p>
+      <p class="footer-sub">© {{ new Date().getFullYear() }} Hotel Manager. Todos los derechos reservados.</p>
+    </footer>
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHuespedAuthStore } from '../stores/auth'
 import { habitacionService } from '../api/services'
@@ -126,31 +235,51 @@ const auth   = useHuespedAuthStore()
 
 const fechaEntrada  = ref('')
 const fechaSalida   = ref('')
+const horaEntrada   = ref('15:00')
+const horaSalida    = ref('12:00')
 const habitaciones  = ref([])
 const cargando      = ref(false)
-const error         = ref('')
 const buscado       = ref(false)
+const error         = ref('')
 
 const hoy = computed(() => new Date().toISOString().split('T')[0])
 
-function particleStyle(i) {
-  return {
-    left: `${(i * 17 + 5) % 100}%`,
-    top:  `${(i * 23 + 10) % 100}%`,
-    animationDelay: `${(i * 0.4) % 4}s`,
-    width:  i % 3 === 0 ? '3px' : '2px',
-    height: i % 3 === 0 ? '3px' : '2px',
-  }
-}
+const noches = computed(() => {
+  if (!fechaEntrada.value || !fechaSalida.value) return 0
+  return Math.max(0, Math.round(
+    (new Date(fechaSalida.value) - new Date(fechaEntrada.value)) / 86400000
+  ))
+})
 
-function iconoTipo(tipo) {
-  return { 'Suite': '◆', 'Doble': '◈', 'Triple': '⬡', 'Sencilla': '○' }[tipo] || '◈'
+// Horas disponibles en intervalos de 30 min
+const horasDisponibles = computed(() => {
+  const horas = []
+  for (let h = 0; h < 24; h++) {
+    for (let m of [0, 30]) {
+      const hStr = String(h).padStart(2, '0')
+      const mStr = String(m).padStart(2, '0')
+      const val  = `${hStr}:${mStr}`
+      const periodo = h < 12 ? 'AM' : 'PM'
+      const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+      horas.push({ value: val, label: `${h12}:${mStr} ${periodo}` })
+    }
+  }
+  return horas
+})
+
+function onFechaChange() {
+  if (fechaEntrada.value && fechaSalida.value && fechaSalida.value <= fechaEntrada.value) {
+    // Auto ajustar check-out al día siguiente del check-in
+    const d = new Date(fechaEntrada.value)
+    d.setDate(d.getDate() + 1)
+    fechaSalida.value = d.toISOString().split('T')[0]
+  }
 }
 
 async function buscar() {
   if (!fechaEntrada.value || !fechaSalida.value) return
   if (fechaSalida.value <= fechaEntrada.value) {
-    error.value = 'La fecha de salida debe ser posterior a la entrada'
+    error.value = 'La fecha de salida debe ser posterior a la fecha de entrada'
     return
   }
   cargando.value = true
@@ -159,8 +288,12 @@ async function buscar() {
   try {
     const res = await habitacionService.listarDisponibles(fechaEntrada.value, fechaSalida.value)
     habitaciones.value = res.data
+    // Scroll suave a resultados
+    setTimeout(() => {
+      document.getElementById('resultados')?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   } catch {
-    error.value = 'Error al buscar habitaciones'
+    error.value = 'Error al buscar habitaciones. Intenta nuevamente.'
   } finally {
     cargando.value = false
   }
@@ -169,253 +302,545 @@ async function buscar() {
 function irAReservar(hab) {
   router.push({
     name: 'reservar',
-    query: { idHabitacion: hab.id, entrada: fechaEntrada.value, salida: fechaSalida.value }
+    query: {
+      idHabitacion: hab.id,
+      entrada:      fechaEntrada.value,
+      salida:       fechaSalida.value,
+      horaEntrada:  horaEntrada.value,
+      horaSalida:   horaSalida.value
+    }
   })
 }
 
 function formatPrecio(v) {
-  return Number(v).toLocaleString('es-CO')
+  return Number(v || 0).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
 }
+
+function formatFechaCorta(valor) {
+  if (!valor) return ''
+  return new Date(valor + 'T00:00:00').toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
+}
+
+function iconoTipo(tipo) {
+  return { 'Suite': '🛏️', 'Doble': '🛏', 'Triple': '🏠', 'Sencilla': '🪑' }[tipo] || '🛏️'
+}
+
+function descripcionDefault(tipo) {
+  return {
+    'Suite':    'Amplia suite con vista panorámica, jacuzzi y sala de estar privada.',
+    'Doble':    'Habitación cómoda con cama doble, TV y baño privado.',
+    'Triple':   'Espaciosa habitación para grupos, con tres camas y todas las comodidades.',
+    'Sencilla': 'Acogedora habitación individual, perfecta para viajeros de negocios.'
+  }[tipo] || 'Habitación cómoda con todas las comodidades necesarias para tu estadía.'
+}
+
+// ── SOCIAL PROOF TOAST ─────────────────────────────────────
+const toastVisible = ref(false)
+const toast = ref({})
+
+const reservasRecientes = [
+  { nombre: 'Marcela R.',   inicial: 'M', tipo: 'Suite',    numero: '201', tiempo: '2 min' },
+  { nombre: 'Carlos M.',    inicial: 'C', tipo: 'Doble',    numero: '105', tiempo: '5 min' },
+  { nombre: 'Sofía L.',     inicial: 'S', tipo: 'Sencilla', numero: '302', tiempo: '8 min' },
+  { nombre: 'Andrés P.',    inicial: 'A', tipo: 'Triple',   numero: '410', tiempo: '12 min' },
+  { nombre: 'Valentina G.', inicial: 'V', tipo: 'Suite',    numero: '501', tiempo: '15 min' },
+  { nombre: 'Juan D.',      inicial: 'J', tipo: 'Doble',    numero: '207', tiempo: '18 min' },
+  { nombre: 'Camila T.',    inicial: 'C', tipo: 'Sencilla', numero: '118', tiempo: '20 min' },
+]
+
+let toastIndex = 0
+
+function mostrarToast() {
+  toast.value = reservasRecientes[toastIndex % reservasRecientes.length]
+  toastIndex++
+  toastVisible.value = true
+  // Se oculta solo a los 4 segundos
+  setTimeout(() => { toastVisible.value = false }, 4000)
+}
+
+// Primera aparición a los 3 segundos, luego cada 9 segundos
+onMounted(() => {
+  setTimeout(() => {
+    mostrarToast()
+    setInterval(mostrarToast, 9000)
+  }, 3000)
+})
+
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
-.inicio { min-height: 100vh; background: var(--dark); }
+* { box-sizing: border-box; }
 
-/* NAVBAR */
+.inicio {
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: #fffbf5;
+  color: #1a1a2e;
+}
+
+/* ── NAVBAR ───────────────────────────────────────────────── */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 1.5rem;
-  background: rgba(10,10,10,0.9);
-  border-bottom: 1px solid rgba(201,168,76,0.1);
-  backdrop-filter: blur(20px);
+  padding: 1rem 2rem;
+  background: rgba(19, 23, 24, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 
 .brand { display: flex; align-items: center; gap: 0.5rem; }
-.brand-icon { color: var(--gold); font-size: 0.85rem; }
+.brand-icon { font-size: 1.4rem; }
 .brand-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--text);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: #e85d04;
 }
 
 .nav-links { display: flex; align-items: center; gap: 0.75rem; }
 
-.btn-login {
-  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--gold);
-  border: 1px solid rgba(201,168,76,0.3);
-  padding: 0.45rem 1rem; border-radius: 4px; transition: all 0.2s;
+.btn-nav {
+  padding: 0.45rem 1.1rem; border-radius: 25px;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; transition: all 0.2s; cursor: pointer;
 }
-.btn-login:hover { background: rgba(201,168,76,0.1); }
-
-.btn-registro {
-  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--dark);
-  background: var(--gold); padding: 0.45rem 1rem;
-  border-radius: 4px; transition: all 0.2s;
+.btn-nav.outline {
+  border: 2px solid #e85d04; color: #e85d04; background: transparent;
 }
-.btn-registro:hover { background: var(--gold-light); }
+.btn-nav.outline:hover { background: #e85d04; color: #fff; }
+.btn-nav.solid { background: #e85d04; color: #fff; border: 2px solid #e85d04; }
+.btn-nav.solid:hover { background: #c44d02; border-color: #c44d02; }
 
-/* HERO */
+/* ── HERO ─────────────────────────────────────────────────── */
 .hero {
-  min-height: 100vh; position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; padding-top: 60px;
+  position: relative; padding: 7rem 2rem 4rem;
 }
 
-.hero-bg {
+.hero-overlay {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.05) 0%, transparent 70%),
-              linear-gradient(160deg, #080808 0%, #111108 50%, #080808 100%);
-}
-
-.hero-particles { position: absolute; inset: 0; pointer-events: none; }
-.particle {
-  position: absolute; background: var(--gold); border-radius: 50%;
-  animation: float 6s ease-in-out infinite; opacity: 0.2;
-}
-@keyframes float {
-  0%,100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-15px) scale(1.4); }
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .hero-content {
-  position: relative; z-index: 2;
-  text-align: center; padding: 2rem 1.5rem; max-width: 700px;
-  animation: fadeUp 0.8s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  position: relative; z-index: 1;
+  max-width: 900px; width: 100%; text-align: center;
 }
 
 .hero-badge {
-  display: inline-block; font-size: 0.62rem; font-weight: 500;
-  letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold);
-  border: 1px solid rgba(201,168,76,0.3); padding: 0.35rem 1rem;
-  border-radius: 20px; margin-bottom: 1.5rem;
+  display: inline-block;
+  background: rgba(232,93,4,0.2); border: 1px solid rgba(232,93,4,0.4);
+  color: #ffb347; padding: 0.4rem 1.2rem; border-radius: 25px;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
 }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 8vw, 3.5rem);
-  font-weight: 300; line-height: 1.15; color: var(--text);
-  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700; color: #fff;
+  line-height: 1.15; margin-bottom: 1rem;
 }
-.hero-accent { color: var(--gold); font-style: italic; }
+.hero-accent { color: #ffb347; font-style: italic; }
 
 .hero-sub {
-  font-size: 0.78rem; color: var(--text-muted);
-  letter-spacing: 0.15em; text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  font-size: 1rem; color: rgba(255,255,255,0.7);
+  margin-bottom: 2.5rem; line-height: 1.6;
 }
 
-.estrellas {
-  font-size: 0.85rem; color: var(--gold);
-  letter-spacing: 0.3em; margin-bottom: 2.5rem; opacity: 0.8;
-}
-
-/* BUSCADOR */
+/* ── BUSCADOR ─────────────────────────────────────────────── */
 .buscador {
-  display: flex; align-items: stretch;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 8px; overflow: hidden;
-  flex-wrap: wrap;
+  background: rgba(255,255,255,0.97);
+  border-radius: 20px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  text-align: left;
 }
 
-.buscador-campo {
-  flex: 1; min-width: 140px; padding: 1rem 1.25rem;
+.buscador-titulo {
+  font-size: 1rem; font-weight: 700;
+  color: #1a1a2e; margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.buscador-campos {
+  display: flex; align-items: flex-end;
+  gap: 0.75rem; flex-wrap: wrap;
+}
+
+.campo-grupo {
   display: flex; flex-direction: column; gap: 0.35rem;
+  flex: 1; min-width: 130px;
 }
 
-.buscador-campo label {
-  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--gold);
+.campo-label {
+  font-size: 0.72rem; font-weight: 700;
+  color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;
 }
 
-.buscador-campo input {
-  background: transparent; border: none; outline: none;
-  color: var(--text); font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem; font-weight: 300; color-scheme: dark;
+.campo-input {
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  font-size: 0.875rem; color: #1a1a2e; background: #f8fafc;
+  outline: none; transition: border-color 0.2s;
+  font-family: 'Inter', sans-serif;
 }
+.campo-input:focus { border-color: #e85d04; background: #fff; }
 
-.buscador-div { width: 1px; background: rgba(201,168,76,0.15); margin: 0.75rem 0; }
+.buscador-sep {
+  font-size: 1.2rem; color: #94a3b8;
+  padding-bottom: 0.65rem; flex-shrink: 0;
+}
 
 .btn-buscar {
-  background: var(--gold); color: var(--dark); border: none;
-  padding: 1rem 1.5rem; font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
-  min-width: 120px; display: flex; align-items: center;
-  justify-content: center; gap: 0.5rem;
+  padding: 0.7rem 1.75rem;
+  background: linear-gradient(135deg, #e85d04, #c44d02);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(232,93,4,0.4);
 }
-.btn-buscar:hover:not(:disabled) { background: var(--gold-light); }
+.btn-buscar:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,93,4,0.5); }
 .btn-buscar:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid rgba(0,0,0,0.3); border-top-color: var(--dark);
-  border-radius: 50%; animation: spin 0.8s linear infinite;
+.buscador-error {
+  margin-top: 0.75rem; font-size: 0.82rem;
+  color: #dc2626; text-align: center;
+}
+
+/* ── FEATURES ─────────────────────────────────────────────── */
+.features {
+  background: #1a1a2e;
+  padding: 1.25rem 2rem;
+}
+
+.features-container {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; justify-content: center;
+  gap: 2rem; flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.82rem; color: rgba(255,255,255,0.7);
+  font-weight: 500;
+}
+.feature-ico { font-size: 1.1rem; }
+
+/* ── RESULTADOS ───────────────────────────────────────────── */
+.resultados { padding: 4rem 2rem; background: #fffbf5; }
+.resultados-container { max-width: 1100px; margin: 0 auto; }
+
+.resultados-header { text-align: center; margin-bottom: 2rem; }
+.resultados-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.5rem;
+}
+.resultados-fechas { font-size: 0.9rem; color: #64748b; }
+
+.estado-cargando {
+  text-align: center; padding: 4rem;
+  color: #64748b; font-size: 1rem;
+}
+
+.spinner-grande {
+  width: 48px; height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #e85d04;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* HABITACIONES */
-.habitaciones-section { padding: 4rem 1.5rem; background: #141210; }
-.inicio-estado { padding: 4rem 1.5rem; background: #141210; }
-.container { max-width: 900px; margin: 0 auto; }
-
-.seccion-header {
-  display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2.5rem;
-}
-.linea { flex: 1; height: 1px; background: rgba(201,168,76,0.2); }
-.seccion-header h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem; font-weight: 300; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--text); white-space: nowrap;
+.spinner-btn {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 
-.vacio { text-align: center; padding: 4rem 2rem; }
-.vacio-icon { font-size: 2rem; color: var(--gold); opacity: 0.4; margin-bottom: 1rem; }
-.vacio-titulo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem; font-weight: 300; color: var(--text); margin-bottom: 0.5rem;
+.sin-disponibilidad {
+  text-align: center; padding: 4rem;
+  background: #fff; border-radius: 16px;
+  border: 2px dashed #e2e8f0;
 }
-.vacio-sub { font-size: 0.8rem; color: var(--text-muted); }
+.sin-disp-ico { font-size: 3rem; margin-bottom: 1rem; }
+.sin-disp-sub { color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem; }
 
-.error-msg {
-  background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.2);
-  border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem;
-  color: #FCA5A5; margin-bottom: 1.5rem;
-}
-
-.hab-grid {
+/* ── HABITACIONES GRID ────────────────────────────────────── */
+.habitaciones-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
 .hab-card {
-  background: #1C1A17; border: 1px solid rgba(201,168,76,0.12);
-  border-radius: 8px; overflow: hidden; cursor: pointer;
-  transition: all 0.3s; position: relative;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 1px solid rgba(0,0,0,0.06);
 }
 .hab-card:hover {
-  border-color: rgba(201,168,76,0.4); transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
 }
 
-.card-badge {
-  position: absolute; top: 0.75rem; right: 0.75rem;
-  font-size: 0.58rem; font-weight: 600; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--gold);
-  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
-  padding: 0.25rem 0.6rem; border-radius: 20px;
-}
-
-.card-icon {
-  padding: 1.5rem 1.25rem 0.75rem;
-  font-size: 1.5rem; color: var(--gold);
-  border-bottom: 1px solid rgba(201,168,76,0.08);
-  width: 52px; height: 52px;
-  background: rgba(201,168,76,0.08); border-radius: 50%;
+.hab-card-img {
+  height: 160px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f64f59 100%);
   display: flex; align-items: center; justify-content: center;
-  margin: 1.5rem 1.25rem 0.75rem;
+  position: relative;
+}
+.hab-card-img:nth-child(2n) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #fda085 100%);
 }
 
-.card-body { padding: 0.75rem 1.25rem 0; }
-.card-body h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem; font-weight: 400; color: var(--text);
+.hab-tipo-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+  color: #fff; padding: 0.3rem 0.8rem; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
+  border: 1px solid rgba(255,255,255,0.3);
 }
-.card-num { font-size: 0.7rem; color: var(--text-muted); }
-.card-desc { font-size: 0.78rem; color: #7A7060; line-height: 1.6; margin: 0.5rem 0; }
-.card-detalles { display: flex; gap: 1rem; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-.card-estrellas { font-size: 0.6rem; color: var(--gold); letter-spacing: 0.15em; opacity: 0.6; }
+.hab-emoji { font-size: 3.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
 
-.card-footer {
-  padding: 0.85rem 1.25rem;
-  border-top: 1px solid rgba(201,168,76,0.08);
-  display: flex; justify-content: space-between; align-items: center;
+.hab-card-body { padding: 1.25rem; }
+
+.hab-card-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 0.6rem;
+}
+.hab-nombre {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin: 0;
+}
+.hab-numero {
+  font-size: 0.75rem; background: #f1f5f9;
+  color: #64748b; padding: 0.2rem 0.6rem;
+  border-radius: 6px; font-weight: 600;
 }
 
-.precio { display: flex; align-items: baseline; gap: 0.25rem; }
-.precio-desde { font-size: 0.62rem; color: var(--text-muted); }
+.hab-descripcion {
+  font-size: 0.82rem; color: #64748b;
+  line-height: 1.6; margin-bottom: 0.75rem;
+}
+
+.hab-detalles {
+  display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;
+}
+.hab-detalle {
+  font-size: 0.75rem; color: #475569;
+  background: #f8fafc; padding: 0.25rem 0.65rem;
+  border-radius: 6px; border: 1px solid #e2e8f0;
+}
+
+.hab-card-footer {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1rem;
+}
+
+.hab-precio {
+  display: flex; align-items: baseline; gap: 0.3rem; margin-bottom: 0.25rem;
+}
 .precio-monto {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.3rem; font-weight: 600; color: var(--gold);
+  font-size: 1.5rem; font-weight: 800; color: #e85d04;
 }
-.precio-label { font-size: 0.65rem; color: var(--text-muted); }
+.precio-noche { font-size: 0.8rem; color: #94a3b8; }
+.precio-total { font-size: 0.82rem; color: #64748b; margin-bottom: 0.85rem; }
+.precio-total strong { color: #1a1a2e; }
 
 .btn-reservar {
-  background: transparent; color: var(--gold);
-  border: 1px solid rgba(201,168,76,0.35);
-  border-radius: 2px; padding: 0.45rem 1rem;
-  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; transition: all 0.2s;
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #e85d04, #c44d02);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(232,93,4,0.3);
 }
-.btn-reservar:hover { background: var(--gold); color: var(--dark); }
+.btn-reservar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(232,93,4,0.45);
+}
+
+/* ── INFO HOTEL ───────────────────────────────────────────── */
+.info-hotel {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: #fff;
+}
+
+.info-container {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+  align-items: center;
+}
+
+.info-texto h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 700;
+  margin-bottom: 1rem; color: #ffb347;
+}
+.info-texto p { color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 2rem; }
+
+.info-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; gap: 0.25rem; }
+.stat-num { font-size: 1.8rem; font-weight: 800; color: #ffb347; }
+.stat-lbl { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+
+
+.info-card-stack { display: flex; flex-direction: column; gap: 1rem; }
+
+.info-card {
+  display: flex; align-items: center; gap: 1rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 1rem 1.25rem;
+  transition: transform 0.2s;
+}
+.info-card:hover { transform: translateX(6px); }
+.info-card.azul   { border-left: 4px solid #60a5fa; }
+.info-card.naranja{ border-left: 4px solid #fb923c; }
+.info-card.verde  { border-left: 4px solid #4ade80; }
+.info-card-ico { font-size: 1.75rem; flex-shrink: 0; }
+.info-card-titulo { font-size: 0.9rem; font-weight: 600; color: #fff; }
+.info-card-sub { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+.footer {
+  background: #0f0f1a; text-align: center;
+  padding: 2rem; color: rgba(255,255,255,0.5);
+}
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; color: #ffb347; margin-bottom: 0.5rem;
+}
+.footer-sub { font-size: 0.8rem; line-height: 1.8; }
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .info-container { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0.85rem 1rem; }
+  .hero { padding: 6rem 1rem 3rem; }
+  .buscador { padding: 1.25rem; }
+  .buscador-campos { flex-direction: column; }
+  .buscador-sep { display: none; }
+  .campo-grupo { min-width: auto; }
+  .btn-buscar { width: 100%; }
+  .features-container { gap: 1rem; }
+  .habitaciones-grid { grid-template-columns: 1fr; }
+  .resultados { padding: 2.5rem 1rem; }
+  .info-hotel { padding: 3rem 1rem; }
+  .info-stats { gap: 1.25rem; }
+}
+
+/* ── SOCIAL PROOF TOAST ───────────────────────────────────── */
+.toast-notif {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  max-width: 280px;
+  min-width: 240px;
+}
+
+.toast-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e85d04, #c44d02);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast-body { flex: 1; }
+
+.toast-nombre {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.15rem;
+}
+
+.toast-hab {
+  font-size: 0.75rem;
+  color: #e85d04;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.toast-tiempo {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.toast-close:hover { color: #1a1a2e; }
+
+/* Animación entrada/salida */
+.toast-enter-active {
+  animation: slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toast-leave-active {
+  animation: slideOutLeft 0.3s ease-in forwards;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-110%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-110%); }
+}
+
+@media (max-width: 480px) {
+  .toast-notif {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+  }
+}
+
+.btn-nav.app {
+  border: 2px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+  background: transparent;
+  font-size: 0.8rem;
+}
+.btn-nav.app:hover { border-color: #E8773A; color: #E8773A; }
 </style>

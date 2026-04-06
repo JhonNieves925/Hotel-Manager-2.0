@@ -49,7 +49,12 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/inicio'
-  }
+  },
+  {
+  path: '/app',
+  name: 'descargar-app',
+  component: () => import('../views/DescargarAppHuespedView.vue')
+},
 ]
 
 const router = createRouter({

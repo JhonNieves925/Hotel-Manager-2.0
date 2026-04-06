@@ -13,25 +13,11 @@ const router = createRouter({
     // --------------------------------------------------------
     // RUTAS PÚBLICAS — accesibles sin login
     // --------------------------------------------------------
-    {
-      path: '/',
-      name: 'inicio',
-      component: () => import('../views/publico/InicioView.vue')
-    },
+    
     {
       path: '/app',
       name: 'descargar-app',
   component: () => import('../views/publico/DescargarAppView.vue')
-    },
-    {
-      path: '/reservar',
-      name: 'reservar',
-      component: () => import('../views/publico/ReservarView.vue')
-    },
-    {
-      path: '/confirmacion/:id',
-      name: 'confirmacion',
-      component: () => import('../views/publico/ConfirmacionView.vue')
     },
     {
       path: '/login',
