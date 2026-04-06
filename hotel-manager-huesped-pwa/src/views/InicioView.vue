@@ -732,7 +732,11 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .navbar { padding: 0.85rem 1rem; }
+  .navbar { padding: 0.75rem 1rem; gap: 0.5rem; }
+  .nav-links { gap: 0.4rem; }
+  .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+  /* En móvil el botón "Descarga la app" ocupa espacio innecesario */
+  .btn-nav.app { display: none; }
   .hero { padding: 6rem 1rem 3rem; }
   .buscador { padding: 1.25rem; }
   .buscador-campos { flex-direction: column; }
@@ -825,6 +829,11 @@ onMounted(() => {
 @keyframes slideOutLeft {
   from { opacity: 1; transform: translateX(0); }
   to   { opacity: 0; transform: translateX(-110%); }
+}
+
+@media (max-width: 380px) {
+  .brand-name { display: none; }
+  .btn-nav { padding: 0.3rem 0.6rem; font-size: 0.73rem; }
 }
 
 @media (max-width: 480px) {

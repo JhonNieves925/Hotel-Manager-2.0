@@ -68,10 +68,19 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
 
+    // Ruta raíz — redirige al portal público de huéspedes
+    {
+      path: '/',
+      beforeEnter: () => {
+        window.location.href = '/huesped/inicio'
+      },
+      component: { render: () => null }
+    },
+
     // Ruta 404
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/'
+      redirect: '/login'
     }
   ]
 })
