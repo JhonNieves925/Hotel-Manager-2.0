@@ -9,13 +9,13 @@
       </div>
       <div class="nav-links">
         <RouterLink to="/app" class="btn-nav app">📱 <span class="app-txt">Descarga la app</span></RouterLink>
-        <RouterLink v-if="!auth.isLoggedIn" to="/login"   class="btn-nav outline">Iniciar sesión</RouterLink>
+        <RouterLink v-if="!auth.isLoggedIn" to="/login"    class="btn-nav outline">Iniciar sesión</RouterLink>
         <RouterLink v-if="!auth.isLoggedIn" to="/registro" class="btn-nav solid">Registrarse</RouterLink>
         <template v-if="auth.isLoggedIn">
           <RouterLink to="/mis-reservas" class="btn-nav outline">Mis reservas</RouterLink>
           <RouterLink to="/perfil"       class="btn-nav solid">{{ auth.nombreCompleto.split(' ')[0] }}</RouterLink>
         </template>
-      </div> 
+      </div>
     </nav>
 
     <!-- HERO -->
@@ -23,9 +23,14 @@
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge">🌟 Cali, Valle del Cauca</div>
-        <!-- Botón descarga app — solo visible en móvil, aquí debajo del badge -->
+
+        <!-- Botón descarga app — solo visible en móvil, debajo del badge -->
         <RouterLink to="/app" class="btn-hero-app">📱 Descarga la app</RouterLink>
-        <h1 class="hero-title">Vive una experiencia<br><span class="hero-accent">inolvidable</span></h1>
+
+        <h1 class="hero-title">
+          Vive una experiencia<br>
+          <span class="hero-accent">inolvidable</span>
+        </h1>
         <p class="hero-sub">Habitaciones confortables · Atención personalizada · Ubicación privilegiada</p>
 
         <!-- BUSCADOR -->
@@ -63,33 +68,15 @@
       </div>
     </section>
 
-    <!-- CARACTERÍSTICAS -->
+    <!-- FEATURES BAR -->
     <section class="features">
       <div class="features-container">
-        <div class="feature-item">
-          <span class="feature-ico">🛏️</span>
-          <span class="feature-txt">Habitaciones premium</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-ico">🍳</span>
-          <span class="feature-txt">Desayuno incluido</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-ico">📶</span>
-          <span class="feature-txt">WiFi de alta velocidad</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-ico">🅿️</span>
-          <span class="feature-txt">Parqueadero gratuito</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-ico">🔒</span>
-          <span class="feature-txt">Seguridad 24/7</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-ico">❄️</span>
-          <span class="feature-txt">Aire acondicionado</span>
-        </div>
+        <div class="feature-item"><span class="feature-ico">🛏️</span><span class="feature-txt">Habitaciones premium</span></div>
+        <div class="feature-item"><span class="feature-ico">🍳</span><span class="feature-txt">Desayuno incluido</span></div>
+        <div class="feature-item"><span class="feature-ico">📶</span><span class="feature-txt">WiFi alta velocidad</span></div>
+        <div class="feature-item"><span class="feature-ico">🅿️</span><span class="feature-txt">Parqueadero gratuito</span></div>
+        <div class="feature-item"><span class="feature-ico">🔒</span><span class="feature-txt">Seguridad 24/7</span></div>
+        <div class="feature-item"><span class="feature-ico">❄️</span><span class="feature-txt">Aire acondicionado</span></div>
       </div>
     </section>
 
@@ -122,9 +109,9 @@
 
           <div v-else class="habitaciones-grid">
             <div v-for="hab in habitaciones" :key="hab.id" class="hab-card">
-              <div class="hab-card-img">
+              <div class="hab-card-img" :style="{ backgroundImage: `url(${imagenTipo(hab.tipo)})` }">
+                <div class="hab-card-img-overlay"></div>
                 <div class="hab-tipo-badge">{{ hab.tipo }}</div>
-                <div class="hab-emoji">{{ iconoTipo(hab.tipo) }}</div>
               </div>
               <div class="hab-card-body">
                 <div class="hab-card-header">
@@ -204,17 +191,17 @@
     </section>
 
     <!-- SOCIAL PROOF TOAST -->
-<Transition name="toast">
-  <div v-if="toastVisible" class="toast-notif">
-    <div class="toast-avatar">{{ toast.inicial }}</div>
-    <div class="toast-body">
-      <p class="toast-nombre">{{ toast.nombre }} acaba de reservar</p>
-      <p class="toast-hab">{{ toast.tipo }} · Hab. {{ toast.numero }}</p>
-      <p class="toast-tiempo">Hace {{ toast.tiempo }}</p>
-    </div>
-    <button class="toast-close" @click="toastVisible = false">×</button>
-  </div>
-</Transition>
+    <Transition name="toast">
+      <div v-if="toastVisible" class="toast-notif">
+        <div class="toast-avatar">{{ toast.inicial }}</div>
+        <div class="toast-body">
+          <p class="toast-nombre">{{ toast.nombre }} acaba de reservar</p>
+          <p class="toast-hab">{{ toast.tipo }} · Hab. {{ toast.numero }}</p>
+          <p class="toast-tiempo">Hace {{ toast.tiempo }}</p>
+        </div>
+        <button class="toast-close" @click="toastVisible = false">×</button>
+      </div>
+    </Transition>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -253,7 +240,6 @@ const noches = computed(() => {
   ))
 })
 
-// Horas disponibles en intervalos de 30 min
 const horasDisponibles = computed(() => {
   const horas = []
   for (let h = 0; h < 24; h++) {
@@ -271,7 +257,6 @@ const horasDisponibles = computed(() => {
 
 function onFechaChange() {
   if (fechaEntrada.value && fechaSalida.value && fechaSalida.value <= fechaEntrada.value) {
-    // Auto ajustar check-out al día siguiente del check-in
     const d = new Date(fechaEntrada.value)
     d.setDate(d.getDate() + 1)
     fechaSalida.value = d.toISOString().split('T')[0]
@@ -290,7 +275,6 @@ async function buscar() {
   try {
     const res = await habitacionService.listarDisponibles(fechaEntrada.value, fechaSalida.value)
     habitaciones.value = res.data
-    // Scroll suave a resultados
     setTimeout(() => {
       document.getElementById('resultados')?.scrollIntoView({ behavior: 'smooth' })
     }, 100)
@@ -327,6 +311,16 @@ function iconoTipo(tipo) {
   return { 'Suite': '🛏️', 'Doble': '🛏', 'Triple': '🏠', 'Sencilla': '🪑' }[tipo] || '🛏️'
 }
 
+function imagenTipo(tipo) {
+  const imgs = {
+    'Suite':    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&auto=format&fit=crop',
+    'Doble':    'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80&auto=format&fit=crop',
+    'Triple':   'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80&auto=format&fit=crop',
+    'Sencilla': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&auto=format&fit=crop',
+  }
+  return imgs[tipo] || imgs['Doble']
+}
+
 function descripcionDefault(tipo) {
   return {
     'Suite':    'Amplia suite con vista panorámica, jacuzzi y sala de estar privada.',
@@ -356,18 +350,15 @@ function mostrarToast() {
   toast.value = reservasRecientes[toastIndex % reservasRecientes.length]
   toastIndex++
   toastVisible.value = true
-  // Se oculta solo a los 4 segundos
   setTimeout(() => { toastVisible.value = false }, 4000)
 }
 
-// Primera aparición a los 3 segundos, luego cada 9 segundos
 onMounted(() => {
   setTimeout(() => {
     mostrarToast()
     setInterval(mostrarToast, 9000)
   }, 3000)
 })
-
 </script>
 
 <style scoped>
@@ -378,54 +369,73 @@ onMounted(() => {
 .inicio {
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  background: #fffbf5;
-  color: #1a1a2e;
+  background: #0A0A0A;
+  color: #fff;
 }
 
 /* ── NAVBAR ───────────────────────────────────────────────── */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(19, 23, 24, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  padding: 1rem 2.5rem;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
 }
 
-.brand { display: flex; align-items: center; gap: 0.5rem; }
+.brand { display: flex; align-items: center; gap: 0.6rem; }
 .brand-icon { font-size: 1.4rem; }
 .brand-name {
   font-family: 'Playfair Display', serif;
   font-size: 1.2rem; font-weight: 700;
-  color: #e85d04;
+  color: #C9A84C; letter-spacing: 0.02em;
 }
 
 .nav-links { display: flex; align-items: center; gap: 0.75rem; }
 
 .btn-nav {
-  padding: 0.45rem 1.1rem; border-radius: 25px;
+  padding: 0.45rem 1.2rem; border-radius: 25px;
   font-size: 0.85rem; font-weight: 600;
-  text-decoration: none; transition: all 0.2s; cursor: pointer;
+  text-decoration: none; transition: all 0.25s; cursor: pointer;
+  letter-spacing: 0.01em;
 }
+.btn-nav.app {
+  border: 1px solid rgba(201,168,76,0.35);
+  color: rgba(201,168,76,0.8);
+  background: transparent; font-size: 0.8rem;
+}
+.btn-nav.app:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.08); }
 .btn-nav.outline {
-  border: 2px solid #e85d04; color: #e85d04; background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.85);
+  background: transparent;
 }
-.btn-nav.outline:hover { background: #e85d04; color: #fff; }
-.btn-nav.solid { background: #e85d04; color: #fff; border: 2px solid #e85d04; }
-.btn-nav.solid:hover { background: #c44d02; border-color: #c44d02; }
+.btn-nav.outline:hover { border-color: #C9A84C; color: #C9A84C; }
+.btn-nav.solid {
+  background: #C9A84C; color: #0A0A0A;
+  border: 1.5px solid #C9A84C; font-weight: 700;
+}
+.btn-nav.solid:hover { background: #BFA046; border-color: #BFA046; }
 
 /* ── HERO ─────────────────────────────────────────────────── */
 .hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+  background-image: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1920&q=85&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   display: flex; align-items: center; justify-content: center;
   position: relative; padding: 7rem 2rem 4rem;
 }
 
 .hero-overlay {
   position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.55) 0%,
+    rgba(0,0,0,0.45) 50%,
+    rgba(0,0,0,0.75) 100%
+  );
 }
 
 .hero-content {
@@ -435,38 +445,58 @@ onMounted(() => {
 
 .hero-badge {
   display: inline-block;
-  background: rgba(232,93,4,0.2); border: 1px solid rgba(232,93,4,0.4);
-  color: #ffb347; padding: 0.4rem 1.2rem; border-radius: 25px;
-  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.05em;
-  margin-bottom: 1.5rem;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.4);
+  color: #C9A84C; padding: 0.4rem 1.2rem; border-radius: 25px;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
 }
+
+/* Botón descarga app — visible solo en móvil */
+.btn-hero-app {
+  align-items: center; gap: 0.4rem;
+  margin: 0 auto 1.25rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 25px;
+  border: 1px solid rgba(201,168,76,0.4);
+  color: rgba(201,168,76,0.85);
+  background: rgba(201,168,76,0.08);
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; transition: all 0.2s;
+}
+.btn-hero-app:hover { border-color: #C9A84C; background: rgba(201,168,76,0.15); color: #C9A84C; }
 
 .hero-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700; color: #fff;
   line-height: 1.15; margin-bottom: 1rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
 }
-.hero-accent { color: #ffb347; font-style: italic; }
+.hero-accent { color: #C9A84C; font-style: italic; }
 
 .hero-sub {
-  font-size: 1rem; color: rgba(255,255,255,0.7);
-  margin-bottom: 2.5rem; line-height: 1.6;
+  font-size: 1rem; color: rgba(255,255,255,0.75);
+  margin-bottom: 2.5rem; line-height: 1.7;
+  letter-spacing: 0.02em;
 }
 
 /* ── BUSCADOR ─────────────────────────────────────────────── */
 .buscador {
-  background: rgba(255,255,255,0.97);
+  background: rgba(10,10,10,0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,168,76,0.2);
   border-radius: 20px;
   padding: 1.75rem 2rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
   text-align: left;
 }
 
 .buscador-titulo {
-  font-size: 1rem; font-weight: 700;
-  color: #1a1a2e; margin-bottom: 1.25rem;
-  text-align: center;
+  font-size: 0.95rem; font-weight: 600;
+  color: #C9A84C; margin-bottom: 1.25rem;
+  text-align: center; letter-spacing: 0.04em;
+  text-transform: uppercase; font-size: 0.78rem;
 }
 
 .buscador-campos {
@@ -480,80 +510,91 @@ onMounted(() => {
 }
 
 .campo-label {
-  font-size: 0.72rem; font-weight: 700;
-  color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;
+  font-size: 0.68rem; font-weight: 700;
+  color: rgba(201,168,76,0.7);
+  text-transform: uppercase; letter-spacing: 0.07em;
 }
 
 .campo-input {
   padding: 0.65rem 0.85rem;
-  border: 1.5px solid #e2e8f0; border-radius: 10px;
-  font-size: 0.875rem; color: #1a1a2e; background: #f8fafc;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  font-size: 0.875rem; color: #fff;
+  background: rgba(255,255,255,0.06);
   outline: none; transition: border-color 0.2s;
   font-family: 'Inter', sans-serif;
 }
-.campo-input:focus { border-color: #e85d04; background: #fff; }
+.campo-input:focus { border-color: #C9A84C; background: rgba(201,168,76,0.06); }
+.campo-input option { background: #1a1a1a; color: #fff; }
 
 .buscador-sep {
-  font-size: 1.2rem; color: #94a3b8;
+  font-size: 1.2rem; color: rgba(201,168,76,0.5);
   padding-bottom: 0.65rem; flex-shrink: 0;
 }
 
 .btn-buscar {
   padding: 0.7rem 1.75rem;
-  background: linear-gradient(135deg, #e85d04, #c44d02);
-  color: #fff; border: none; border-radius: 10px;
-  font-size: 0.95rem; font-weight: 700;
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
+  color: #0A0A0A; border: none; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 800;
   cursor: pointer; transition: all 0.2s;
   white-space: nowrap; flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(232,93,4,0.4);
+  box-shadow: 0 4px 18px rgba(201,168,76,0.35);
+  letter-spacing: 0.02em;
 }
-.btn-buscar:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,93,4,0.5); }
-.btn-buscar:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-buscar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(201,168,76,0.5);
+}
+.btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .buscador-error {
   margin-top: 0.75rem; font-size: 0.82rem;
-  color: #dc2626; text-align: center;
+  color: #fca5a5; text-align: center;
 }
 
 /* ── FEATURES ─────────────────────────────────────────────── */
 .features {
-  background: #1a1a2e;
-  padding: 1.25rem 2rem;
+  background: #111111;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  padding: 1.1rem 2rem;
 }
 
 .features-container {
   max-width: 1100px; margin: 0 auto;
   display: flex; justify-content: center;
-  gap: 2rem; flex-wrap: wrap;
+  gap: 2.5rem; flex-wrap: wrap;
 }
 
 .feature-item {
   display: flex; align-items: center; gap: 0.5rem;
-  font-size: 0.82rem; color: rgba(255,255,255,0.7);
-  font-weight: 500;
+  font-size: 0.82rem; color: rgba(255,255,255,0.55);
+  font-weight: 500; letter-spacing: 0.02em;
 }
-.feature-ico { font-size: 1.1rem; }
+.feature-ico { font-size: 1rem; }
+.feature-txt { white-space: nowrap; }
 
 /* ── RESULTADOS ───────────────────────────────────────────── */
-.resultados { padding: 4rem 2rem; background: #fffbf5; }
+.resultados { padding: 5rem 2rem; background: #0A0A0A; }
 .resultados-container { max-width: 1100px; margin: 0 auto; }
 
-.resultados-header { text-align: center; margin-bottom: 2rem; }
+.resultados-header { text-align: center; margin-bottom: 2.5rem; }
 .resultados-header h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.5rem;
+  font-size: 1.9rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;
 }
-.resultados-fechas { font-size: 0.9rem; color: #64748b; }
+.resultados-fechas { font-size: 0.88rem; color: rgba(201,168,76,0.7); letter-spacing: 0.02em; }
 
 .estado-cargando {
   text-align: center; padding: 4rem;
-  color: #64748b; font-size: 1rem;
+  color: rgba(255,255,255,0.5); font-size: 1rem;
 }
 
 .spinner-grande {
   width: 48px; height: 48px;
-  border: 4px solid #e2e8f0;
-  border-top-color: #e85d04;
+  border: 3px solid rgba(201,168,76,0.2);
+  border-top-color: #C9A84C;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto 1rem;
@@ -562,60 +603,62 @@ onMounted(() => {
 
 .spinner-btn {
   display: inline-block; width: 16px; height: 16px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top-color: #fff;
+  border: 2px solid rgba(10,10,10,0.3);
+  border-top-color: #0A0A0A;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
 .sin-disponibilidad {
   text-align: center; padding: 4rem;
-  background: #fff; border-radius: 16px;
-  border: 2px dashed #e2e8f0;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px;
+  border: 1px dashed rgba(201,168,76,0.2);
 }
 .sin-disp-ico { font-size: 3rem; margin-bottom: 1rem; }
-.sin-disp-sub { color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem; }
+.sin-disponibilidad p { color: rgba(255,255,255,0.6); }
+.sin-disp-sub { color: rgba(255,255,255,0.35) !important; font-size: 0.9rem; margin-top: 0.5rem; }
 
 /* ── HABITACIONES GRID ────────────────────────────────────── */
 .habitaciones-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .hab-card {
-  background: #fff;
+  background: #141414;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  transition: transform 0.25s, box-shadow 0.25s;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(201,168,76,0.12);
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 .hab-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  border-color: rgba(201,168,76,0.35);
 }
 
 .hab-card-img {
-  height: 160px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f64f59 100%);
-  display: flex; align-items: center; justify-content: center;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
   position: relative;
 }
-.hab-card-img:nth-child(2n) {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #fda085 100%);
+.hab-card-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
 }
 
 .hab-tipo-badge {
   position: absolute; top: 1rem; left: 1rem;
-  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
-  color: #fff; padding: 0.3rem 0.8rem; border-radius: 20px;
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(201,168,76,0.9);
+  color: #0A0A0A; padding: 0.3rem 0.85rem; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.hab-emoji { font-size: 3.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
 
-.hab-card-body { padding: 1.25rem; }
+.hab-card-body { padding: 1.35rem; }
 
 .hab-card-header {
   display: flex; justify-content: space-between; align-items: flex-start;
@@ -623,62 +666,62 @@ onMounted(() => {
 }
 .hab-nombre {
   font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin: 0;
+  font-size: 1.2rem; font-weight: 700; color: #fff; margin: 0;
 }
 .hab-numero {
-  font-size: 0.75rem; background: #f1f5f9;
-  color: #64748b; padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  background: rgba(201,168,76,0.12);
+  color: #C9A84C; padding: 0.2rem 0.65rem;
   border-radius: 6px; font-weight: 600;
+  border: 1px solid rgba(201,168,76,0.2);
 }
 
 .hab-descripcion {
-  font-size: 0.82rem; color: #64748b;
+  font-size: 0.82rem; color: rgba(255,255,255,0.5);
   line-height: 1.6; margin-bottom: 0.75rem;
 }
 
 .hab-detalles {
-  display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;
+  display: flex; gap: 0.65rem; margin-bottom: 1rem; flex-wrap: wrap;
 }
 .hab-detalle {
-  font-size: 0.75rem; color: #475569;
-  background: #f8fafc; padding: 0.25rem 0.65rem;
-  border-radius: 6px; border: 1px solid #e2e8f0;
+  font-size: 0.73rem; color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.05);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
 }
 
 .hab-card-footer {
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(255,255,255,0.07);
   padding-top: 1rem;
 }
 
 .hab-precio {
-  display: flex; align-items: baseline; gap: 0.3rem; margin-bottom: 0.25rem;
+  display: flex; align-items: baseline; gap: 0.3rem; margin-bottom: 0.2rem;
 }
-.precio-monto {
-  font-size: 1.5rem; font-weight: 800; color: #e85d04;
-}
-.precio-noche { font-size: 0.8rem; color: #94a3b8; }
-.precio-total { font-size: 0.82rem; color: #64748b; margin-bottom: 0.85rem; }
-.precio-total strong { color: #1a1a2e; }
+.precio-monto { font-size: 1.6rem; font-weight: 800; color: #C9A84C; }
+.precio-noche { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+.precio-total { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 0.9rem; }
+.precio-total strong { color: rgba(255,255,255,0.8); }
 
 .btn-reservar {
-  width: 100%;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #e85d04, #c44d02);
-  color: #fff; border: none; border-radius: 10px;
-  font-size: 0.9rem; font-weight: 700;
-  cursor: pointer; transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(232,93,4,0.3);
+  width: 100%; padding: 0.8rem;
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
+  color: #0A0A0A; border: none; border-radius: 10px;
+  font-size: 0.9rem; font-weight: 800;
+  cursor: pointer; transition: all 0.25s;
+  letter-spacing: 0.02em;
 }
 .btn-reservar:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(232,93,4,0.45);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
 }
 
 /* ── INFO HOTEL ───────────────────────────────────────────── */
 .info-hotel {
   padding: 5rem 2rem;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  color: #fff;
+  background: #111111;
+  border-top: 1px solid rgba(201,168,76,0.1);
 }
 
 .info-container {
@@ -690,140 +733,108 @@ onMounted(() => {
 .info-texto h2 {
   font-family: 'Playfair Display', serif;
   font-size: 2rem; font-weight: 700;
-  margin-bottom: 1rem; color: #ffb347;
+  margin-bottom: 1rem; color: #C9A84C;
 }
-.info-texto p { color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 2rem; }
+.info-texto p { color: rgba(255,255,255,0.6); line-height: 1.85; margin-bottom: 2rem; }
 
-.info-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.info-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; }
 .stat { display: flex; flex-direction: column; gap: 0.25rem; }
-.stat-num { font-size: 1.8rem; font-weight: 800; color: #ffb347; }
-.stat-lbl { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
-
+.stat-num { font-size: 1.9rem; font-weight: 800; color: #C9A84C; }
+.stat-lbl { font-size: 0.76rem; color: rgba(255,255,255,0.4); letter-spacing: 0.03em; }
 
 .info-card-stack { display: flex; flex-direction: column; gap: 1rem; }
 
 .info-card {
   display: flex; align-items: center; gap: 1rem;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 14px; padding: 1rem 1.25rem;
-  transition: transform 0.2s;
+  transition: transform 0.2s, border-color 0.2s;
 }
-.info-card:hover { transform: translateX(6px); }
-.info-card.azul   { border-left: 4px solid #60a5fa; }
-.info-card.naranja{ border-left: 4px solid #fb923c; }
-.info-card.verde  { border-left: 4px solid #4ade80; }
+.info-card:hover { transform: translateX(6px); border-color: rgba(201,168,76,0.25); }
+.info-card.azul   { border-left: 3px solid #60a5fa; }
+.info-card.naranja{ border-left: 3px solid #C9A84C; }
+.info-card.verde  { border-left: 3px solid #4ade80; }
 .info-card-ico { font-size: 1.75rem; flex-shrink: 0; }
 .info-card-titulo { font-size: 0.9rem; font-weight: 600; color: #fff; }
-.info-card-sub { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+.info-card-sub { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
 
 /* ── FOOTER ───────────────────────────────────────────────── */
 .footer {
-  background: #0f0f1a; text-align: center;
-  padding: 2rem; color: rgba(255,255,255,0.5);
+  background: #050505;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  text-align: center;
+  padding: 2.5rem 2rem;
+  color: rgba(255,255,255,0.35);
 }
 .footer-brand {
   font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; color: #ffb347; margin-bottom: 0.5rem;
+  font-size: 1.2rem; color: #C9A84C; margin-bottom: 0.5rem;
 }
-.footer-sub { font-size: 0.8rem; line-height: 1.8; }
+.footer-sub { font-size: 0.78rem; line-height: 2; }
 
 /* ── RESPONSIVE ───────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .info-container { grid-template-columns: 1fr; gap: 2rem; }
+  .info-container { grid-template-columns: 1fr; gap: 2.5rem; }
 }
 
 @media (max-width: 768px) {
-  .navbar { padding: 0.75rem 1rem; gap: 0.5rem; }
+  .navbar { padding: 0.75rem 1rem; }
   .nav-links { gap: 0.4rem; }
   .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
-  /* En móvil el botón app va en el hero, no en el navbar */
   .btn-nav.app { display: none; }
   .btn-hero-app { display: inline-flex; }
-  .hero { padding: 6rem 1rem 3rem; }
+  .hero { padding: 6rem 1rem 3rem; background-attachment: scroll; }
   .buscador { padding: 1.25rem; }
   .buscador-campos { flex-direction: column; }
   .buscador-sep { display: none; }
   .campo-grupo { min-width: auto; }
   .btn-buscar { width: 100%; }
-  .features-container { gap: 1rem; }
+  .features-container { gap: 1.25rem; }
   .habitaciones-grid { grid-template-columns: 1fr; }
-  .resultados { padding: 2.5rem 1rem; }
+  .resultados { padding: 3rem 1rem; }
   .info-hotel { padding: 3rem 1rem; }
-  .info-stats { gap: 1.25rem; }
+  .info-stats { gap: 1.5rem; }
 }
 
-/* ── SOCIAL PROOF TOAST ───────────────────────────────────── */
+@media (max-width: 380px) {
+  .brand-name { display: none; }
+  .btn-nav { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
+}
+
+/* ── TOAST ────────────────────────────────────────────────── */
 .toast-notif {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  max-width: 280px;
-  min-width: 240px;
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 999;
+  display: flex; align-items: center; gap: 0.75rem;
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 14px; padding: 0.85rem 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  max-width: 280px; min-width: 240px;
 }
 
 .toast-avatar {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #e85d04, #c44d02);
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 700;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
+  color: #0A0A0A; font-size: 0.85rem; font-weight: 800;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 
 .toast-body { flex: 1; }
-
-.toast-nombre {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin: 0 0 0.15rem;
-}
-
-.toast-hab {
-  font-size: 0.75rem;
-  color: #e85d04;
-  font-weight: 600;
-  margin: 0 0 0.15rem;
-}
-
-.toast-tiempo {
-  font-size: 0.7rem;
-  color: #94a3b8;
-  margin: 0;
-}
+.toast-nombre { font-size: 0.8rem; font-weight: 700; color: #fff; margin: 0 0 0.15rem; }
+.toast-hab { font-size: 0.75rem; color: #C9A84C; font-weight: 600; margin: 0 0 0.15rem; }
+.toast-tiempo { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin: 0; }
 
 .toast-close {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  color: #94a3b8;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  flex-shrink: 0;
-  transition: color 0.2s;
+  background: none; border: none; font-size: 1.1rem;
+  color: rgba(255,255,255,0.3); cursor: pointer; padding: 0;
+  line-height: 1; flex-shrink: 0; transition: color 0.2s;
 }
-.toast-close:hover { color: #1a1a2e; }
+.toast-close:hover { color: #C9A84C; }
 
-/* Animación entrada/salida */
-.toast-enter-active {
-  animation: slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.toast-leave-active {
-  animation: slideOutLeft 0.3s ease-in forwards;
-}
+.toast-enter-active { animation: slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.toast-leave-active { animation: slideOutLeft 0.3s ease-in forwards; }
 
 @keyframes slideInLeft {
   from { opacity: 0; transform: translateX(-110%); }
@@ -834,42 +845,11 @@ onMounted(() => {
   to   { opacity: 0; transform: translateX(-110%); }
 }
 
-@media (max-width: 380px) {
-  .brand-name { display: none; }
-  .btn-nav { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
-}
-
 @media (max-width: 480px) {
-  .toast-notif {
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    max-width: none;
-  }
+  .toast-notif { bottom: 1rem; left: 1rem; right: 1rem; max-width: none; }
 }
 
-.btn-nav.app {
-  border: 2px solid #e85d04;
-  color: #e85d04;
-  background: transparent;
-  font-size: 0.8rem;
-}
-.btn-nav.app:hover { background: #e85d04; color: #fff; }
-
-/* Botón descarga en el hero — visible solo en móvil */
-.btn-hero-app {
-  align-items: center; gap: 0.4rem;
-  margin: 0.6rem auto 0;
-  padding: 0.5rem 1.4rem;
-  border-radius: 25px;
-  border: 2px solid rgba(232,119,58,0.6);
-  color: rgba(255,255,255,0.85);
-  background: rgba(232,119,58,0.12);
-  font-size: 0.85rem; font-weight: 600;
-  text-decoration: none; transition: all 0.2s;
-}
-.btn-hero-app:hover { border-color: #E8773A; background: rgba(232,119,58,0.25); color: #fff; }
-
+/* Botón hero app — desktop oculto */
 @media (min-width: 769px) {
   .btn-hero-app { display: none; }
 }
