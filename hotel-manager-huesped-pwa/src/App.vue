@@ -13,14 +13,30 @@
   </Transition>
 
   <RouterView v-if="!splashVisible" />
+
+  <!-- Banner de actualización disponible -->
+  <Transition name="update-fade">
+    <div v-if="needRefresh" class="update-banner">
+      <span>🆕 Nueva versión disponible</span>
+      <button class="update-btn" @click="actualizar">Actualizar</button>
+    </div>
+  </Transition>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 const splashVisible = ref(true)
 const progreso = ref(0)
+
+// Detecta nueva versión del service worker
+const { needRefresh, updateServiceWorker } = useRegisterSW()
+
+function actualizar() {
+  updateServiceWorker(true)
+}
 
 onMounted(() => {
   // Barra de carga animada
@@ -124,4 +140,27 @@ input, select, textarea { font-family: inherit; }
 /* ── TRANSICIÓN ── */
 .splash-fade-leave-active { transition: opacity 0.5s ease; }
 .splash-fade-leave-to    { opacity: 0; }
+
+/* ── BANNER ACTUALIZACIÓN ── */
+.update-banner {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  z-index: 9998;
+  display: flex; align-items: center; gap: 1rem;
+  background: #1a2f5e; border: 1px solid rgba(232,119,58,0.4);
+  color: #fff; font-size: 0.9rem;
+  padding: 0.75rem 1.25rem; border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+
+.update-btn {
+  background: #E8773A; color: #fff;
+  border: none; border-radius: 50px;
+  padding: 0.35rem 1rem; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.update-btn:hover { background: #C5602A; }
+
+.update-fade-enter-active, .update-fade-leave-active { transition: opacity 0.3s, transform 0.3s; }
+.update-fade-enter-from, .update-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(1rem); }
 </style>

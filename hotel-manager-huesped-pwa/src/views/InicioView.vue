@@ -15,7 +15,7 @@
           <RouterLink to="/mis-reservas" class="btn-nav outline">Mis reservas</RouterLink>
           <RouterLink to="/perfil"       class="btn-nav solid">{{ auth.nombreCompleto.split(' ')[0] }}</RouterLink>
         </template>
-      </div>
+      </div> 
     </nav>
 
     <!-- HERO -->
@@ -23,6 +23,8 @@
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge">🌟 Cali, Valle del Cauca</div>
+        <!-- Botón descarga app — solo visible en móvil, aquí debajo del badge -->
+        <RouterLink to="/app" class="btn-hero-app">📱 Descarga la app</RouterLink>
         <h1 class="hero-title">Vive una experiencia<br><span class="hero-accent">inolvidable</span></h1>
         <p class="hero-sub">Habitaciones confortables · Atención personalizada · Ubicación privilegiada</p>
 
@@ -735,8 +737,9 @@ onMounted(() => {
   .navbar { padding: 0.75rem 1rem; gap: 0.5rem; }
   .nav-links { gap: 0.4rem; }
   .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
-  /* En móvil muestra solo el ícono para ahorrar espacio */
-  .btn-nav.app .app-txt { display: none; }
+  /* En móvil el botón app va en el hero, no en el navbar */
+  .btn-nav.app { display: none; }
+  .btn-hero-app { display: inline-flex; }
   .hero { padding: 6rem 1rem 3rem; }
   .buscador { padding: 1.25rem; }
   .buscador-campos { flex-direction: column; }
@@ -846,10 +849,25 @@ onMounted(() => {
 }
 
 .btn-nav.app {
-  border: 2px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.75);
+  border: 2px solid #e85d04;
+  color: #e85d04;
   background: transparent;
   font-size: 0.8rem;
 }
-.btn-nav.app:hover { border-color: #E8773A; color: #E8773A; }
+.btn-nav.app:hover { background: #e85d04; color: #fff; }
+
+/* Botón descarga en el hero — solo móvil */
+.btn-hero-app {
+  display: none;
+  align-items: center; gap: 0.4rem;
+  margin: 0.6rem auto 0;
+  padding: 0.5rem 1.4rem;
+  border-radius: 25px;
+  border: 2px solid rgba(232,119,58,0.6);
+  color: rgba(255,255,255,0.85);
+  background: rgba(232,119,58,0.12);
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; transition: all 0.2s;
+}
+.btn-hero-app:hover { border-color: #E8773A; background: rgba(232,119,58,0.25); color: #fff; }
 </style>
