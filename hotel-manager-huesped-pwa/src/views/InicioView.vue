@@ -856,9 +856,8 @@ onMounted(() => {
 }
 .btn-nav.app:hover { background: #e85d04; color: #fff; }
 
-/* Botón descarga en el hero — solo móvil */
+/* Botón descarga en el hero — visible solo en móvil */
 .btn-hero-app {
-  display: none;
   align-items: center; gap: 0.4rem;
   margin: 0.6rem auto 0;
   padding: 0.5rem 1.4rem;
@@ -870,4 +869,8 @@ onMounted(() => {
   text-decoration: none; transition: all 0.2s;
 }
 .btn-hero-app:hover { border-color: #E8773A; background: rgba(232,119,58,0.25); color: #fff; }
+
+@media (min-width: 769px) {
+  .btn-hero-app { display: none; }
+}
 </style>
