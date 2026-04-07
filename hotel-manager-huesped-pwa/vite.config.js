@@ -22,7 +22,7 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         scope: '/huesped/',
-        start_url: '/huesped/',
+        start_url: '/huesped/login',
         icons: [
           {
             src: 'icons/icon-192.png',

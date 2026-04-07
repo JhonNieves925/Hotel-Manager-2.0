@@ -3,10 +3,9 @@ import axios from 'axios'
 // DESARROLLO LOCAL → baseURL: 'http://localhost:8080/api'
 // PRODUCCIÓN      → baseURL: '/api'
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
-                                //'ngrok-skip-browser-warning': 'true'
   }
 })
 
