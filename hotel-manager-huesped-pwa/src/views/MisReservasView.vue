@@ -14,7 +14,7 @@
 
     <!-- NAV BOTTOM -->
     <nav class="bottom-nav">
-      <RouterLink to="/inicio" class="nav-item">
+      <RouterLink to="/buscar" class="nav-item">
         <span class="nav-icon">◈</span>
         <span>Reservar</span>
       </RouterLink>
@@ -55,7 +55,7 @@
         <div class="vacio-icon">○</div>
         <p class="vacio-titulo">Sin reservas</p>
         <p class="vacio-sub">No tienes reservas {{ filtroActivo !== 'todas' ? 'en este estado' : 'aún' }}</p>
-        <RouterLink to="/inicio" class="btn-reservar-nuevo">Hacer una reserva</RouterLink>
+        <RouterLink to="/buscar" class="btn-reservar-nuevo">Hacer una reserva</RouterLink>
       </div>
 
       <div v-else class="reservas-lista">
