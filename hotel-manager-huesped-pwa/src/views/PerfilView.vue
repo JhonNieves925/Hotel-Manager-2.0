@@ -11,7 +11,7 @@
     </header>
 
     <nav class="bottom-nav">
-      <RouterLink to="/inicio" class="nav-item">
+      <RouterLink to="/buscar" class="nav-item">
         <span class="nav-icon">◈</span>
         <span>Reservar</span>
       </RouterLink>

@@ -36,6 +36,12 @@ const routes = [
     }
   },
   {
+    path: '/buscar',
+    name: 'buscar',
+    component: () => import('../views/BuscarView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/reservar',
     name: 'reservar',
     component: () => import('../views/ReservarView.vue')
