@@ -8,7 +8,7 @@
         <span class="brand-name">Hotel Manager</span>
       </div>
       <div class="nav-links">
-        <RouterLink to="/app" class="btn-nav app">📱 Descarga la app</RouterLink>
+        <RouterLink to="/app" class="btn-nav app">📱 <span class="app-txt">Descarga la app</span></RouterLink>
         <RouterLink v-if="!auth.isLoggedIn" to="/login"   class="btn-nav outline">Iniciar sesión</RouterLink>
         <RouterLink v-if="!auth.isLoggedIn" to="/registro" class="btn-nav solid">Registrarse</RouterLink>
         <template v-if="auth.isLoggedIn">
@@ -735,8 +735,8 @@ onMounted(() => {
   .navbar { padding: 0.75rem 1rem; gap: 0.5rem; }
   .nav-links { gap: 0.4rem; }
   .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
-  /* En móvil el botón "Descarga la app" ocupa espacio innecesario */
-  .btn-nav.app { display: none; }
+  /* En móvil muestra solo el ícono para ahorrar espacio */
+  .btn-nav.app .app-txt { display: none; }
   .hero { padding: 6rem 1rem 3rem; }
   .buscador { padding: 1.25rem; }
   .buscador-campos { flex-direction: column; }
@@ -833,7 +833,7 @@ onMounted(() => {
 
 @media (max-width: 380px) {
   .brand-name { display: none; }
-  .btn-nav { padding: 0.3rem 0.6rem; font-size: 0.73rem; }
+  .btn-nav { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
 }
 
 @media (max-width: 480px) {
