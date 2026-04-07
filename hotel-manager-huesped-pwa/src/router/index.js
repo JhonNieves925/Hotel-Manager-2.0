@@ -4,7 +4,13 @@ import { useHuespedAuthStore } from '../stores/auth'
 const routes = [
   {
     path: '/',
-    redirect: '/inicio'
+    redirect: () => {
+      // Si la app está instalada como PWA (modo standalone) va directo al login
+      const isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true
+      return isStandalone ? '/login' : '/inicio'
+    }
   },
   {
     path: '/inicio',
