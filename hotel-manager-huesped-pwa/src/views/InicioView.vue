@@ -376,15 +376,17 @@ onMounted(() => {
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 2.5rem;
+  height: 80px;
+  padding: 0 2.5rem;
   background: rgba(5, 5, 5, 0.92);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(201,168,76,0.15);
+  overflow: hidden;
 }
 
-.brand { display: flex; align-items: center; }
+.brand { display: flex; align-items: center; height: 100%; }
 .brand-logo {
-  height: 56px;
+  height: 110px;
   width: auto;
   object-fit: contain;
   mix-blend-mode: lighten;
@@ -778,7 +780,7 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .navbar { padding: 0.75rem 1rem; }
+  .navbar { height: 64px; padding: 0 1rem; }
   .nav-links { gap: 0.4rem; }
   .btn-nav { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
   .btn-nav.app { display: none; }
@@ -797,7 +799,7 @@ onMounted(() => {
 }
 
 @media (max-width: 380px) {
-  .brand-logo { height: 36px; }
+  .brand-logo { height: 52px; }
   .btn-nav { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
 }
 
