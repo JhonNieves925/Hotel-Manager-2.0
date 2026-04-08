@@ -3,8 +3,9 @@
 
     <nav class="navbar">
       <RouterLink to="/inicio" class="brand">
-        <span>🏨</span>
-        <span class="brand-name">Hotel Manager</span>
+        <div class="brand">
+        <img src="/logo.png" alt="Hotel Manager" class="brand-logo" />
+      </div>
       </RouterLink>
       <RouterLink to="/inicio" class="btn-volver">← Volver al inicio</RouterLink>
     </nav>
@@ -12,7 +13,9 @@
     <main class="main">
 
       <div class="hero-section">
-        <div class="app-icon">🏨</div>
+        <div class="brand">
+        <img src="/logo.png" alt="Hotel Manager" class="app-icon" />
+      </div>
         <div class="badge">📱 App para Huéspedes</div>
         <h1>Gestiona tus reservas<br><span class="accent">desde tu celular</span></h1>
         <p class="sub">Descarga la app de Hotel Manager y ten el control de tus reservas, check-in y perfil en la palma de tu mano.</p>
@@ -104,30 +107,34 @@ return `${window.location.protocol}//${host}/huesped/login`
 
 .descarga-page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 50%, #1a0a2e 100%);
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
   font-family: 'Inter', sans-serif;
   color: #fff;
 }
 
 /* ── NAVBAR ── */
 .navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1.25rem 2rem;
-  background: rgba(255,255,255,0.03);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  height: 80px;
+  padding: 0 2.5rem;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  overflow: hidden;
 }
-.brand {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem; font-weight: 700; color: #E8773A;
-  text-decoration: none;
+.brand { display: flex; align-items: center; height: 100%; }
+.brand-logo {
+  height: 110px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: lighten;
 }
-.brand-name { color: #E8773A; }
 .btn-volver {
   font-size: 0.8rem; color: rgba(255,255,255,0.4);
   text-decoration: none; transition: color 0.2s;
 }
-.btn-volver:hover { color: #E8773A; }
+.btn-volver:hover { color: #C9A84C; }
 
 /* ── MAIN ── */
 .main { max-width: 860px; margin: 0 auto; padding: 4rem 2rem 3rem; }
@@ -140,13 +147,15 @@ return `${window.location.protocol}//${host}/huesped/login`
   margin-bottom: 4rem;
 }
 .app-icon {
-  font-size: 4rem; margin-bottom: 1rem;
-  filter: drop-shadow(0 4px 16px rgba(232,119,58,0.4));
+  display: block;
+  margin: 0 auto; 
+  height: 220px;
+  width: auto;
 }
 .badge {
   display: inline-block;
-  background: rgba(232,119,58,0.1); border: 1px solid rgba(232,119,58,0.3);
-  color: #E8773A; padding: 0.35rem 1rem; border-radius: 20px;
+  background: rgba(232, 186, 58, 0.1); border: 1px solid rgba(232, 186, 58, 0.3);
+  color: #C9A84C; padding: 0.35rem 1rem; border-radius: 20px;
   font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
   margin-bottom: 1.5rem;
 }
@@ -156,7 +165,7 @@ return `${window.location.protocol}//${host}/huesped/login`
   font-weight: 700; line-height: 1.2;
   color: #fff; margin-bottom: 1rem;
 }
-.accent { color: #E8773A; font-style: italic; }
+.accent { color: #C9A84C; font-style: italic; }
 .sub {
   font-size: 1rem; color: rgba(255,255,255,0.5);
   max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7;
@@ -164,14 +173,14 @@ return `${window.location.protocol}//${host}/huesped/login`
 
 .btn-descargar {
   display: inline-flex; align-items: center; gap: 0.75rem;
-  background: #E8773A; color: #fff;
+  background: #C9A84C; color: #fff;
   padding: 0.9rem 2.5rem; border-radius: 50px;
   font-size: 1rem; font-weight: 700;
   text-decoration: none; transition: all 0.25s;
-  box-shadow: 0 8px 24px rgba(232,119,58,0.35);
+  box-shadow: 0 8px 24px rgba(232, 177, 58, 0.35);
 }
 .btn-descargar:hover {
-  background: #F28C4E; transform: translateY(-2px);
+  background: #f2d44e; transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(232,119,58,0.45);
 }
 .btn-arrow { font-size: 1.2rem; transition: transform 0.2s; }
@@ -199,8 +208,8 @@ return `${window.location.protocol}//${host}/huesped/login`
   text-align: center; transition: all 0.2s;
 }
 .feature-card:hover {
-  border-color: rgba(232,119,58,0.3);
-  background: rgba(232,119,58,0.05);
+  border-color: rgba(232, 191, 58, 0.3);
+  background: rgba(232, 171, 58, 0.05);
   transform: translateY(-3px);
 }
 .feature-ico { font-size: 2rem; margin-bottom: 0.75rem; }
@@ -230,7 +239,7 @@ return `${window.location.protocol}//${host}/huesped/login`
 .step-num {
   font-family: 'Playfair Display', serif;
   font-size: 2.5rem; font-weight: 700;
-  color: rgba(232,119,58,0.3); line-height: 1; flex-shrink: 0;
+  color: rgba(232, 191, 58, 0.3); line-height: 1; flex-shrink: 0;
 }
 
 .step-texto { display: flex; flex-direction: column; gap: 0.3rem; padding-top: 0.4rem; }
@@ -239,7 +248,7 @@ return `${window.location.protocol}//${host}/huesped/login`
 
 .step-sep {
   width: 60px; height: 1px;
-  background: rgba(232,119,58,0.2); flex-shrink: 0;
+  background: rgba(232, 177, 58, 0.2); flex-shrink: 0;
 }
 
 /* ── FOOTER ── */

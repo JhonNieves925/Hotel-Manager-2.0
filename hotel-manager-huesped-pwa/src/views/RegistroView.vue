@@ -135,7 +135,7 @@ async function handleRegistro() {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: 2rem 1.5rem;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 45%, #1a0a2e 100%);
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
   font-family: 'Inter', sans-serif;
 }
 
@@ -162,23 +162,23 @@ async function handleRegistro() {
   font-size: 0.72rem; font-weight: 500;
   color: rgba(255,255,255,0.4); transition: color 0.2s;
 }
-.btn-volver:hover { color: #E8773A; }
+.btn-volver:hover { color: #C9A84C; }
 
 .brand {
   display: flex; align-items: center; gap: 0.5rem;
   font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
-  color: #E8773A; letter-spacing: 0.02em; text-transform: none;
+  color: #C9A84C; letter-spacing: 0.02em; text-transform: none;
 }
-.brand-icon { color: #E8773A; font-size: 1rem; }
+.brand-icon { color: #C9A84C; font-size: 1rem; }
 
 /* ── CARD HEADER ── */
 .card-header { margin-bottom: 1.75rem; }
 
 .header-badge {
   display: inline-block; font-size: 0.58rem; font-weight: 600;
-  letter-spacing: 0.22em; text-transform: uppercase; color: #E8773A;
-  border: 1px solid rgba(232,119,58,0.3);
-  background: rgba(232,119,58,0.08);
+  letter-spacing: 0.22em; text-transform: uppercase; color: #C9A84C;
+  border: 1px solid rgba(232, 191, 58, 0.3);
+  background: rgba(232, 177, 58, 0.08);
   padding: 0.3rem 0.85rem; border-radius: 20px; margin-bottom: 1rem;
 }
 .card-header h1 {
@@ -226,7 +226,7 @@ async function handleRegistro() {
   color: rgba(255,255,255,0.3); font-size: 0.65rem;
   cursor: pointer; transition: color 0.2s;
 }
-.btn-ver:hover { color: #E8773A; }
+.btn-ver:hover { color: #C9A84C; }
 
 /* ── MENSAJES ── */
 .error-msg {
@@ -241,13 +241,13 @@ async function handleRegistro() {
 
 /* ── SUBMIT ── */
 .btn-submit {
-  background: #E8773A; color: #fff; border: none; border-radius: 6px;
+  background: #C9A84C; color: #fff; border: none; border-radius: 6px;
   padding: 0.9rem; font-family: 'Inter', sans-serif; font-size: 0.72rem;
   font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
   transition: all 0.25s; display: flex; align-items: center;
   justify-content: center; gap: 0.5rem;
 }
-.btn-submit:hover:not(:disabled) { background: #F28C4E; transform: translateY(-1px); }
+.btn-submit:hover:not(:disabled) { background: #c9c14c; transform: translateY(-1px); }
 .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .spinner {
@@ -265,8 +265,8 @@ async function handleRegistro() {
   font-size: 0.75rem; color: rgba(255,255,255,0.35);
   display: flex; justify-content: center; gap: 0.5rem;
 }
-.link-login { color: #E8773A; font-weight: 500; transition: color 0.2s; }
-.link-login:hover { color: #F28C4E; }
+.link-login { color: #C9A84C; font-weight: 500; transition: color 0.2s; }
+.link-login:hover { color: #f2d94e; }
 
 @media (max-width: 480px) {
   .form-row { grid-template-columns: 1fr; }

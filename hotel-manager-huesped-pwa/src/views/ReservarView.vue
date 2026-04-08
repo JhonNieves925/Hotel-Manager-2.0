@@ -3,7 +3,7 @@
 
     <header class="header">
       <button class="btn-volver" @click="router.back()">←</button>
-      <div class="brand">🏨 Hotel Manager</div>
+      <div class="brand">Hotel Manager</div>
       <div style="width:32px"></div>
     </header>
 
@@ -303,13 +303,13 @@ function formatPrecio(v) {
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap');
 
 * { box-sizing: border-box; }
-.page { min-height: 100vh; background: #fffbf5; font-family: 'Inter', sans-serif; }
+.page { min-height: 100vh; background: #0A1628; font-family: 'Inter', sans-serif; }
 
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-between; align-items: center;
   padding: 1rem 1.5rem;
-  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,0,0,0.08);
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
@@ -317,19 +317,22 @@ function formatPrecio(v) {
   background: none; border: none; font-size: 1.3rem;
   color: #64748b; cursor: pointer;
 }
-.btn-volver:hover { color: #e85d04; }
+.btn-volver:hover { color: #e8b13a; }
 .brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem; font-weight: 700; color: #e85d04;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-align: center;
 }
 
 .main { padding: 5rem 1.25rem 3rem; max-width: 600px; margin: 0 auto; }
 
 /* RESUMEN */
 .resumen-card {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  background: linear-gradient(135deg, #2f2f55, #1c2642);
   border-radius: 16px; padding: 1.5rem;
-  margin-bottom: 1.75rem; color: #fff;
+  margin-bottom: 1.75rem; color: #000000;
   box-shadow: 0 8px 30px rgba(26,26,46,0.3);
 }
 
@@ -365,7 +368,7 @@ function formatPrecio(v) {
 .form { display: flex; flex-direction: column; gap: 1.25rem; }
 
 .form-seccion {
-  background: #fff; border-radius: 14px;
+  background: #1f232b; border-radius: 14px;
   padding: 1.25rem; border: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
@@ -373,41 +376,41 @@ function formatPrecio(v) {
 .seccion-header {
   display: flex; align-items: center; gap: 0.65rem;
   margin-bottom: 1.1rem; padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e8b13a;
 }
 .seccion-num {
-  background: #e85d04; color: #fff;
+  background: #e8b13a; color: #fff;
   width: 26px; height: 26px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.72rem; font-weight: 800; flex-shrink: 0;
 }
-.seccion-titulo { font-size: 0.9rem; font-weight: 700; color: #1a1a2e; }
+.seccion-titulo { font-size: 0.9rem; font-weight: 700; color: #e7e7e7; }
 
 .datos-guardados {
-  padding: 0.75rem 1rem; background: #f0fdf4;
-  border: 1px solid #86efac; border-radius: 8px;
-  font-size: 0.85rem; color: #15803d; font-weight: 500;
+  padding: 0.75rem 1rem; background: #84ce47;
+  border: 1px solid #504b4b; border-radius: 8px;
+  font-size: 0.85rem; color: #3b3a3a; font-weight: 500;
 }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
 .form-row:last-child { margin-bottom: 0; }
 
 .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
-.form-group label { font-size: 0.75rem; font-weight: 600; color: #475569; }
+.form-group label { font-size: 0.75rem; font-weight: 600; color: #e2e2e2; }
 .form-group input,
 .form-group select,
 .form-group textarea {
   padding: 0.55rem 0.8rem;
-  border: 1.5px solid #e2e8f0; border-radius: 8px;
-  font-size: 0.875rem; color: #1a1a2e; background: #f8fafc;
+  border: 1.5px solid #e8b13a; border-radius: 8px;
+  font-size: 0.875rem; color: #ffffff; background: #35373b;
   outline: none; transition: border-color 0.2s;
   font-family: 'Inter', sans-serif;
 }
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus { border-color: #e85d04; background: #fff; }
+.form-group textarea:focus { border-color: #e8b13a; background: #686565; }
 .form-group textarea { resize: none; }
-.campo-hint { font-size: 0.7rem; color: #94a3b8; }
+.campo-hint { font-size: 0.7rem; color: #ffffff; }
 
 .error-msg {
   padding: 0.75rem 1rem; background: #fef2f2;
@@ -417,30 +420,30 @@ function formatPrecio(v) {
 
 .btn-confirmar {
   padding: 1rem;
-  background: linear-gradient(135deg, #e85d04, #c44d02);
+  background: linear-gradient(135deg, #1fe804, #29c402);
   color: #fff; border: none; border-radius: 12px;
   font-size: 1rem; font-weight: 700; cursor: pointer;
   transition: all 0.2s; display: flex; align-items: center;
   justify-content: center; gap: 0.5rem;
-  box-shadow: 0 6px 20px rgba(232,93,4,0.35);
+  box-shadow: 0 6px 20px rgba(4, 232, 34, 0.35);
 }
 .btn-confirmar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(232,93,4,0.45);
+  box-shadow: 0 8px 28px rgba(42, 232, 4, 0.582);
 }
 .btn-confirmar:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .spinner {
   width: 18px; height: 18px;
   border: 2px solid rgba(255,255,255,0.4);
-  border-top-color: #fff; border-radius: 50%;
+  border-top-color: #444242; border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .form-nota {
   text-align: center; font-size: 0.78rem;
-  color: #94a3b8; margin-top: -0.5rem;
+  color: #f0f0f0; margin-top: -0.5rem;
 }
 
 @media (max-width: 500px) {

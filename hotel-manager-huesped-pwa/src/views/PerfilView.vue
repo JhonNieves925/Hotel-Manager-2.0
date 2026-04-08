@@ -3,10 +3,7 @@
 
     <header class="header">
       <RouterLink to="/mis-reservas" class="btn-volver">←</RouterLink>
-      <div class="brand">
-        <span class="brand-icon">✦</span>
-        <span>Hotel Manager</span>
-      </div>
+      <div class="brand">Hotel Manager</div>
       <div style="width:32px"></div>
     </header>
 
@@ -175,31 +172,38 @@ function logout() {
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 40%, #1a0a2e 100%);
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
+  display: flex;
+  flex-direction: column;
   font-family: 'Inter', sans-serif;
 }
 
 /* ── HEADER ── */
 .header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0.9rem 1.5rem;
-  background: #ffffff;
-  box-shadow: 0 1px 12px rgba(0,0,0,0.12);
+  height: 80px;
+  padding: 0 2.5rem;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  overflow: hidden;
 }
 .btn-volver { color: #999; font-size: 1.1rem; transition: color 0.2s; }
-.btn-volver:hover { color: #E8773A; }
+.btn-volver:hover { color: #e8a23a; }
 .brand {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
-  color: #E8773A; letter-spacing: 0.02em; text-transform: none;
+   font-family: "Georgia", "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-align: center;
 }
-.brand-icon { color: #E8773A; font-size: 1rem; }
+
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  display: flex; background: #ffffff;
+  display: flex; background: #0f0f0f;
   box-shadow: 0 -1px 12px rgba(0,0,0,0.1);
   border-top: 1px solid rgba(0,0,0,0.06);
   padding-bottom: env(safe-area-inset-bottom);
@@ -210,8 +214,8 @@ function logout() {
   font-size: 0.58rem; font-weight: 500; letter-spacing: 0.06em;
   text-transform: uppercase; color: #999; transition: color 0.2s; text-decoration: none;
 }
-.nav-item.active, .router-link-active { color: #E8773A !important; }
-.nav-item:hover { color: #E8773A; }
+.nav-item.active, .router-link-active { color: #e8ab3a !important; }
+.nav-item:hover { color: #e8a23a; }
 .nav-icon { font-size: 1rem; }
 
 /* ── MAIN ── */
@@ -225,18 +229,18 @@ function logout() {
 }
 .avatar {
   width: 72px; height: 72px; border-radius: 50%;
-  background: rgba(232,119,58,0.12);
-  border: 2px solid rgba(232,119,58,0.35);
+  background: rgba(232, 162, 58, 0.12);
+  border: 2px solid rgba(232, 177, 58, 0.35);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; font-weight: 700; color: #E8773A;
+  font-size: 1.3rem; font-weight: 700; color: #e8a23a;
   margin: 0 auto 1rem; letter-spacing: 0.05em;
 }
 .perfil-nombre {
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem; font-weight: 400; color: #fff; margin-bottom: 0.25rem;
 }
-.perfil-email { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-bottom: 0.75rem; }
-.perfil-estrellas { font-size: 0.65rem; color: #E8773A; letter-spacing: 0.3em; opacity: 0.6; }
+.perfil-email { font-size: 0.78rem; color: rgba(255, 255, 255, 0.74); margin-bottom: 0.75rem; }
+.perfil-estrellas { font-size: 0.65rem; color: #e8bf3a; letter-spacing: 0.3em; opacity: 0.6; }
 
 /* ── FORM ── */
 .form { display: flex; flex-direction: column; gap: 2rem; }
@@ -247,14 +251,14 @@ function logout() {
 }
 .seccion-num {
   font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; color: #E8773A; opacity: 0.5; font-weight: 400; line-height: 1;
+  font-size: 1.2rem; color: #e8bf3a; opacity: 0.5; font-weight: 400; line-height: 1;
 }
 .seccion-label span:nth-child(2) {
   font-size: 0.62rem; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; color: rgba(255, 255, 255, 0.89);
   white-space: nowrap;
 }
-.seccion-linea { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+.seccion-linea { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.342); }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
@@ -271,8 +275,8 @@ function logout() {
   font-weight: 400; color: #fff; outline: none; transition: all 0.25s;
 }
 .form-group input:focus {
-  border-color: rgba(232,119,58,0.5);
-  background: rgba(232,119,58,0.04);
+  border-color: rgba(232, 177, 58, 0.5);
+  background: rgba(232, 200, 58, 0.04);
 }
 .form-group input:disabled { opacity: 0.4; cursor: default; }
 .form-group input::placeholder { color: rgba(255,255,255,0.2); }
@@ -284,19 +288,19 @@ function logout() {
 }
 .error-msg {
   background: rgba(252,129,74,0.08); border: 1px solid rgba(252,129,74,0.2);
-  border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.8rem; color: #fc814a;
+  border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.8rem; color: #fc4a4a;
 }
 
 /* ── BOTONES ── */
 .form-acciones { display: flex; gap: 0.75rem; }
 
 .btn-editar {
-  flex: 1; background: transparent; color: #E8773A;
-  border: 1px solid rgba(232,119,58,0.4); border-radius: 6px;
+  flex: 1; background: transparent; color: #e8b13a;
+  border: 1px solid rgba(232, 177, 58, 0.4); border-radius: 6px;
   padding: 0.85rem; font-size: 0.7rem; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase; transition: all 0.2s;
 }
-.btn-editar:hover { background: rgba(232,119,58,0.1); }
+.btn-editar:hover { background: rgba(232, 186, 58, 0.1); }
 
 .btn-cancelar {
   flex: 1; background: transparent; color: rgba(255,255,255,0.4);
@@ -307,11 +311,11 @@ function logout() {
 .btn-cancelar:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
 
 .btn-guardar {
-  flex: 1; background: #E8773A; color: #fff; border: none;
+  flex: 1; background: #ac8a2d; color: #fff; border: none;
   border-radius: 6px; padding: 0.85rem; font-size: 0.7rem; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase; transition: all 0.2s;
 }
-.btn-guardar:hover:not(:disabled) { background: #F28C4E; transform: translateY(-1px); }
+.btn-guardar:hover:not(:disabled) { background: #866d26; transform: translateY(-1px); }
 .btn-guardar:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* ── LOGOUT ── */
@@ -320,15 +324,15 @@ function logout() {
   border-top: 1px solid rgba(255,255,255,0.07);
 }
 .btn-logout {
-  width: 100%; background: rgba(252,129,74,0.07);
-  border: 1px solid rgba(252,129,74,0.2); border-radius: 6px;
+  width: 100%; background: rgba(252, 240, 74, 0.07);
+  border: 1px solid rgba(252, 225, 74, 0.2); border-radius: 6px;
   padding: 0.85rem; font-size: 0.7rem; font-weight: 500;
   letter-spacing: 0.15em; text-transform: uppercase;
-  color: rgba(252,129,74,0.8); transition: all 0.2s;
+  color: rgba(252, 210, 74, 0.8); transition: all 0.2s;
 }
-.btn-logout:hover { background: rgba(252,129,74,0.15); color: #fc814a; }
+.btn-logout:hover { background: rgba(252, 205, 74, 0.15); color: #ecce46; }
 
 @media (max-width: 400px) {
   .form-row { grid-template-columns: 1fr; }
 }
-</style>
+</style> 

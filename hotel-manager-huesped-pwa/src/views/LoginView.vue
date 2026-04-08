@@ -80,7 +80,7 @@ async function handleLogin() {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: 2rem 1.5rem;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 45%, #1a0a2e 100%);
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
   font-family: 'Inter', sans-serif;
 }
 
@@ -107,23 +107,23 @@ async function handleLogin() {
   font-size: 0.72rem; font-weight: 500;
   color: rgba(255,255,255,0.4); transition: color 0.2s;
 }
-.btn-volver:hover { color: #E8773A; }
+.btn-volver:hover { color: #C9A84C; }
 
 .brand {
   display: flex; align-items: center; gap: 0.5rem;
   font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
-  color: #E8773A; letter-spacing: 0.02em;
+  color: #C9A84C; letter-spacing: 0.02em;
 }
-.brand-icon { color: #E8773A; font-size: 1rem; }
+.brand-icon { color: #C9A84C; font-size: 1rem; }
 
 /* ── CARD HEADER ── */
 .card-header { margin-bottom: 2rem; }
 
 .header-badge {
   display: inline-block; font-size: 0.58rem; font-weight: 600;
-  letter-spacing: 0.22em; text-transform: uppercase; color: #E8773A;
-  border: 1px solid rgba(232,119,58,0.3);
-  background: rgba(232,119,58,0.08);
+  letter-spacing: 0.22em; text-transform: uppercase; color: #C9A84C;
+  border: 1px solid rgba(211, 175, 59, 0.3);
+  background: rgba(232, 186, 58, 0.08);
   padding: 0.3rem 0.85rem; border-radius: 20px; margin-bottom: 1rem;
 }
 .card-header h1 {
@@ -168,19 +168,19 @@ async function handleLogin() {
 /* ── ERROR ── */
 .error-msg {
   background: rgba(252,129,74,0.08); border: 1px solid rgba(252,129,74,0.2);
-  border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.8rem; color: #fc814a;
+  border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.8rem; color: #C9A84C;
   display: flex; align-items: center; gap: 0.5rem;
 }
 
 /* ── SUBMIT ── */
 .btn-submit {
-  background: #E8773A; color: #fff; border: none; border-radius: 6px;
+  background: #C9A84C; color: #fff; border: none; border-radius: 6px;
   padding: 0.9rem; font-family: 'Inter', sans-serif; font-size: 0.72rem;
   font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
   transition: all 0.25s; display: flex; align-items: center;
   justify-content: center; gap: 0.5rem;
 }
-.btn-submit:hover:not(:disabled) { background: #F28C4E; transform: translateY(-1px); }
+.btn-submit:hover:not(:disabled) { background: #c7c94c; transform: translateY(-1px); }
 .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .spinner {
@@ -198,6 +198,6 @@ async function handleLogin() {
   font-size: 0.75rem; color: rgba(255,255,255,0.35);
   display: flex; justify-content: center; gap: 0.5rem;
 }
-.link-registro { color: #E8773A; font-weight: 500; transition: color 0.2s; }
-.link-registro:hover { color: #F28C4E; }
+.link-registro { color: #C9A84C; font-weight: 500; transition: color 0.2s; }
+.link-registro:hover { color: #c9c14c; }
 </style>

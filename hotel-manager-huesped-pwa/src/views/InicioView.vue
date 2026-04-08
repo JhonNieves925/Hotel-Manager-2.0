@@ -40,7 +40,7 @@
             <!-- Check-in -->
             <div class="buscador-bloque">
               <div class="bloque-header">
-                <span class="bloque-ico">🌅</span>
+                <span class="bloque-ico"></span>
                 <span class="bloque-etiqueta">Llegada</span>
               </div>
               <div class="bloque-campos">
@@ -63,7 +63,7 @@
             <!-- Check-out -->
             <div class="buscador-bloque">
               <div class="bloque-header">
-                <span class="bloque-ico">🌙</span>
+                <span class="bloque-ico"></span>
                 <span class="bloque-etiqueta">Salida</span>
               </div>
               <div class="bloque-campos">
@@ -84,7 +84,7 @@
 
           <button class="btn-buscar" @click="buscar" :disabled="cargando || !fechaEntrada || !fechaSalida">
             <span v-if="cargando" class="spinner-btn"></span>
-            <span v-else>🔍 Buscar disponibilidad</span>
+            <span v-else>Buscar disponibilidad</span>
           </button>
           <p v-if="error" class="buscador-error">⚠ {{ error }}</p>
         </div>

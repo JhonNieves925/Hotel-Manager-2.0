@@ -3,7 +3,7 @@
 
     <header class="header">
       <RouterLink to="/mis-reservas" class="btn-volver">←</RouterLink>
-      <div class="brand">🏨 Hotel Manager</div>
+      <div class="brand">Hotel Manager</div>
       <div style="width:32px"></div>
     </header>
 
@@ -37,7 +37,7 @@
           <div class="fechas-grid">
             <!-- Check-in -->
             <div class="fecha-card" :class="{ activo: campoActivo === 'entrada' }">
-              <div class="fecha-card-label">📅 Check-in</div>
+              <div class="fecha-card-label">📅 Ingreso</div>
               <input
                 type="date"
                 v-model="fechaEntrada"
@@ -54,7 +54,7 @@
 
             <!-- Check-out -->
             <div class="fecha-card" :class="{ activo: campoActivo === 'salida' }">
-              <div class="fecha-card-label">📅 Check-out</div>
+              <div class="fecha-card-label">📅 Salida</div>
               <input
                 type="date"
                 v-model="fechaSalida"
@@ -274,9 +274,10 @@ function formatPrecio(v) {
 
 .page {
   min-height: 100vh;
-  background: #0A1628;
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
+  display: flex;
+  flex-direction: column;
   font-family: 'Inter', sans-serif;
-  color: #fff;
 }
 
 /* ── HEADER ── */
@@ -284,25 +285,27 @@ function formatPrecio(v) {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-between; align-items: center;
   padding: 1rem 1.25rem;
-  background: rgba(10,22,40,0.95); backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .btn-volver {
   background: none; border: none; font-size: 1.3rem;
   color: rgba(255,255,255,0.6); cursor: pointer; padding: 0;
 }
-.btn-volver:hover { color: #E8773A; }
+.btn-volver:hover { color: #e8b13a; }
 .brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem; font-weight: 700; color: #E8773A;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-align: center;
 }
-
 /* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-around; align-items: center;
   padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
-  background: rgba(10,22,40,0.97); backdrop-filter: blur(20px);
+  background: rgba(10, 10, 10, 0.97); backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 .nav-item {
@@ -310,7 +313,7 @@ function formatPrecio(v) {
   color: rgba(255,255,255,0.4); font-size: 0.7rem;
   text-decoration: none; transition: color 0.2s; padding: 0 1rem;
 }
-.nav-item.active, .nav-item:hover { color: #E8773A; }
+.nav-item.active, .nav-item:hover { color: #C9A84C; }
 .nav-icon { font-size: 1.1rem; }
 
 /* ── MAIN ── */
@@ -327,7 +330,7 @@ function formatPrecio(v) {
   font-size: 2rem; font-weight: 700; line-height: 1.2;
   color: #fff; margin-bottom: 0.5rem;
 }
-.acento { color: #E8773A; font-style: italic; }
+.acento { color: #C9A84C; font-style: italic; }
 .paso-sub { font-size: 0.88rem; color: rgba(255,255,255,0.45); }
 
 /* ── FECHAS ── */
@@ -344,8 +347,8 @@ function formatPrecio(v) {
   cursor: pointer;
 }
 .fecha-card.activo {
-  border-color: #E8773A;
-  background: rgba(232,119,58,0.08);
+  border-color: #C9A84C;
+  background: rgba(232, 191, 58, 0.08);
 }
 .fecha-card-label {
   font-size: 0.7rem; font-weight: 600;
@@ -366,9 +369,9 @@ function formatPrecio(v) {
 
 .noches-badge {
   display: inline-flex; align-items: center;
-  background: rgba(232,119,58,0.15);
-  border: 1px solid rgba(232,119,58,0.3);
-  color: #E8773A; font-size: 0.82rem; font-weight: 600;
+  background: rgba(232, 186, 58, 0.15);
+  border: 1px solid rgba(232, 186, 58, 0.3);
+  color: #C9A84C; font-size: 0.82rem; font-weight: 600;
   padding: 0.3rem 0.85rem; border-radius: 50px;
   margin-bottom: 1.25rem;
 }
@@ -393,22 +396,22 @@ function formatPrecio(v) {
   outline: none; transition: border-color 0.2s;
   appearance: none;
 }
-.hora-select:focus { border-color: #E8773A; }
-.hora-select option { background: #0D1B3E; color: #fff; }
+.hora-select:focus { border-color: #C9A84C; }
+.hora-select option { background: #0a1327; color: #fff; }
 
 /* ── BTN BUSCAR ── */
 .btn-buscar {
   width: 100%; padding: 1rem;
-  background: linear-gradient(135deg, #E8773A, #C5602A);
+  background: linear-gradient(135deg, #C9A84C, #c5942a);
   color: #fff; border: none; border-radius: 14px;
   font-size: 1rem; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  box-shadow: 0 6px 24px rgba(232,119,58,0.35);
+  box-shadow: 0 6px 24px rgba(232, 229, 58, 0.35);
   transition: all 0.2s;
 }
 .btn-buscar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(232,119,58,0.45);
+  box-shadow: 0 8px 30px rgba(232, 200, 58, 0.45);
 }
 .btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -432,14 +435,14 @@ function formatPrecio(v) {
   text-align: left; font-family: 'Inter', sans-serif;
   transition: color 0.2s;
 }
-.btn-cambiar:hover { color: #E8773A; }
+.btn-cambiar:hover { color: #C9A84C; }
 .fechas-resumen {
   display: flex; align-items: center; gap: 0.5rem;
   font-size: 0.9rem; font-weight: 600; color: #fff;
 }
 .sep { color: rgba(255,255,255,0.3); }
 .badge-noches {
-  background: rgba(232,119,58,0.2); color: #E8773A;
+  background: rgba(232,119,58,0.2); color: #C9A84C;
   font-size: 0.72rem; font-weight: 700;
   padding: 0.15rem 0.55rem; border-radius: 50px;
 }
@@ -454,14 +457,14 @@ function formatPrecio(v) {
 .habitaciones-lista { display: flex; flex-direction: column; gap: 1rem; }
 
 .hab-card {
-  background: rgba(255,255,255,0.04);
+  background: rgba(182, 173, 173, 0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px; overflow: hidden;
   transition: border-color 0.2s, background 0.2s;
 }
 .hab-card:hover {
-  border-color: rgba(232,119,58,0.3);
-  background: rgba(232,119,58,0.04);
+  border-color: rgba(232, 186, 58, 0.3);
+  background: rgba(232, 191, 58, 0.04);
 }
 
 .hab-card-top {
@@ -477,7 +480,7 @@ function formatPrecio(v) {
 .hab-num { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
 .hab-desc { font-size: 0.78rem; color: rgba(255,255,255,0.35); line-height: 1.4; }
 .hab-precio { text-align: right; flex-shrink: 0; }
-.precio-noche { font-size: 1.1rem; font-weight: 800; color: #E8773A; }
+.precio-noche { font-size: 1.1rem; font-weight: 800; color: #C9A84C; }
 .precio-label { font-size: 0.68rem; color: rgba(255,255,255,0.35); }
 
 .hab-card-bottom {
@@ -490,14 +493,14 @@ function formatPrecio(v) {
 .total-info strong { color: #fff; }
 
 .btn-reservar {
-  background: #E8773A; color: #fff;
+  background: #C9A84C; color: #fff;
   border: none; border-radius: 50px;
   padding: 0.5rem 1.25rem;
   font-size: 0.85rem; font-weight: 700;
   cursor: pointer; transition: background 0.2s;
   font-family: 'Inter', sans-serif;
 }
-.btn-reservar:hover { background: #C5602A; }
+.btn-reservar:hover { background: #C9A84C; }
 
 /* ── SIN RESULTADOS ── */
 .sin-resultados {
@@ -509,12 +512,12 @@ function formatPrecio(v) {
 .btn-cambiar-fechas {
   background: rgba(232,119,58,0.15);
   border: 1px solid rgba(232,119,58,0.3);
-  color: #E8773A; border-radius: 50px;
+  color: #C9A84C; border-radius: 50px;
   padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600;
   cursor: pointer; font-family: 'Inter', sans-serif;
   transition: background 0.2s;
 }
-.btn-cambiar-fechas:hover { background: rgba(232,119,58,0.25); }
+.btn-cambiar-fechas:hover { background: rgba(232, 215, 58, 0.25); }
 
 /* ── SPINNER ── */
 .spinner {

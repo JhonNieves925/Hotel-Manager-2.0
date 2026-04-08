@@ -1,11 +1,10 @@
 <template>
   <div class="page">
-
+ 
     <!-- HEADER -->
     <header class="header">
       <div class="brand">
-        <span class="brand-icon">✦</span>
-        <span>Hotel Manager</span>
+        <img src="/logo.png" alt="Hotel Manager" class="brand-logo" />
       </div>
       <div class="header-actions">
         <RouterLink to="/perfil" class="btn-perfil">{{ iniciales }}</RouterLink>
@@ -195,7 +194,7 @@ function formatPrecio(v) {
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 40%, #1a0a2e 100%);
+  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
   display: flex;
   flex-direction: column;
   font-family: 'Inter', sans-serif;
@@ -203,25 +202,26 @@ function formatPrecio(v) {
 
 /* ── HEADER ── */
 .header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0.9rem 1.5rem;
-  background: #ffffff;
-  box-shadow: 0 1px 12px rgba(0,0,0,0.15);
+  height: 80px;
+  padding: 0 2.5rem;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  overflow: hidden;
 }
 
-.brand {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem; font-weight: 700;
-  color: #E8773A;
-  letter-spacing: 0.02em;
+.brand { display: flex; align-items: center; height: 100%; }
+.brand-logo {
+  height: 110px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: lighten;
 }
-.brand-icon { color: #E8773A; font-size: 1rem; }
-
 .btn-perfil {
   width: 36px; height: 36px; border-radius: 50%;
-  background: #E8773A;
+  background: #a78a3d;
   border: none;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.72rem; font-weight: 700;
@@ -233,7 +233,7 @@ function formatPrecio(v) {
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
   display: flex;
-  background: #ffffff;
+  background: #0f0f0f;
   box-shadow: 0 -1px 12px rgba(0,0,0,0.12);
   border-top: 1px solid rgba(0,0,0,0.06);
   padding-bottom: env(safe-area-inset-bottom);
@@ -246,8 +246,8 @@ function formatPrecio(v) {
   letter-spacing: 0.06em; text-transform: uppercase;
   color: #999; transition: color 0.2s; text-decoration: none;
 }
-.nav-item.active, .router-link-active { color: #E8773A !important; }
-.nav-item:hover { color: #E8773A; }
+.nav-item.active, .router-link-active { color: #e8bf3a !important; }
+.nav-item:hover { color: #C9A84C; }
 .nav-icon { font-size: 1rem; }
 
 /* ── MAIN ── */
@@ -285,9 +285,9 @@ function formatPrecio(v) {
 }
 .filtro-btn.active,
 .filtro-btn:hover {
-  color: #E8773A;
-  border-color: rgba(232,119,58,0.5);
-  background: rgba(232,119,58,0.1);
+  color: #C9A84C;
+  border-color: rgba(232, 191, 58, 0.5);
+  background: rgba(232, 191, 58, 0.1);
 }
 
 /* ── CARGANDO ── */
@@ -298,8 +298,8 @@ function formatPrecio(v) {
 }
 .spinner {
   width: 20px; height: 20px;
-  border: 2px solid rgba(232,119,58,0.2);
-  border-top-color: #E8773A;
+  border: 2px solid rgba(232, 200, 58, 0.2);
+  border-top-color: #e8bf3a;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -307,7 +307,7 @@ function formatPrecio(v) {
 
 /* ── VACÍO ── */
 .vacio { text-align: center; padding: 4rem 1rem; }
-.vacio-icon { font-size: 2rem; color: #E8773A; opacity: 0.3; margin-bottom: 1rem; }
+.vacio-icon { font-size: 2rem; color: #e8bf3a; opacity: 0.3; margin-bottom: 1rem; }
 .vacio-titulo {
   font-family: 'Playfair Display', serif;
   font-size: 1.4rem; font-weight: 400;
@@ -335,7 +335,7 @@ function formatPrecio(v) {
   animation: fadeUp 0.4s ease both;
 }
 .reserva-card:hover {
-  border-color: rgba(232,119,58,0.25);
+  border-color: rgba(232, 186, 58, 0.25);
   transform: translateY(-1px);
 }
 @keyframes fadeUp {
@@ -350,7 +350,7 @@ function formatPrecio(v) {
   background: rgba(255,255,255,0.02);
 }
 .reserva-id {
-  font-size: 0.68rem; color: rgba(255,255,255,0.35);
+  font-size: 0.68rem; color: rgba(255, 255, 255, 0.61);
   letter-spacing: 0.12em; font-weight: 500;
 }
 
@@ -361,10 +361,10 @@ function formatPrecio(v) {
   font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .badge.pendiente  { background: rgba(251,191,36,0.12);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-.badge.confirmada { background: rgba(99,179,237,0.12);  color: #63b3ed; border: 1px solid rgba(99,179,237,0.2); }
-.badge.en_curso   { background: rgba(72,187,120,0.12);  color: #68d391; border: 1px solid rgba(72,187,120,0.2); }
+.badge.confirmada { background: rgba(99,179,237,0.12);  color: #63b3ed; border: 1px solid rgba(99, 179, 237, 0.459); }
+.badge.en_curso   { background: rgba(72,187,120,0.12);  color: #68d391; border: 1px solid rgba(72, 187, 120, 0.541); }
 .badge.completada { background: rgba(160,174,192,0.12); color: #a0aec0; border: 1px solid rgba(160,174,192,0.2); }
-.badge.cancelada  { background: rgba(252,129,74,0.12);  color: #fc814a; border: 1px solid rgba(252,129,74,0.2); }
+.badge.cancelada  { background: rgba(252,129,74,0.12);  color: #fc504a; border: 1px solid rgba(252, 74, 74, 0.466); }
 
 .reserva-hab {
   padding: 0.9rem 1.15rem;
@@ -375,7 +375,7 @@ function formatPrecio(v) {
   font-family: 'Playfair Display', serif;
   font-size: 1.1rem; font-weight: 400; color: #fff;
 }
-.hab-num { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+.hab-num { font-size: 0.7rem; color: rgba(255, 255, 255, 0.623); }
 
 .reserva-fechas {
   display: flex; align-items: center; gap: 0.75rem;
@@ -384,12 +384,12 @@ function formatPrecio(v) {
 }
 .fecha-item { display: flex; flex-direction: column; gap: 0.15rem; }
 .fecha-label {
-  font-size: 0.58rem; color: rgba(255,255,255,0.35);
+  font-size: 0.58rem; color: rgba(255, 255, 255, 0.678);
   letter-spacing: 0.12em; text-transform: uppercase;
 }
 .fecha-valor { font-size: 0.82rem; color: #fff; font-weight: 500; }
 .fecha-sep {
-  color: #E8773A; opacity: 0.5; font-size: 0.85rem;
+  color: #8ef31b; opacity: 0.5; font-size: 0.85rem;
   flex: 1; text-align: center;
 }
 
@@ -399,20 +399,20 @@ function formatPrecio(v) {
 }
 .reserva-total { display: flex; align-items: baseline; gap: 0.5rem; }
 .total-label {
-  font-size: 0.6rem; color: rgba(255,255,255,0.35);
+  font-size: 0.6rem; color: rgba(255, 255, 255, 0.685);
   text-transform: uppercase; letter-spacing: 0.1em;
 }
 .total-monto {
   font-family: 'Playfair Display', serif;
-  font-size: 1.35rem; font-weight: 600; color: #E8773A;
+  font-size: 1.35rem; font-weight: 600; color: #9bfd2c;
 }
 
 .btn-cancelar {
   font-size: 0.63rem; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(252,129,74,0.8);
+  color: rgba(252, 74, 74, 0.8);
   background: rgba(252,129,74,0.08);
-  border: 1px solid rgba(252,129,74,0.2);
+  border: 1px solid rgba(252, 74, 74, 0.2);
   border-radius: 6px; padding: 0.4rem 0.9rem;
   transition: all 0.2s;
 }
