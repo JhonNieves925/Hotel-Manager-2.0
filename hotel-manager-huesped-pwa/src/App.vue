@@ -2,8 +2,7 @@
   <Transition name="splash-fade">
     <div v-if="splashVisible" class="splash">
       <div class="splash-contenido">
-        <div class="splash-logo">🏨</div>
-        <div class="splash-brand">Hotel Manager</div>
+        <img src="/logo.png" alt="Hotel Manager" class="splash-logo-img" />
         <div class="splash-tagline">Una experiencia inolvidable</div>
         <div class="splash-barra-wrap">
           <div class="splash-barra" :style="{ width: progreso + '%' }"></div>
@@ -101,20 +100,16 @@ input, select, textarea { font-family: inherit; }
   padding: 2rem; text-align: center;
 }
 
-.splash-logo {
-  font-size: 4.5rem;
-  animation: pulso 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(232,119,58,0.5));
+.splash-logo-img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  animation: pulso 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 24px rgba(201,168,76,0.4));
 }
 @keyframes pulso {
   0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.08); }
-}
-
-.splash-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem; font-weight: 700;
-  color: #fff; letter-spacing: 0.02em;
+  50%       { transform: scale(1.04); }
 }
 
 .splash-tagline {
