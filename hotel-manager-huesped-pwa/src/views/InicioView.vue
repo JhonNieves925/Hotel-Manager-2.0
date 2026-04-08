@@ -4,8 +4,7 @@
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="brand">
-        <span class="brand-icon">🏨</span>
-        <span class="brand-name">Hotel Manager</span>
+        <img src="/logo.png" alt="Hotel Manager" class="brand-logo" />
       </div>
       <div class="nav-links">
         <RouterLink to="/app" class="btn-nav app">📱 <span class="app-txt">Descarga la app</span></RouterLink>
@@ -383,12 +382,11 @@ onMounted(() => {
   border-bottom: 1px solid rgba(201,168,76,0.15);
 }
 
-.brand { display: flex; align-items: center; gap: 0.6rem; }
-.brand-icon { font-size: 1.4rem; }
-.brand-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; font-weight: 700;
-  color: #C9A84C; letter-spacing: 0.02em;
+.brand { display: flex; align-items: center; }
+.brand-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-links { display: flex; align-items: center; gap: 0.75rem; }
@@ -798,7 +796,7 @@ onMounted(() => {
 }
 
 @media (max-width: 380px) {
-  .brand-name { display: none; }
+  .brand-logo { height: 36px; }
   .btn-nav { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
 }
 
