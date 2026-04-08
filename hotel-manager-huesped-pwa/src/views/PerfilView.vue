@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page"> 
 
     <header class="header">
       <RouterLink to="/mis-reservas" class="btn-volver">←</RouterLink>
@@ -335,4 +335,4 @@ function logout() {
 @media (max-width: 400px) {
   .form-row { grid-template-columns: 1fr; }
 }
-</style> 
+</style>

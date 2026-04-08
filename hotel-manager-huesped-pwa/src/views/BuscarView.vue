@@ -532,4 +532,47 @@ function formatPrecio(v) {
 .slide-enter-active, .slide-leave-active { transition: all 0.3s ease; }
 .slide-enter-from { opacity: 0; transform: translateX(30px); }
 .slide-leave-to   { opacity: 0; transform: translateX(-30px); }
+
+/* ── DESKTOP ──────────────────────────────────────────────── */
+@media (min-width: 769px) {
+  .bottom-nav {
+    top: 0; bottom: 0; left: 0; right: auto;
+    width: 230px;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-top: none;
+    border-right: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+    padding: 5.5rem 0 2rem;
+    gap: 0.15rem;
+  }
+  .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.82rem;
+    gap: 0.75rem;
+    width: 100%;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+  }
+  .nav-item.active, .nav-item:hover {
+    border-left-color: #E8773A;
+    background: rgba(232,119,58,0.07);
+  }
+  .nav-icon { font-size: 1.1rem; }
+
+  .header { left: 230px; }
+
+  .main {
+    margin-left: 230px;
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+    max-width: none;
+  }
+
+  /* Paso 1 y 2 centrados y más anchos en desktop */
+  .paso { max-width: 600px; margin: 0 auto; }
+  .habitaciones-grid { grid-template-columns: repeat(3, 1fr); }
+}
 </style>
