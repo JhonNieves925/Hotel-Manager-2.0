@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div class="page">
 
     <!-- HEADER -->
@@ -422,4 +422,49 @@ function formatPrecio(v) {
   color: #fc814a;
 }
 .btn-cancelar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── DESKTOP ──────────────────────────────────────────────── */
+@media (min-width: 769px) {
+  /* Sidebar izquierdo */
+  .bottom-nav {
+    top: 0; bottom: 0; left: 0; right: auto;
+    width: 230px;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-top: none;
+    border-right: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+    padding: 5.5rem 0 2rem;
+    gap: 0.15rem;
+  }
+  .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.82rem;
+    gap: 0.75rem;
+    width: 100%;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+  }
+  .nav-item.active, .router-link-active {
+    border-left-color: #E8773A !important;
+    background: rgba(232,119,58,0.07);
+  }
+  .nav-icon { font-size: 1.1rem; }
+
+  /* Header se desplaza a la derecha del sidebar */
+  .header { left: 230px; }
+
+  /* Contenido se desplaza a la derecha */
+  .main {
+    margin-left: 230px;
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+    max-width: none;
+  }
+
+  /* Grid de reservas en 2 columnas */
+  .reservas-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+}
 </style>

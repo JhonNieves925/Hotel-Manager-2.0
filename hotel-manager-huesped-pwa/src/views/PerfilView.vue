@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page"> 
 
     <header class="header">
       <RouterLink to="/mis-reservas" class="btn-volver">←</RouterLink>
@@ -330,5 +330,47 @@ function logout() {
 
 @media (max-width: 400px) {
   .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── DESKTOP ──────────────────────────────────────────────── */
+@media (min-width: 769px) {
+  .bottom-nav {
+    top: 0; bottom: 0; left: 0; right: auto;
+    width: 230px;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-top: none;
+    border-right: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+    padding: 5.5rem 0 2rem;
+    gap: 0.15rem;
+  }
+  .nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.82rem;
+    gap: 0.75rem;
+    width: 100%;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+  }
+  .nav-item.active, .router-link-active {
+    border-left-color: #E8773A !important;
+    background: rgba(232,119,58,0.07);
+  }
+  .nav-icon { font-size: 1.1rem; }
+
+  .header { left: 230px; }
+
+  .main {
+    margin-left: 230px;
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+    max-width: none;
+  }
+
+  /* Perfil más ancho en desktop */
+  .perfil-card { max-width: 700px; margin: 0 auto; }
 }
 </style>
