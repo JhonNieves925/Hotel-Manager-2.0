@@ -384,9 +384,10 @@ onMounted(() => {
 
 .brand { display: flex; align-items: center; }
 .brand-logo {
-  height: 48px;
+  height: 56px;
   width: auto;
   object-fit: contain;
+  mix-blend-mode: lighten;
 }
 
 .nav-links { display: flex; align-items: center; gap: 0.75rem; }

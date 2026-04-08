@@ -56,7 +56,7 @@ onMounted(() => {
 
 body {
   font-family: 'Inter', -apple-system, sans-serif;
-  background: #0A1628;
+  background: #0A0A0A;
   color: #fff;
   line-height: 1.6;
   overscroll-behavior: none;
@@ -90,7 +90,7 @@ input, select, textarea { font-family: inherit; }
 /* ── SPLASH ── */
 .splash {
   position: fixed; inset: 0; z-index: 9999;
-  background: linear-gradient(160deg, #0D1B3E 0%, #0A1628 50%, #1a0a2e 100%);
+  background: #0A0A0A;
   display: flex; align-items: center; justify-content: center;
 }
 
@@ -101,11 +101,12 @@ input, select, textarea { font-family: inherit; }
 }
 
 .splash-logo-img {
-  width: 200px;
+  width: 220px;
   height: auto;
   object-fit: contain;
+  mix-blend-mode: lighten;
   animation: pulso 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 24px rgba(201,168,76,0.4));
+  filter: drop-shadow(0 0 30px rgba(201,168,76,0.35));
 }
 @keyframes pulso {
   0%, 100% { transform: scale(1); }
