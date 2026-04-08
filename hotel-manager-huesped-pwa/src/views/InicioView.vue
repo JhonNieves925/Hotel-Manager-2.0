@@ -844,9 +844,11 @@ onMounted(() => {
   .btn-hero-app { display: inline-flex; }
   .hero { padding: 6rem 1rem 3rem; background-attachment: scroll; }
   .buscador { padding: 1rem; }
-  .buscador-grid { gap: 0; }
-  .buscador-divisor { width: 1.5rem; font-size: 0.8rem; }
-  .bloque-campos { grid-template-columns: 1fr 1fr; gap: 0.35rem; }
+  /* En móvil: bloques apilados verticalmente */
+  .buscador-grid { flex-direction: column; gap: 0.5rem; }
+  .buscador-divisor { display: none; }
+  /* Dentro de cada bloque: fecha y hora en fila */
+  .bloque-campos { grid-template-columns: 1.4fr 1fr; gap: 0.4rem; }
   .features-container { gap: 1.25rem; }
   .habitaciones-grid { grid-template-columns: 1fr; }
   .resultados { padding: 3rem 1rem; }
