@@ -35,33 +35,57 @@
         <!-- BUSCADOR -->
         <div class="buscador">
           <div class="buscador-titulo">¿Cuándo quieres hospedarte?</div>
-          <div class="buscador-campos">
-            <div class="campo-grupo">
-              <label class="campo-label">📅 Check-in</label>
-              <input type="date" v-model="fechaEntrada" :min="hoy" class="campo-input" @change="onFechaChange" />
+          <div class="buscador-grid">
+
+            <!-- Check-in -->
+            <div class="buscador-bloque">
+              <div class="bloque-header">
+                <span class="bloque-ico">🌅</span>
+                <span class="bloque-etiqueta">Llegada</span>
+              </div>
+              <div class="bloque-campos">
+                <div class="campo-grupo">
+                  <label class="campo-label">Fecha</label>
+                  <input type="date" v-model="fechaEntrada" :min="hoy" class="campo-input" @change="onFechaChange" />
+                </div>
+                <div class="campo-grupo">
+                  <label class="campo-label">Hora</label>
+                  <select v-model="horaEntrada" class="campo-input">
+                    <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div class="campo-grupo">
-              <label class="campo-label">🕐 Hora llegada</label>
-              <select v-model="horaEntrada" class="campo-input">
-                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
-              </select>
+
+            <!-- Divisor -->
+            <div class="buscador-divisor">→</div>
+
+            <!-- Check-out -->
+            <div class="buscador-bloque">
+              <div class="bloque-header">
+                <span class="bloque-ico">🌙</span>
+                <span class="bloque-etiqueta">Salida</span>
+              </div>
+              <div class="bloque-campos">
+                <div class="campo-grupo">
+                  <label class="campo-label">Fecha</label>
+                  <input type="date" v-model="fechaSalida" :min="fechaEntrada || hoy" class="campo-input" @change="onFechaChange" />
+                </div>
+                <div class="campo-grupo">
+                  <label class="campo-label">Hora</label>
+                  <select v-model="horaSalida" class="campo-input">
+                    <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div class="buscador-sep">→</div>
-            <div class="campo-grupo">
-              <label class="campo-label">📅 Check-out</label>
-              <input type="date" v-model="fechaSalida" :min="fechaEntrada || hoy" class="campo-input" @change="onFechaChange" />
-            </div>
-            <div class="campo-grupo">
-              <label class="campo-label">🕐 Hora salida</label>
-              <select v-model="horaSalida" class="campo-input">
-                <option v-for="h in horasDisponibles" :key="h.value" :value="h.value">{{ h.label }}</option>
-              </select>
-            </div>
-            <button class="btn-buscar" @click="buscar" :disabled="cargando || !fechaEntrada || !fechaSalida">
-              <span v-if="cargando" class="spinner-btn"></span>
-              <span v-else>🔍 Buscar</span>
-            </button>
+
           </div>
+
+          <button class="btn-buscar" @click="buscar" :disabled="cargando || !fechaEntrada || !fechaSalida">
+            <span v-if="cargando" class="spinner-btn"></span>
+            <span v-else>🔍 Buscar disponibilidad</span>
+          </button>
           <p v-if="error" class="buscador-error">⚠ {{ error }}</p>
         </div>
       </div>
@@ -488,60 +512,93 @@ onMounted(() => {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(201,168,76,0.2);
   border-radius: 20px;
-  padding: 1.75rem 2rem;
+  padding: 1.25rem 1.25rem 1rem;
   box-shadow: 0 24px 60px rgba(0,0,0,0.6);
   text-align: left;
 }
 
 .buscador-titulo {
-  font-size: 0.95rem; font-weight: 600;
-  color: #C9A84C; margin-bottom: 1.25rem;
-  text-align: center; letter-spacing: 0.04em;
-  text-transform: uppercase; font-size: 0.78rem;
+  font-size: 0.72rem; font-weight: 700;
+  color: #C9A84C; margin-bottom: 0.85rem;
+  text-align: center; letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
+/* Nuevo layout: dos bloques lado a lado con divisor */
+.buscador-grid {
+  display: flex; align-items: stretch; gap: 0;
+  margin-bottom: 0.85rem;
+}
+
+.buscador-bloque {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 12px;
+  padding: 0.7rem 0.75rem 0.6rem;
+}
+
+.bloque-header {
+  display: flex; align-items: center; gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+.bloque-ico { font-size: 0.95rem; }
+.bloque-etiqueta {
+  font-size: 0.72rem; font-weight: 700;
+  color: #C9A84C; text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bloque-campos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;
+}
+
+.buscador-divisor {
+  display: flex; align-items: center; justify-content: center;
+  width: 1.75rem; flex-shrink: 0;
+  font-size: 0.9rem; color: rgba(201,168,76,0.4);
+}
+
+/* Mantener buscador-campos por compatibilidad */
 .buscador-campos {
   display: flex; align-items: flex-end;
   gap: 0.75rem; flex-wrap: wrap;
 }
 
 .campo-grupo {
-  display: flex; flex-direction: column; gap: 0.35rem;
-  flex: 1; min-width: 130px;
+  display: flex; flex-direction: column; gap: 0.2rem;
 }
 
 .campo-label {
-  font-size: 0.68rem; font-weight: 700;
-  color: rgba(201,168,76,0.7);
-  text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 0.6rem; font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 0.05em;
 }
 
 .campo-input {
-  padding: 0.65rem 0.85rem;
+  padding: 0.45rem 0.5rem;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  font-size: 0.875rem; color: #fff;
+  border-radius: 8px;
+  font-size: 0.78rem; color: #fff;
   background: rgba(255,255,255,0.06);
   outline: none; transition: border-color 0.2s;
   font-family: 'Inter', sans-serif;
+  width: 100%;
 }
 .campo-input:focus { border-color: #C9A84C; background: rgba(201,168,76,0.06); }
 .campo-input option { background: #1a1a1a; color: #fff; }
 
-.buscador-sep {
-  font-size: 1.2rem; color: rgba(201,168,76,0.5);
-  padding-bottom: 0.65rem; flex-shrink: 0;
-}
+.buscador-sep { display: none; }
 
 .btn-buscar {
-  padding: 0.7rem 1.75rem;
+  width: 100%;
+  padding: 0.85rem 1.75rem;
   background: linear-gradient(135deg, #C9A84C, #A8882A);
-  color: #0A0A0A; border: none; border-radius: 10px;
+  color: #0A0A0A; border: none; border-radius: 12px;
   font-size: 0.95rem; font-weight: 800;
   cursor: pointer; transition: all 0.2s;
-  white-space: nowrap; flex-shrink: 0;
   box-shadow: 0 4px 18px rgba(201,168,76,0.35);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 .btn-buscar:hover:not(:disabled) {
   transform: translateY(-2px);
@@ -786,11 +843,10 @@ onMounted(() => {
   .btn-nav.app { display: none; }
   .btn-hero-app { display: inline-flex; }
   .hero { padding: 6rem 1rem 3rem; background-attachment: scroll; }
-  .buscador { padding: 1.25rem; }
-  .buscador-campos { flex-direction: column; }
-  .buscador-sep { display: none; }
-  .campo-grupo { min-width: auto; }
-  .btn-buscar { width: 100%; }
+  .buscador { padding: 1rem; }
+  .buscador-grid { gap: 0; }
+  .buscador-divisor { width: 1.5rem; font-size: 0.8rem; }
+  .bloque-campos { grid-template-columns: 1fr 1fr; gap: 0.35rem; }
   .features-container { gap: 1.25rem; }
   .habitaciones-grid { grid-template-columns: 1fr; }
   .resultados { padding: 3rem 1rem; }
