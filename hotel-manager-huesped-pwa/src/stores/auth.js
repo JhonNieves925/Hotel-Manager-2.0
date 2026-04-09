@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { huespedAuthService } from '../api/services'
-import { huespedPerfilService } from '../api/services'
+import { huespedAuthService, huespedPerfilService } from '../api/services'
+import { subscribeToPush, unsubscribeFromPush } from '../composables/usePush'
 
 export const useHuespedAuthStore = defineStore('huespedAuth', () => {
 
@@ -36,6 +36,7 @@ export const useHuespedAuthStore = defineStore('huespedAuth', () => {
     rol:             'huesped'
   }
   localStorage.setItem('huesped_usuario', JSON.stringify(usuario.value))
+  subscribeToPush()
   return res.data
 }
 
@@ -45,6 +46,7 @@ export const useHuespedAuthStore = defineStore('huespedAuth', () => {
   }
 
   function logout() {
+    unsubscribeFromPush()
     token.value   = null
     usuario.value = null
     localStorage.removeItem('huesped_token')

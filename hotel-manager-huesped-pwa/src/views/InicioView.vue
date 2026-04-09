@@ -40,7 +40,7 @@
             <!-- Check-in -->
             <div class="buscador-bloque">
               <div class="bloque-header">
-                <span class="bloque-ico"></span>
+                <span class="bloque-ico">🌅</span>
                 <span class="bloque-etiqueta">Llegada</span>
               </div>
               <div class="bloque-campos">
@@ -63,7 +63,7 @@
             <!-- Check-out -->
             <div class="buscador-bloque">
               <div class="bloque-header">
-                <span class="bloque-ico"></span>
+                <span class="bloque-ico">🌙</span>
                 <span class="bloque-etiqueta">Salida</span>
               </div>
               <div class="bloque-campos">
@@ -84,7 +84,7 @@
 
           <button class="btn-buscar" @click="buscar" :disabled="cargando || !fechaEntrada || !fechaSalida">
             <span v-if="cargando" class="spinner-btn"></span>
-            <span v-else>Buscar disponibilidad</span>
+            <span v-else>🔍 Buscar disponibilidad</span>
           </button>
           <p v-if="error" class="buscador-error">⚠ {{ error }}</p>
         </div>
@@ -165,48 +165,154 @@
     </section>
 
     <!-- SECCIÓN INFO HOTEL -->
-    <section class="info-hotel">
-      <div class="info-container">
-        <div class="info-texto">
-          <h2>¿Por qué elegirnos?</h2>
-          <p>En Hotel Manager te ofrecemos una experiencia de hospedaje excepcional en el corazón de Cali. Nuestras instalaciones combinan confort, seguridad y atención personalizada para hacer de tu estadía un momento memorable.</p>
-          <div class="info-stats">
-            <div class="stat">
-              <span class="stat-num">500+</span>
-              <span class="stat-lbl">Huéspedes satisfechos</span>
-            </div>
-            <div class="stat">
-              <span class="stat-num">4.9★</span>
-              <span class="stat-lbl">Calificación promedio</span>
-            </div>
-            <div class="stat">
-              <span class="stat-num">24/7</span>
-              <span class="stat-lbl">Atención al cliente</span>
-            </div>
+    <!-- ¿POR QUÉ ELEGIRNOS? -->
+    <section class="porque">
+      <div class="porque-container">
+        <div class="porque-imagen">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80&auto=format&fit=crop" alt="Hotel Manager" />
+          <div class="porque-badge-img">
+            <span class="badge-num">4.9★</span>
+            <span class="badge-txt">Calificación promedio</span>
           </div>
         </div>
-        <div class="info-visual">
-          <div class="info-card-stack">
-            <div class="info-card azul">
-              <span class="info-card-ico">📍</span>
+        <div class="porque-contenido">
+          <p class="porque-sup">¿Por qué elegirnos?</p>
+          <h2 class="porque-titulo">Una experiencia que<br><span class="porque-acento">va más allá</span> del hospedaje</h2>
+          <p class="porque-desc">En Hotel Manager combinamos confort, seguridad y atención personalizada para hacer de tu estadía en Cali un momento verdaderamente memorable.</p>
+          <div class="porque-grid">
+            <div class="porque-item">
+              <span class="porque-ico">🛏️</span>
               <div>
-                <div class="info-card-titulo">Ubicación</div>
-                <div class="info-card-sub">Cali, Valle del Cauca</div>
+                <div class="porque-item-titulo">Habitaciones premium</div>
+                <div class="porque-item-sub">Diseño moderno y confortable</div>
               </div>
             </div>
-            <div class="info-card naranja">
-              <span class="info-card-ico">🕐</span>
+            <div class="porque-item">
+              <span class="porque-ico">🔒</span>
               <div>
-                <div class="info-card-titulo">Check-in desde</div>
-                <div class="info-card-sub">Tu hora elegida</div>
+                <div class="porque-item-titulo">Seguridad 24/7</div>
+                <div class="porque-item-sub">Vigilancia permanente</div>
               </div>
             </div>
-            <div class="info-card verde">
-              <span class="info-card-ico">📞</span>
+            <div class="porque-item">
+              <span class="porque-ico">🍳</span>
               <div>
-                <div class="info-card-titulo">Contacto</div>
-                <div class="info-card-sub">(2) 123-4567</div>
+                <div class="porque-item-titulo">Desayuno incluido</div>
+                <div class="porque-item-sub">Menú variado cada día</div>
               </div>
+            </div>
+            <div class="porque-item">
+              <span class="porque-ico">📶</span>
+              <div>
+                <div class="porque-item-titulo">WiFi alta velocidad</div>
+                <div class="porque-item-sub">Conexión en todo el hotel</div>
+              </div>
+            </div>
+            <div class="porque-item">
+              <span class="porque-ico">🅿️</span>
+              <div>
+                <div class="porque-item-titulo">Parqueadero gratuito</div>
+                <div class="porque-item-sub">Espacio seguro para tu vehículo</div>
+              </div>
+            </div>
+            <div class="porque-item">
+              <span class="porque-ico">🕐</span>
+              <div>
+                <div class="porque-item-titulo">Check-in flexible</div>
+                <div class="porque-item-sub">Elige tu hora de llegada</div>
+              </div>
+            </div>
+          </div>
+          <div class="porque-stats">
+            <div class="pstat"><span class="pstat-num">500+</span><span class="pstat-lbl">Huéspedes</span></div>
+            <div class="pstat-sep"></div>
+            <div class="pstat"><span class="pstat-num">4.9★</span><span class="pstat-lbl">Calificación</span></div>
+            <div class="pstat-sep"></div>
+            <div class="pstat"><span class="pstat-num">24/7</span><span class="pstat-lbl">Atención</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UBICACIÓN -->
+    <section class="ubicacion">
+      <div class="ubicacion-container">
+        <div class="ubicacion-mapa">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127589.98456789!2d-76.5725!3d3.4516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a6f0a0a0a0a0%3A0x1!2sCali%2C+Valle+del+Cauca!5e0!3m2!1ses!2sco!4v1234567890"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+        <div class="ubicacion-info">
+          <p class="ubicacion-sup">Encuéntranos</p>
+          <h2 class="ubicacion-titulo">Nuestra <span class="ubicacion-acento">ubicación</span></h2>
+          <p class="ubicacion-desc">Estamos en el corazón de Cali, cerca de los principales centros comerciales, restaurantes y atractivos turísticos de la ciudad.</p>
+          <div class="ubicacion-datos">
+            <div class="ubic-dato">
+              <span class="ubic-ico">📍</span>
+              <div>
+                <div class="ubic-titulo">Dirección</div>
+                <div class="ubic-sub">Cali, Valle del Cauca, Colombia</div>
+              </div>
+            </div>
+            <div class="ubic-dato">
+              <span class="ubic-ico">📞</span>
+              <div>
+                <div class="ubic-titulo">Teléfono</div>
+                <div class="ubic-sub">(2) 123-4567</div>
+              </div>
+            </div>
+            <div class="ubic-dato">
+              <span class="ubic-ico">✉️</span>
+              <div>
+                <div class="ubic-titulo">Email</div>
+                <div class="ubic-sub">info@hotelmanager.co</div>
+              </div>
+            </div>
+            <div class="ubic-dato">
+              <span class="ubic-ico">🕐</span>
+              <div>
+                <div class="ubic-titulo">Recepción</div>
+                <div class="ubic-sub">Abierto las 24 horas</div>
+              </div>
+            </div>
+          </div>
+          <RouterLink v-if="!auth.isLoggedIn" to="/registro" class="btn-reservar-ubic">Reservar ahora</RouterLink>
+          <RouterLink v-else to="/buscar" class="btn-reservar-ubic">Buscar habitación</RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEÑAS -->
+    <section class="resenas">
+      <div class="resenas-header">
+        <p class="resenas-sup">Lo que dicen nuestros huéspedes</p>
+        <h2 class="resenas-titulo">Opiniones <span class="resenas-acento">reales</span></h2>
+        <div class="resenas-estrellas-global">
+          <span class="estrellas-num">4.9</span>
+          <span class="estrellas-ico">★★★★★</span>
+          <span class="estrellas-base">basado en 500+ reseñas</span>
+        </div>
+      </div>
+
+      <!-- Carrusel infinito -->
+      <div class="carrusel-wrapper">
+        <div class="carrusel-track">
+          <!-- Duplicamos la lista para el loop infinito -->
+          <div v-for="r in [...resenas, ...resenas]" class="resena-item">
+            <div class="resena-top">
+              <div class="resena-avatar">{{ r.inicial }}</div>
+              <div class="resena-autor">
+                <div class="resena-nombre">{{ r.nombre }}</div>
+                <div class="resena-lugar">{{ r.lugar }}</div>
+              </div>
+              <div class="resena-stars">{{ '★'.repeat(r.estrellas) }}</div>
+            </div>
+            <p class="resena-texto">"{{ r.texto }}"</p>
+            <div class="resena-meta">
+              <span class="resena-tipo">{{ r.tipo }}</span>
+              <span class="resena-fecha">{{ r.fecha }}</span>
             </div>
           </div>
         </div>
@@ -228,9 +334,59 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <div class="footer-brand">🏨 Hotel Manager</div>
-      <p class="footer-sub">Cali, Valle del Cauca · Colombia</p>
-      <p class="footer-sub">© {{ new Date().getFullYear() }} Hotel Manager. Todos los derechos reservados.</p>
+      <div class="footer-top">
+        <div class="footer-col footer-col-brand">
+          <div class="footer-logo">Hotel Manager</div>
+          <p class="footer-tagline">Tu hogar lejos de casa en el corazón de Cali.</p>
+          <div class="footer-redes">
+            <a href="#" class="red-ico" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="#" class="red-ico" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="red-ico" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="#" class="red-ico" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-titulo">Navegación</h4>
+          <ul class="footer-links">
+            <li><RouterLink to="/inicio">Inicio</RouterLink></li>
+            <li><RouterLink to="/login">Iniciar sesión</RouterLink></li>
+            <li><RouterLink to="/registro">Registrarse</RouterLink></li>
+            <li><RouterLink to="/buscar">Buscar habitación</RouterLink></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-titulo">Servicios</h4>
+          <ul class="footer-links">
+            <li><span>Habitaciones</span></li>
+            <li><span>Desayuno incluido</span></li>
+            <li><span>Parqueadero</span></li>
+            <li><span>WiFi gratuito</span></li>
+            <li><span>Atención 24/7</span></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-titulo">Contacto</h4>
+          <ul class="footer-links footer-contacto">
+            <li><span>📍 Cali, Valle del Cauca</span></li>
+            <li><span>📞 (2) 123-4567</span></li>
+            <li><span>✉️ info@hotelmanager.co</span></li>
+            <li><span>🕐 Recepción 24h</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© {{ new Date().getFullYear() }} Hotel Manager. Todos los derechos reservados.</span>
+        <span class="footer-bottom-sep">·</span>
+        <span>Cali, Colombia</span>
+      </div>
     </footer>
 
   </div>
@@ -356,6 +512,15 @@ function descripcionDefault(tipo) {
 // ── SOCIAL PROOF TOAST ─────────────────────────────────────
 const toastVisible = ref(false)
 const toast = ref({})
+
+const resenas = [
+  { id: 1, inicial: 'M', nombre: 'María González', lugar: 'Bogotá, Colombia', estrellas: 5, tipo: 'Suite', fecha: 'Marzo 2025', texto: 'Una experiencia increíble. Las instalaciones son impecables y el personal siempre dispuesto a ayudar. Sin duda el mejor hotel en el que me he hospedado en Cali.' },
+  { id: 2, inicial: 'C', nombre: 'Carlos Ramírez', lugar: 'Medellín, Colombia', estrellas: 5, tipo: 'Habitación Doble', fecha: 'Febrero 2025', texto: 'Excelente relación calidad-precio. Desayuno delicioso, habitación muy limpia y cómoda. Volveré sin dudarlo en mi próximo viaje a Cali.' },
+  { id: 3, inicial: 'A', nombre: 'Andrea Torres', lugar: 'Cali, Colombia', estrellas: 5, tipo: 'Habitación Triple', fecha: 'Enero 2025', texto: 'Viajé con mi familia y todos quedamos encantados. Los niños se sintieron muy cómodos y el parqueadero gratuito fue un plus enorme. 100% recomendado.' },
+  { id: 4, inicial: 'J', nombre: 'Jorge Martínez', lugar: 'Bucaramanga, Colombia', estrellas: 5, tipo: 'Suite', fecha: 'Abril 2025', texto: 'La suite superó todas mis expectativas. Jacuzzi, minibar y una vista espectacular. Perfecto para nuestra luna de miel. Gracias por hacer ese momento tan especial.' },
+  { id: 5, inicial: 'L', nombre: 'Laura Pérez', lugar: 'Barranquilla, Colombia', estrellas: 4, tipo: 'Habitación Sencilla', fecha: 'Marzo 2025', texto: 'Muy buena opción para viajes de negocios. WiFi rápido, cama cómoda y ubicación estratégica. El check-in flexible fue justo lo que necesitaba.' },
+  { id: 6, inicial: 'R', nombre: 'Ricardo Flores', lugar: 'Pereira, Colombia', estrellas: 5, tipo: 'Habitación Doble', fecha: 'Febrero 2025', texto: 'La atención del personal es excepcional. Desde que llegamos nos hicieron sentir como en casa. Las habitaciones son modernas y muy bien equipadas.' },
+]
 
 const reservasRecientes = [
   { nombre: 'Marcela R.',   inicial: 'M', tipo: 'Suite',    numero: '201', tiempo: '2 min' },
@@ -776,64 +941,272 @@ onMounted(() => {
 }
 
 /* ── INFO HOTEL ───────────────────────────────────────────── */
-.info-hotel {
+/* ── ¿POR QUÉ ELEGIRNOS? ──────────────────────────────────── */
+.porque {
   padding: 5rem 2rem;
   background: #111111;
   border-top: 1px solid rgba(201,168,76,0.1);
 }
-
-.info-container {
+.porque-container {
   max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem;
   align-items: center;
 }
+.porque-imagen {
+  position: relative; border-radius: 20px; overflow: hidden;
+}
+.porque-imagen img {
+  width: 100%; height: 480px; object-fit: cover;
+  border-radius: 20px; display: block;
+}
+.porque-badge-img {
+  position: absolute; bottom: 1.5rem; left: 1.5rem;
+  background: rgba(10,10,10,0.88); backdrop-filter: blur(12px);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 12px; padding: 0.75rem 1.25rem;
+  display: flex; flex-direction: column;
+}
+.badge-num { font-size: 1.4rem; font-weight: 800; color: #C9A84C; }
+.badge-txt { font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; }
 
-.info-texto h2 {
+.porque-sup {
+  font-size: 0.72rem; font-weight: 700; color: #C9A84C;
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;
+}
+.porque-titulo {
   font-family: 'Playfair Display', serif;
-  font-size: 2rem; font-weight: 700;
-  margin-bottom: 1rem; color: #C9A84C;
+  font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700;
+  color: #fff; line-height: 1.25; margin-bottom: 1rem;
 }
-.info-texto p { color: rgba(255,255,255,0.6); line-height: 1.85; margin-bottom: 2rem; }
+.porque-acento { color: #C9A84C; font-style: italic; }
+.porque-desc { color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem; }
 
-.info-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; }
-.stat { display: flex; flex-direction: column; gap: 0.25rem; }
-.stat-num { font-size: 1.9rem; font-weight: 800; color: #C9A84C; }
-.stat-lbl { font-size: 0.76rem; color: rgba(255,255,255,0.4); letter-spacing: 0.03em; }
-
-.info-card-stack { display: flex; flex-direction: column; gap: 1rem; }
-
-.info-card {
-  display: flex; align-items: center; gap: 1rem;
+.porque-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.porque-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.85rem 1rem;
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px; padding: 1rem 1.25rem;
-  transition: transform 0.2s, border-color 0.2s;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; transition: border-color 0.2s;
 }
-.info-card:hover { transform: translateX(6px); border-color: rgba(201,168,76,0.25); }
-.info-card.azul   { border-left: 3px solid #60a5fa; }
-.info-card.naranja{ border-left: 3px solid #C9A84C; }
-.info-card.verde  { border-left: 3px solid #4ade80; }
-.info-card-ico { font-size: 1.75rem; flex-shrink: 0; }
-.info-card-titulo { font-size: 0.9rem; font-weight: 600; color: #fff; }
-.info-card-sub { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+.porque-item:hover { border-color: rgba(201,168,76,0.2); }
+.porque-ico { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+.porque-item-titulo { font-size: 0.82rem; font-weight: 600; color: #fff; margin-bottom: 0.15rem; }
+.porque-item-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+
+.porque-stats {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 14px;
+}
+.pstat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; flex: 1; }
+.pstat-num { font-size: 1.5rem; font-weight: 800; color: #C9A84C; }
+.pstat-lbl { font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; }
+.pstat-sep { width: 1px; height: 2.5rem; background: rgba(201,168,76,0.2); }
+
+/* ── UBICACIÓN ────────────────────────────────────────────── */
+.ubicacion {
+  padding: 5rem 2rem;
+  background: #0A0A0A;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.ubicacion-container {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem;
+  align-items: center;
+}
+.ubicacion-mapa {
+  border-radius: 20px; overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.15);
+  height: 420px;
+}
+.ubicacion-mapa iframe { width: 100%; height: 100%; border: none; }
+
+.ubicacion-sup {
+  font-size: 0.72rem; font-weight: 700; color: #C9A84C;
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;
+}
+.ubicacion-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700;
+  color: #fff; line-height: 1.25; margin-bottom: 1rem;
+}
+.ubicacion-acento { color: #C9A84C; font-style: italic; }
+.ubicacion-desc { color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem; }
+
+.ubicacion-datos { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+.ubic-dato {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+}
+.ubic-ico { font-size: 1.25rem; flex-shrink: 0; }
+.ubic-titulo { font-size: 0.8rem; font-weight: 600; color: #fff; }
+.ubic-sub { font-size: 0.73rem; color: rgba(255,255,255,0.4); margin-top: 0.1rem; }
+
+.btn-reservar-ubic {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
+  color: #0A0A0A; border-radius: 12px;
+  font-size: 0.9rem; font-weight: 800;
+  text-decoration: none; letter-spacing: 0.03em;
+  box-shadow: 0 4px 18px rgba(201,168,76,0.3);
+  transition: all 0.2s;
+}
+.btn-reservar-ubic:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,168,76,0.45); }
 
 /* ── FOOTER ───────────────────────────────────────────────── */
 .footer {
   background: #050505;
   border-top: 1px solid rgba(201,168,76,0.1);
-  text-align: center;
-  padding: 2.5rem 2rem;
+  padding: 3.5rem 2rem 0;
   color: rgba(255,255,255,0.35);
 }
-.footer-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; color: #C9A84C; margin-bottom: 0.5rem;
+.footer-top {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 2.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.footer-sub { font-size: 0.78rem; line-height: 2; }
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; color: #C9A84C; margin-bottom: 0.75rem;
+}
+.footer-tagline { font-size: 0.82rem; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 1.25rem; }
+
+.footer-redes { display: flex; gap: 0.75rem; }
+.red-ico {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  transition: all 0.2s; text-decoration: none;
+}
+.red-ico svg { width: 16px; height: 16px; }
+.red-ico:hover { border-color: #C9A84C; color: #C9A84C; background: rgba(201,168,76,0.08); }
+
+.footer-col-titulo {
+  font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.7);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 1.1rem;
+}
+.footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links li a, .footer-links li span {
+  font-size: 0.82rem; color: rgba(255,255,255,0.4);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links li a:hover { color: #C9A84C; }
+
+.footer-bottom {
+  max-width: 1100px; margin: 0 auto;
+  padding: 1.25rem 0;
+  display: flex; align-items: center; gap: 0.75rem;
+  font-size: 0.75rem; color: rgba(255,255,255,0.25);
+  flex-wrap: wrap;
+}
+.footer-bottom-sep { color: rgba(255,255,255,0.15); }
+
+/* ── RESEÑAS ──────────────────────────────────────────────── */
+.resenas {
+  padding: 5rem 0;
+  background: #0A0A0A;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  overflow: hidden;
+}
+
+.resenas-header {
+  text-align: center; margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+.resenas-sup {
+  font-size: 0.72rem; font-weight: 700; color: #C9A84C;
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;
+}
+.resenas-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700;
+  color: #fff; margin-bottom: 1rem;
+}
+.resenas-acento { color: #C9A84C; font-style: italic; }
+.resenas-estrellas-global {
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+}
+.estrellas-num { font-size: 2rem; font-weight: 800; color: #C9A84C; }
+.estrellas-ico { font-size: 1.1rem; color: #C9A84C; letter-spacing: 0.1em; }
+.estrellas-base { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+/* Carrusel infinito */
+.carrusel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  /* Difuminado en los bordes */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+.carrusel-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: scroll-resenas 40s linear infinite;
+}
+.carrusel-track:hover { animation-play-state: paused; }
+
+@keyframes scroll-resenas {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.resena-item {
+  width: 320px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 0.85rem;
+  padding: 0 0.5rem;
+}
+
+.resena-top {
+  display: flex; align-items: center; gap: 0.85rem;
+}
+.resena-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700; color: #0A0A0A;
+  flex-shrink: 0;
+}
+.resena-autor { flex: 1; }
+.resena-nombre { font-size: 0.88rem; font-weight: 600; color: #fff; }
+.resena-lugar  { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 0.1rem; }
+.resena-stars  { font-size: 0.85rem; color: #C9A84C; letter-spacing: 0.05em; flex-shrink: 0; }
+
+.resena-texto {
+  font-size: 0.875rem; color: rgba(255,255,255,0.65);
+  line-height: 1.75; font-style: italic;
+}
+
+.resena-meta {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.resena-tipo {
+  font-size: 0.65rem; font-weight: 700; color: #C9A84C;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 0.18rem 0.55rem; border-radius: 20px;
+}
+.resena-fecha { font-size: 0.68rem; color: rgba(255,255,255,0.3); }
 
 /* ── RESPONSIVE ───────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .info-container { grid-template-columns: 1fr; gap: 2.5rem; }
+  .porque-container { grid-template-columns: 1fr; gap: 2.5rem; }
+  .ubicacion-container { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
 }
 
 @media (max-width: 768px) {
@@ -844,16 +1217,22 @@ onMounted(() => {
   .btn-hero-app { display: inline-flex; }
   .hero { padding: 6rem 1rem 3rem; background-attachment: scroll; }
   .buscador { padding: 1rem; }
-  /* En móvil: bloques apilados verticalmente */
   .buscador-grid { flex-direction: column; gap: 0.5rem; }
   .buscador-divisor { display: none; }
-  /* Dentro de cada bloque: fecha y hora en fila */
   .bloque-campos { grid-template-columns: 1.4fr 1fr; gap: 0.4rem; }
   .features-container { gap: 1.25rem; }
   .habitaciones-grid { grid-template-columns: 1fr; }
   .resultados { padding: 3rem 1rem; }
-  .info-hotel { padding: 3rem 1rem; }
-  .info-stats { gap: 1.5rem; }
+  .porque { padding: 3rem 1rem; }
+  .porque-imagen img { height: 280px; }
+  .porque-grid { grid-template-columns: 1fr; }
+  .porque-stats { gap: 0.75rem; padding: 1rem; }
+  .ubicacion { padding: 3rem 1rem; }
+  .resenas { padding: 3rem 0; }
+  .ubicacion-mapa { height: 260px; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 2rem; }
+  .footer { padding: 2.5rem 1.25rem 0; }
+  .footer-bottom { justify-content: center; text-align: center; }
 }
 
 @media (max-width: 380px) {

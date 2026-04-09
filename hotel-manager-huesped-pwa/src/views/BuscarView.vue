@@ -36,9 +36,10 @@
 
           <div class="fechas-grid">
             <!-- Check-in -->
-            <div class="fecha-card" :class="{ activo: campoActivo === 'entrada' }">
-              <div class="fecha-card-label">📅 Ingreso</div>
+            <div class="fecha-card" :class="{ activo: campoActivo === 'entrada' }" @click="abrirPicker('entrada')">
+              <div class="fecha-card-label">📅 Check-in</div>
               <input
+                ref="inputEntrada"
                 type="date"
                 v-model="fechaEntrada"
                 :min="hoy"
@@ -47,15 +48,16 @@
                 @blur="campoActivo = ''"
                 @change="onEntradaChange"
               />
-              <div class="fecha-display">{{ fechaEntrada ? formatFechaCorta(fechaEntrada) : 'Seleccionar' }}</div>
+              <div class="fecha-display" style="pointer-events:none">{{ fechaEntrada ? formatFechaCorta(fechaEntrada) : 'Seleccionar' }}</div>
             </div>
 
             <div class="flecha-sep">→</div>
 
             <!-- Check-out -->
-            <div class="fecha-card" :class="{ activo: campoActivo === 'salida' }">
-              <div class="fecha-card-label">📅 Salida</div>
+            <div class="fecha-card" :class="{ activo: campoActivo === 'salida' }" @click="abrirPicker('salida')">
+              <div class="fecha-card-label">📅 Check-out</div>
               <input
+                ref="inputSalida"
                 type="date"
                 v-model="fechaSalida"
                 :min="minSalida"
@@ -63,7 +65,7 @@
                 @focus="campoActivo = 'salida'"
                 @blur="campoActivo = ''"
               />
-              <div class="fecha-display">{{ fechaSalida ? formatFechaCorta(fechaSalida) : 'Seleccionar' }}</div>
+              <div class="fecha-display" style="pointer-events:none">{{ fechaSalida ? formatFechaCorta(fechaSalida) : 'Seleccionar' }}</div>
             </div>
           </div>
 
@@ -179,6 +181,15 @@ const habitaciones = ref([])
 const cargando     = ref(false)
 const errorFechas  = ref('')
 const campoActivo  = ref('')
+const inputEntrada = ref(null)
+const inputSalida  = ref(null)
+
+function abrirPicker(campo) {
+  const input = campo === 'entrada' ? inputEntrada.value : inputSalida.value
+  if (!input) return
+  if (input.showPicker) input.showPicker()
+  else input.focus()
+}
 
 const hoy = new Date().toISOString().split('T')[0]
 
@@ -240,13 +251,13 @@ async function buscar() {
 
 function seleccionar(hab) {
   router.push({
-    name: 'reservar',
+    name: 'habitacion-detalle',
+    params: { id: hab.id },
     query: {
-      idHabitacion: hab.id,
-      entrada:      fechaEntrada.value,
-      salida:       fechaSalida.value,
-      horaEntrada:  horaEntrada.value,
-      horaSalida:   horaSalida.value,
+      entrada:     fechaEntrada.value,
+      salida:      fechaSalida.value,
+      horaEntrada: horaEntrada.value,
+      horaSalida:  horaSalida.value,
     }
   })
 }
@@ -274,10 +285,9 @@ function formatPrecio(v) {
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #000000 0%, #080804 45%, #141105 100%);
-  display: flex;
-  flex-direction: column;
+  background: #0A0A0A;
   font-family: 'Inter', sans-serif;
+  color: #fff;
 }
 
 /* ── HEADER ── */
@@ -285,27 +295,29 @@ function formatPrecio(v) {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-between; align-items: center;
   padding: 1rem 1.25rem;
-  background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(12px);
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .btn-volver {
   background: none; border: none; font-size: 1.3rem;
   color: rgba(255,255,255,0.6); cursor: pointer; padding: 0;
 }
-.btn-volver:hover { color: #e8b13a; }
+.btn-volver:hover { color: #C9A84C; }
 .brand {
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: 28px;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   text-align: center;
 }
+
 /* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: space-around; align-items: center;
   padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
-  background: rgba(10, 10, 10, 0.97); backdrop-filter: blur(20px);
+  background: rgba(10,10,10,0.97); backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 .nav-item {
@@ -348,7 +360,7 @@ function formatPrecio(v) {
 }
 .fecha-card.activo {
   border-color: #C9A84C;
-  background: rgba(232, 191, 58, 0.08);
+  background: rgba(201,168,76,0.08);
 }
 .fecha-card-label {
   font-size: 0.7rem; font-weight: 600;
@@ -369,8 +381,8 @@ function formatPrecio(v) {
 
 .noches-badge {
   display: inline-flex; align-items: center;
-  background: rgba(232, 186, 58, 0.15);
-  border: 1px solid rgba(232, 186, 58, 0.3);
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
   color: #C9A84C; font-size: 0.82rem; font-weight: 600;
   padding: 0.3rem 0.85rem; border-radius: 50px;
   margin-bottom: 1.25rem;
@@ -397,21 +409,21 @@ function formatPrecio(v) {
   appearance: none;
 }
 .hora-select:focus { border-color: #C9A84C; }
-.hora-select option { background: #0a1327; color: #fff; }
+.hora-select option { background: #0A0A0A; color: #fff; }
 
 /* ── BTN BUSCAR ── */
 .btn-buscar {
   width: 100%; padding: 1rem;
-  background: linear-gradient(135deg, #C9A84C, #c5942a);
+  background: linear-gradient(135deg, #C9A84C, #A8882A);
   color: #fff; border: none; border-radius: 14px;
   font-size: 1rem; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  box-shadow: 0 6px 24px rgba(232, 229, 58, 0.35);
+  box-shadow: 0 6px 24px rgba(201,168,76,0.35);
   transition: all 0.2s;
 }
 .btn-buscar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(232, 200, 58, 0.45);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.45);
 }
 .btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -442,7 +454,7 @@ function formatPrecio(v) {
 }
 .sep { color: rgba(255,255,255,0.3); }
 .badge-noches {
-  background: rgba(232,119,58,0.2); color: #C9A84C;
+  background: rgba(201,168,76,0.2); color: #C9A84C;
   font-size: 0.72rem; font-weight: 700;
   padding: 0.15rem 0.55rem; border-radius: 50px;
 }
@@ -457,14 +469,14 @@ function formatPrecio(v) {
 .habitaciones-lista { display: flex; flex-direction: column; gap: 1rem; }
 
 .hab-card {
-  background: rgba(182, 173, 173, 0.04);
+  background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px; overflow: hidden;
   transition: border-color 0.2s, background 0.2s;
 }
 .hab-card:hover {
-  border-color: rgba(232, 186, 58, 0.3);
-  background: rgba(232, 191, 58, 0.04);
+  border-color: rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.04);
 }
 
 .hab-card-top {
@@ -500,7 +512,7 @@ function formatPrecio(v) {
   cursor: pointer; transition: background 0.2s;
   font-family: 'Inter', sans-serif;
 }
-.btn-reservar:hover { background: #C9A84C; }
+.btn-reservar:hover { background: #A8882A; }
 
 /* ── SIN RESULTADOS ── */
 .sin-resultados {
@@ -510,14 +522,14 @@ function formatPrecio(v) {
 .sin-ico { font-size: 3rem; }
 .sin-resultados p { color: rgba(255,255,255,0.5); font-size: 0.95rem; }
 .btn-cambiar-fechas {
-  background: rgba(232,119,58,0.15);
-  border: 1px solid rgba(232,119,58,0.3);
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
   color: #C9A84C; border-radius: 50px;
   padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600;
   cursor: pointer; font-family: 'Inter', sans-serif;
   transition: background 0.2s;
 }
-.btn-cambiar-fechas:hover { background: rgba(232, 215, 58, 0.25); }
+.btn-cambiar-fechas:hover { background: rgba(201,168,76,0.25); }
 
 /* ── SPINNER ── */
 .spinner {
@@ -533,46 +545,4 @@ function formatPrecio(v) {
 .slide-enter-from { opacity: 0; transform: translateX(30px); }
 .slide-leave-to   { opacity: 0; transform: translateX(-30px); }
 
-/* ── DESKTOP ──────────────────────────────────────────────── */
-@media (min-width: 769px) {
-  .bottom-nav {
-    top: 0; bottom: 0; left: 0; right: auto;
-    width: 230px;
-    flex-direction: column;
-    justify-content: flex-start;
-    border-top: none;
-    border-right: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
-    padding: 5.5rem 0 2rem;
-    gap: 0.15rem;
-  }
-  .nav-item {
-    flex-direction: row;
-    justify-content: flex-start;
-    padding: 0.85rem 1.75rem;
-    font-size: 0.82rem;
-    gap: 0.75rem;
-    width: 100%;
-    border-radius: 0;
-    border-left: 3px solid transparent;
-  }
-  .nav-item.active, .nav-item:hover {
-    border-left-color: #E8773A;
-    background: rgba(232,119,58,0.07);
-  }
-  .nav-icon { font-size: 1.1rem; }
-
-  .header { left: 230px; }
-
-  .main {
-    margin-left: 230px;
-    padding-top: 5.5rem;
-    padding-bottom: 2.5rem;
-    max-width: none;
-  }
-
-  /* Paso 1 y 2 centrados y más anchos en desktop */
-  .paso { max-width: 600px; margin: 0 auto; }
-  .habitaciones-grid { grid-template-columns: repeat(3, 1fr); }
-}
 </style>

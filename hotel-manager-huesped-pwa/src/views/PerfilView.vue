@@ -268,6 +268,7 @@ function logout() {
   text-transform: uppercase; color: rgba(255,255,255,0.35);
 }
 .form-group input {
+  width: 100%; box-sizing: border-box;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 6px; padding: 0.75rem 1rem;
@@ -335,4 +336,5 @@ function logout() {
 @media (max-width: 400px) {
   .form-row { grid-template-columns: 1fr; }
 }
-</style>
+
+</style> 

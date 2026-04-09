@@ -24,3 +24,9 @@ export const habitacionService = {
 export const reservaService = {
   crear: (data) => api.post('/reservas', data)
 }
+
+export const pushService = {
+  vapidKey:  ()         => api.get('/push/vapid-key'),
+  suscribir: (sub)      => api.post('/push/suscribir', sub),
+  cancelar:  (endpoint) => api.delete('/push/cancelar', { data: { endpoint } })
+}

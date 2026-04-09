@@ -42,6 +42,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/habitacion/:id',
+    name: 'habitacion-detalle',
+    component: () => import('../views/HabitacionDetalleView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/reservar',
     name: 'reservar',
     component: () => import('../views/ReservarView.vue')
